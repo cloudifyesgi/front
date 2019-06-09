@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Import Containers
-import { DefaultLayoutComponent } from './containers';
+import { DefaultLayoutComponent } from './components';
 
 export const routes: Routes = [
   {
@@ -19,7 +19,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: './views/dashboard/dashboard.module#DashboardModule'
+        loadChildren: './views/views.module#ViewsModule'
       }
     ]
   }
