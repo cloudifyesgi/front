@@ -6,6 +6,11 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import {DefaultCloudifyComponent} from './components/default-cloudify/default-cloudify.component';
+import {HttpClientModule} from '@angular/common/http';
+import {DirectoryService} from './services/directory/directory.service';
+import {CommonModule} from '@angular/common';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   imports: [
@@ -13,8 +18,18 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     DashboardRoutingModule,
     ChartsModule,
     BsDropdownModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    HttpClientModule,
+    CommonModule,
+    AgGridModule.withComponents([DefaultCloudifyComponent])
   ],
-  declarations: [ DashboardComponent ]
+  exports : [],
+  declarations: [
+    DashboardComponent,
+    DefaultCloudifyComponent
+  ],
+  providers : [
+    DirectoryService
+  ]
 })
 export class DashboardModule { }

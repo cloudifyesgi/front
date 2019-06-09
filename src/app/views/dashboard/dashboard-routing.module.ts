@@ -3,6 +3,7 @@ import { Routes,
      RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard.component';
+import {DefaultCloudifyComponent} from './components/default-cloudify/default-cloudify.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,13 @@ const routes: Routes = [
     data: {
       title: 'Dashboard'
     }
-  }
+  },
+  {
+    path: 'defaultCloudify',
+    component: DefaultCloudifyComponent,
+    data: {
+    }
+  },
 ];
 
 @NgModule({

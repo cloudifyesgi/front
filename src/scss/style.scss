@@ -1,6 +1,10 @@
 // If you want to override variables do it here
 @import "variables";
 
+@import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+@import "ag-grid-community/dist/styles/ag-grid.css";
+@import "ag-grid-community/dist/styles/ag-theme-balham.css";
+
 // Import styles with default layout.
 // If you are going to use dark layout please comment next line
 @import "~@coreui/coreui-pro/scss/coreui";
@@ -15,3 +19,5 @@
 // Spinkit
 $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
+
+

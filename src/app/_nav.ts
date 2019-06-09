@@ -5,8 +5,8 @@ export const navItems = [
     icon: 'cui-cloud',
     children: [
       {
-        name: 'Favorite 1',
-        url: './',
+        name: 'Cloudify',
+        url: './defaultCloudify',
         icon: 'cui-star'
       },
       {
