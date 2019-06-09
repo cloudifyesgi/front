@@ -13,8 +13,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 import {AppComponent} from './app.component';
 
-// Import containers
-import {DefaultLayoutComponent} from './containers';
+import {DefaultLayoutComponent} from './components';
 
 const APP_CONTAINERS = [
     DefaultLayoutComponent
@@ -36,6 +35,7 @@ import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {TabsModule} from 'ngx-bootstrap/tabs';
 import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {CoreModule} from "./core/core.module";
+import {ComponentsModule} from "./components/components.module";
 
 @NgModule({
     imports: [
@@ -51,11 +51,12 @@ import {CoreModule} from "./core/core.module";
         BsDropdownModule.forRoot(),
         TabsModule.forRoot(),
         ChartsModule,
-        CoreModule
+        CoreModule,
+        ComponentsModule
     ],
+    exports: [AppRoutingModule],
     declarations: [
-        AppComponent,
-        ...APP_CONTAINERS
+        AppComponent
     ],
     providers: [{
         provide: LocationStrategy,

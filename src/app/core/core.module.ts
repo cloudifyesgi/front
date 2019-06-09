@@ -4,8 +4,9 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
 import {NavbarComponent} from "./components/navbar/navbar.component";
-import {ConstantsService} from "./services/constantes/constants.service";
+import {ConstantsService} from "./services/constants/constants.service";
 import {HttpClientModule} from "@angular/common/http";
+import {LocalStorageService} from "./services/localStorage/local-storage.service";
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import {HttpClientModule} from "@angular/common/http";
         NavbarComponent
     ],
     providers: [
-        ConstantsService
+        ConstantsService,
+        LocalStorageService
     ]
 })
 

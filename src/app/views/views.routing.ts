@@ -3,9 +3,10 @@ import {
     Routes,
     RouterModule
 } from '@angular/router';
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {AuthenticationGuard} from "../core/guards/authentication/authentication.guard";
+import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
 
-import {DashboardComponent} from './dashboard.component';
-import {AuthenticationGuard} from "../../core/guards/authentication/authentication.guard";
 
 const routes: Routes = [
     {
@@ -20,7 +21,8 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [LocalStorageService]
 })
-export class DashboardRoutingModule {
+export class ViewsRouting {
 }
