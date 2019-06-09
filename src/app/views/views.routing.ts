@@ -1,11 +1,10 @@
 import {NgModule} from '@angular/core';
-import {
-    Routes,
-    RouterModule
-} from '@angular/router';
+import {Routes, RouterModule} from '@angular/router';
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthenticationGuard} from "../core/guards/authentication/authentication.guard";
 import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
+import {LoginComponent} from "./authentication/login/login.component";
+import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
 
 
 const routes: Routes = [
@@ -16,6 +15,14 @@ const routes: Routes = [
         data: {
             title: 'Dashboard'
         }
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: "home",
+        component: DefaultCloudifyComponent
     }
 ];
 

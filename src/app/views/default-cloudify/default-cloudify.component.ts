@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Directory} from '../../models/directory';
-import {DirectoryService} from '../../services/directory/directory.service';
+import {Directory} from '../../core/models/entities/directory';
+import {DirectoryService} from '../../core/services/Rest/directory/directory.service';
 
 @Component({
   selector: 'app-default-cloudify',

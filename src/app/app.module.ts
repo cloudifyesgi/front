@@ -13,12 +13,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 import {AppComponent} from './app.component';
 
-import {DefaultLayoutComponent} from './components';
-
-const APP_CONTAINERS = [
-    DefaultLayoutComponent
-];
-
 import {
     AppAsideModule,
     AppBreadcrumbModule,

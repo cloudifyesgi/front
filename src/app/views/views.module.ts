@@ -7,6 +7,10 @@ import {LocalStorageService} from "../core/services/localStorage/local-storage.s
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ViewsRouting} from "./views.routing";
 import {LoginComponent} from "./authentication/login/login.component";
+import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
+import {HttpClientModule} from '@angular/common/http';
+import {CommonModule} from '@angular/common';
+import { AgGridModule } from 'ag-grid-angular';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -16,11 +20,15 @@ import {LoginComponent} from "./authentication/login/login.component";
         ViewsRouting,
         ChartsModule,
         BsDropdownModule,
-        ButtonsModule.forRoot()
+        ButtonsModule.forRoot(),
+        HttpClientModule,
+        CommonModule,
+        AgGridModule.withComponents([DefaultCloudifyComponent])
     ],
     declarations: [
         DashboardComponent,
-        LoginComponent
+        LoginComponent,
+        DefaultCloudifyComponent
     ],
     providers: [LocalStorageService]
 })
