@@ -10,7 +10,9 @@ import {LoginComponent} from "./authentication/login/login.component";
 import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import { AgGridModule } from 'ag-grid-angular';
+import {AgGridModule} from 'ag-grid-angular';
+import {ComponentsModule} from "../components/components.module";
+import {AppModule} from "../app.module";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -23,7 +25,9 @@ import { AgGridModule } from 'ag-grid-angular';
         ButtonsModule.forRoot(),
         HttpClientModule,
         CommonModule,
-        AgGridModule.withComponents([DefaultCloudifyComponent])
+        AgGridModule.withComponents([DefaultCloudifyComponent]),
+        ComponentsModule
+
     ],
     declarations: [
         DashboardComponent,

@@ -5,16 +5,23 @@ import {AuthenticationGuard} from "../core/guards/authentication/authentication.
 import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
 import {LoginComponent} from "./authentication/login/login.component";
 import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
+import {DefaultLayoutComponent} from "../components/default-layout";
 
 
 const routes: Routes = [
     {
         path: '',
-        component: DashboardComponent,
+        component: DefaultLayoutComponent,
         canActivate: [AuthenticationGuard],
         data: {
             title: 'Dashboard'
-        }
+        },
+        children: [
+            {
+                path: '',
+                component: DashboardComponent,
+            }
+        ]
     },
     {
         path: 'login',

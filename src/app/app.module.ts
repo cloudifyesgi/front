@@ -29,7 +29,6 @@ import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {TabsModule} from 'ngx-bootstrap/tabs';
 import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {CoreModule} from "./core/core.module";
-import {ComponentsModule} from "./components/components.module";
 
 @NgModule({
     imports: [
@@ -45,8 +44,7 @@ import {ComponentsModule} from "./components/components.module";
         BsDropdownModule.forRoot(),
         TabsModule.forRoot(),
         ChartsModule,
-        CoreModule,
-        ComponentsModule
+        CoreModule
     ],
     exports: [AppRoutingModule],
     declarations: [
