@@ -29,7 +29,8 @@ import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {TabsModule} from 'ngx-bootstrap/tabs';
 import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {CoreModule} from "./core/core.module";
-import {ComponentsModule} from "./components/components.module";
+import {TokenInterceptor} from "./core/providers/auth.interceptor";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
 
 @NgModule({
     imports: [
@@ -45,17 +46,23 @@ import {ComponentsModule} from "./components/components.module";
         BsDropdownModule.forRoot(),
         TabsModule.forRoot(),
         ChartsModule,
-        CoreModule,
-        ComponentsModule
+        CoreModule
     ],
     exports: [AppRoutingModule],
     declarations: [
         AppComponent
     ],
-    providers: [{
-        provide: LocationStrategy,
-        useClass: HashLocationStrategy
-    }],
+    providers: [
+        {
+            provide: LocationStrategy,
+            useClass: HashLocationStrategy
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

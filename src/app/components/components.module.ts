@@ -11,12 +11,13 @@ import {AppRoutingModule} from "../app.routing";
 import {AppAsideModule, AppBreadcrumbModule, AppFooterModule, AppHeaderModule, AppSidebarModule} from "@coreui/angular";
 import {PerfectScrollbarModule} from "ngx-perfect-scrollbar";
 import {TabsModule} from "ngx-bootstrap";
+import {AppModule} from "../app.module";
+import {RouterModule} from "@angular/router";
+import { FileCardComponent } from './file-card/file-card.component';
 
 
 @NgModule({
     imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
         AppAsideModule,
         AppFooterModule,
         AppHeaderModule,
@@ -28,9 +29,12 @@ import {TabsModule} from "ngx-bootstrap";
         FormsModule,
         ChartsModule,
         ButtonsModule.forRoot(),
-        AppRoutingModule
+        RouterModule
     ],
-    declarations: [DefaultLayoutComponent],
+    declarations: [DefaultLayoutComponent, FileCardComponent],
+    exports: [
+        FileCardComponent
+    ],
     providers: [LocalStorageService]
 })
 export class ComponentsModule {

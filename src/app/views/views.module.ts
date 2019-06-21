@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ChartsModule} from 'ng2-charts/ng2-charts';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {ButtonsModule} from 'ngx-bootstrap/buttons';
@@ -10,7 +10,10 @@ import {LoginComponent} from "./authentication/login/login.component";
 import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import { AgGridModule } from 'ag-grid-angular';
+import {AgGridModule} from 'ag-grid-angular';
+import {ComponentsModule} from "../components/components.module";
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './authentication/register/register.component';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -23,12 +26,17 @@ import { AgGridModule } from 'ag-grid-angular';
         ButtonsModule.forRoot(),
         HttpClientModule,
         CommonModule,
-        AgGridModule.withComponents([DefaultCloudifyComponent])
+        AgGridModule.withComponents([DefaultCloudifyComponent]),
+        ComponentsModule,
+        ReactiveFormsModule
+
     ],
     declarations: [
         DashboardComponent,
         LoginComponent,
-        DefaultCloudifyComponent
+        DefaultCloudifyComponent,
+        HomeComponent,
+        RegisterComponent
     ],
     providers: [LocalStorageService]
 })
