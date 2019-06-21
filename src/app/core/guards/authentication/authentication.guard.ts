@@ -17,8 +17,7 @@ export class AuthenticationGuard implements CanActivate {
     canActivate(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const bool = !!this.localStorageService.get('token');
-
+        const bool = !!this.authenticationService.getToken();
         if (bool) {
             return bool;
         } else {
