@@ -4,4 +4,5 @@ export const constants = {
     'URL_USER': '/user',
     'URL_GET_DIRECTORY': '/directory',
     'URL_GET_CHILD_DIRECTORY': '/directory/child/',
+    'URL_FILE': '/file',
 };
