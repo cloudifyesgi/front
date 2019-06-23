@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DefaultCloudifyComponent } from './default-cloudify.component';
+import { FolderCardComponent } from './folder-card.component';
 
-describe('DefaultCloudifyComponent', () => {
-  let component: DefaultCloudifyComponent;
-  let fixture: ComponentFixture<DefaultCloudifyComponent>;
+describe('FolderCardComponent', () => {
+  let component: FolderCardComponent;
+  let fixture: ComponentFixture<FolderCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DefaultCloudifyComponent ]
+      declarations: [ FolderCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DefaultCloudifyComponent);
+    fixture = TestBed.createComponent(FolderCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

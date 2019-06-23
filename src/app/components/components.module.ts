@@ -13,6 +13,7 @@ import {PerfectScrollbarModule} from "ngx-perfect-scrollbar";
 import {TabsModule} from "ngx-bootstrap";
 import {AppModule} from "../app.module";
 import {RouterModule} from "@angular/router";
+import { FolderCardComponent } from './folder-card/folder-card.component';
 import { FileCardComponent } from './file-card/file-card.component';
 
 
@@ -31,8 +32,9 @@ import { FileCardComponent } from './file-card/file-card.component';
         ButtonsModule.forRoot(),
         RouterModule
     ],
-    declarations: [DefaultLayoutComponent, FileCardComponent],
+    declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent],
     exports: [
+        FolderCardComponent,
         FileCardComponent
     ],
     providers: [LocalStorageService]
