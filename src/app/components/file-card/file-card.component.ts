@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Directory} from "../../core/models/entities/directory";
+import {File} from "../../core/models/entities/file";
 
 @Component({
     selector: 'app-file-card',
@@ -8,7 +8,8 @@ import {Directory} from "../../core/models/entities/directory";
 })
 export class FileCardComponent implements OnInit {
 
-    @Input() directory: Directory;
+    @Input() file: File;
+
     constructor() {
     }
 

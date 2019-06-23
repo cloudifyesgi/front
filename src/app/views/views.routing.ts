@@ -1,10 +1,8 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthenticationGuard} from "../core/guards/authentication/authentication.guard";
 import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
 import {LoginComponent} from "./authentication/login/login.component";
-import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
 import {DefaultLayoutComponent} from "../components/default-layout";
 import {HomeComponent} from "./home/home.component";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
@@ -31,7 +29,15 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: HomeComponent,
+                redirectTo: 'folders/0',
+            },
+            {
+                path: 'folders',
+                redirectTo: 'folders/0',
+            },
+            {
+                path: 'folders/:directoryId',
+                component: HomeComponent
             }
         ]
     }
