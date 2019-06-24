@@ -6,6 +6,7 @@ import {Directory} from "../../core/models/entities/directory";
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {File} from "../../core/models/entities/file";
+import * as $AB from 'jquery';
 
 @Component({
     selector: 'app-home',
@@ -63,6 +64,13 @@ export class HomeComponent implements OnInit {
             },
             err => console.log(err)
         );
+    }
+
+    openDirectoryNameModal() {
+        console.log($AB);
+
+        // el('#getNameDirectory').modal("hey");
+        (<any>$AB('#getNameDirectory')).modal('show');
     }
 
 }
