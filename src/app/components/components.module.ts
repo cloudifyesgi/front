@@ -15,6 +15,7 @@ import {AppModule} from "../app.module";
 import {RouterModule} from "@angular/router";
 import { FolderCardComponent } from './folder-card/folder-card.component';
 import { FileCardComponent } from './file-card/file-card.component';
+import {CoreModule} from "../core/core.module";
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { FileCardComponent } from './file-card/file-card.component';
         FormsModule,
         ChartsModule,
         ButtonsModule.forRoot(),
-        RouterModule
+        RouterModule,
+        CoreModule
     ],
     declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent],
     exports: [
