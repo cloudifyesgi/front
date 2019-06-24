@@ -15,7 +15,11 @@ export class DirectoryService {
     }
 
     getDirectory(): Observable<HttpResponse<Array<Directory>>> {
-        return this.http.get<Array<Directory>>(this.constantsService.getConstant('URL_GET_DIRECTORY'), {observe: "response"});
+        return this.http.get<Array<Directory>>(this.constantsService.getConstant('URL_DIRECTORY'), {observe: "response"});
+    }
+
+    create(name: string, parent_directory: string): Observable<HttpResponse<Array<any>>> {
+        return this.http.post<any>(this.constantsService.getConstant('URL_DIRECTORY'), {name, parent_directory}, {observe: "response"});
     }
 
     getChildDirectory(id): Observable<HttpResponse<GetChildren>> {

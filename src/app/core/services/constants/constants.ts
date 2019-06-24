@@ -4,7 +4,7 @@ export const constants = {
     'URL_USER': '/user',
     'URL_USER_NAME': '/user/name',
     'URL_FILE': '/file',
-    'URL_GET_DIRECTORY': '/directory',
+    'URL_DIRECTORY': '/directory',
     'URL_GET_CHILD_DIRECTORY': '/directory/:id/children',
     'URL_GET_FILES_BY_DIRECTORY': '/directory/:id/files',
     'URL_GET_FILES_BY_VERSION': '/file/:name/versions',

@@ -1,12 +1,6 @@
 <nav class="breadcrumb">
     <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
-    <div class="breadcrumb-menu">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn" href="#"><i class="cui-settings"></i>Upload</a>
-            <a class="btn" href="#"><i class="fa fa-plus-square"></i>Créer un dossier</a>
-        </div>
-    </div>
 </nav>
 <div class="app aside-menu-show" style="background-color:#e4e5e6">
         <aside class="aside-menu" [hidden]="isHidden">
@@ -27,12 +21,16 @@
 <div class="homeContainer">
     <div class="card">
         <div class="card-header">
-            folder
+            folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal" data-target="#getNameDirectory"></i>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#getNameDirectory" (click)="modal.close('Ok click')">
+                Launch demo modal
+            </button>
         </div>
         <div class="card-body">
             <div class="container-fluid">
                 <div class="row">
-                    <app-folder-card *ngFor="let directory of children" [directory]="directory" class="col-2"></app-folder-card>
+                    <app-folder-card *ngFor="let directory of children" [directory]="directory"
+                                     class="col-2"></app-folder-card>
                 </div>
             </div>
         </div>
@@ -58,4 +56,23 @@
 </div>
 
 
+<div class="modal fade" id="getNameDirectory" tabindex="-1" role="dialog" aria-labelledby="getNameDirectoryTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="getNameDirectoryTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
