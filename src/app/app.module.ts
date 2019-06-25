@@ -52,7 +52,7 @@ import {NgxFileDropModule} from "ngx-file-drop";
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        NgxFileDropModule
+        NgxFileDropModule,
     ],
     exports: [AppRoutingModule],
     declarations: [

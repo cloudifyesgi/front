@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {testing} from "rxjs-compat/umd";
+import {HomeComponent} from "../../views/home/home.component";
 
 @Component({
     selector: 'app-file-card',
@@ -14,32 +15,19 @@ export class FileCardComponent implements OnInit {
     testFile: FileModel;
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
-    constructor(private fileService: FileService) {
+    constructor(private fileService: FileService, private homeComponent: HomeComponent) {
     }
 
     ngOnInit() {
     }
 
-    getFile(idFile: string) {
-        console.log('lets download this file id:' + idFile);
-        /*this.fileService.getFileById(idFile).map(res => {
-            return {
-                filename: 'filename.pdf',
-                data: res.blob()
-            };
-        }).subscribe( (res) => {
-            const url = window.URL.createObjectURL(res.data);
-            // this.testFile = data.body;
-        });*/
+    async getFile(idFile: string) {
         const binaryData = [];
         let url;
         let link;
-        let file_name = 'default_name';
-        this.fileService.getFileInfo(idFile).subscribe( (data) => {
-            file_name = data.body.name;
-        });
-        this.fileService.getFileById(idFile).subscribe( res => {
-            console.log(res.body);
+        const response = await this.fileService.getFileInfo(idFile).toPromise();
+        const file_name = response.body.name;
+        await this.fileService.getFileById(idFile).subscribe( res => {
             binaryData.push(res.body);
             url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
             link = this.downloadZipLink.nativeElement;
@@ -48,6 +36,16 @@ export class FileCardComponent implements OnInit {
             link.click();
             window.URL.revokeObjectURL(url);
         });
+    }
+
+    deleteFile(id) {
+        this.fileService.deleteFile(id).subscribe(
+            (data) => {
+                this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
+            },
+            (err) => {
+                console.log(err);
+            });
     }
 
 }

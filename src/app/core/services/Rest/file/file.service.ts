@@ -6,7 +6,6 @@ import {Observable} from "rxjs";
 import {User} from "../../../models/entities/user";
 import {UserService} from "../User/user.service";
 import {Upload} from "../../../models/entities/upload";
-import {ResponseContentType} from "@angular/http";
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +31,14 @@ export class FileService {
         return this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
-    deleteFile(id): Observable<boolean> {
-        return <Observable<boolean>>this.http.delete(`${this.constantsService.getConstant("URL_FILE")}/${id}`);
+    /*getFileInfo(id) {
+        return new Promise(resolve => {
+            resolve(this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"}));
+        });
+    }*/
+
+    deleteFile(id): Observable<HttpResponse<FileModel>> {
+        return this.http.delete<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
     getFileByUser(UserId): Observable<Array<File>> {

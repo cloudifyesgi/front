@@ -9,6 +9,7 @@ import {FileModel} from "../../core/models/entities/file";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {Upload} from "../../core/models/entities/upload";
 import {DatePipe} from "@angular/common";
+import {LocalStorageService} from "../../core/services/localStorage/local-storage.service";
 
 @Component({
     selector: 'app-home',
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    public dropped(files: NgxFileDropEntry[]) {
+    dropped(files: NgxFileDropEntry[]) {
         this.filesToUpload = files;
         for (const droppedFile of files) {
 
@@ -80,19 +81,20 @@ export class HomeComponent implements OnInit {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
                 fileEntry.file((file: File) => {
 
-                    // Here you can access the real file
-                    console.log(droppedFile.relativePath, file);
-
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('name', droppedFile.relativePath);
                     formData.append('date_create', this.datePipe.transform(Date.now(), 'yyyy-MM-dd'));
                     formData.append('file_version', '1');
                     formData.append('file_type', 'txt');
+                    formData.append('user_create', this.user._id.toString());
+                    formData.append('user_update', this.user._id.toString());
+                    formData.append('directory', this.currentDirectory._id);
 
                     this.fileService.uploadFile(formData).subscribe(
                         (data) => {
                             console.log('data.status' + data.status);
+                            this.getFiles(this.currentDirectory._id);
                         },
                         (err) => {
                             console.log(err);
@@ -107,10 +109,10 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    public fileOver(event) {
+    fileOver(event) {
     }
 
-    public fileLeave(event) {
+    fileLeave(event) {
     }
 
 }
