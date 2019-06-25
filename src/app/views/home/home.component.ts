@@ -6,7 +6,9 @@ import {Directory} from "../../core/models/entities/directory";
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {File} from "../../core/models/entities/file";
-import * as $AB from 'jquery';
+import {FormBuilder} from "@angular/forms";
+
+declare var jQuery: any;
 
 @Component({
     selector: 'app-home',
@@ -19,13 +21,21 @@ export class HomeComponent implements OnInit {
     children: Array<Directory>;
     parents: Array<Directory>;
     currentDirectory: Directory;
+    selectedElement: Directory | File;
     files: Array<File>;
+
+    directoryForm = this.fb.group(
+        {
+            directoryName: ['', []]
+        }
+    );
 
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
                 private fileService: FileService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private fb: FormBuilder) {
     }
 
     async ngOnInit() {
@@ -66,11 +76,21 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    openDirectoryNameModal() {
-        console.log($AB);
-
-        // el('#getNameDirectory').modal("hey");
-        (<any>$AB('#getNameDirectory')).modal('show');
+    createDirectory() {
+        console.log(this.currentDirectory.name);
+        console.log(this.directoryForm.value);
+        this.directoryService.create(this.directoryForm.value.directoryName, this.currentDirectory._id).subscribe(
+            response => {
+                console.log(response);
+                jQuery('#getNameDirectory').modal('hide');
+            },
+            err => {
+                console.log(err);
+            }
+        );
     }
 
+    setSelectedElement($event: Directory | File) {
+        this.selectedElement = $event;
+    }
 }

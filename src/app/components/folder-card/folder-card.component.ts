@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {Router} from "@angular/router";
 
@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 export class FolderCardComponent implements OnInit {
 
     @Input() directory: Directory;
+    @Output() messageEvent = new EventEmitter<Directory | File>();
 
     constructor(private router: Router) {
     }
@@ -19,5 +20,10 @@ export class FolderCardComponent implements OnInit {
 
     openFolder(idFolder: string) {
         this.router.navigate(['folders/' + idFolder]);
+    }
+
+    selectFolder(directory: Directory) {
+        console.log(directory);
+        this.messageEvent.emit(directory);
     }
 }

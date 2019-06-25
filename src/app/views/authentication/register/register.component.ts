@@ -9,10 +9,6 @@ import {Router} from "@angular/router";
     styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-    /* username: string;
-     email: string;
-     password: string;
-     password2: string;*/
 
     registerFields = this.fb.group({
             firstname: ['', [Validators.required]],
