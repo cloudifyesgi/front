@@ -31,12 +31,6 @@ export class FileService {
         return this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
-    /*getFileInfo(id) {
-        return new Promise(resolve => {
-            resolve(this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"}));
-        });
-    }*/
-
     deleteFile(id): Observable<HttpResponse<FileModel>> {
         return this.http.delete<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
@@ -52,5 +46,15 @@ export class FileService {
 
     uploadFile(file: FormData): Observable<HttpResponse<File>> {
         return this.http.post<File>(this.constantsService.getConstant('URL_FILE'), file, {observe: "response"});
+    }
+
+    getFileByVersions(name): Observable<HttpResponse<Array<FileModel>>> {
+        const url = this.constantsService.getConstant('URL_GET_FILES_BY_VERSION').replace(':name', name);
+        return this.http.get<Array<FileModel>>(url, {observe: "response"});
+    }
+
+    getFileVersion(name, number): Observable<HttpResponse<FileModel>> {
+        const url = this.constantsService.getConstant('URL_GET_FILE_BY_VERSION').replace(':name', name).replace(':number', number);
+        return this.http.get<FileModel>(url, {observe: "response"});
     }
 }
