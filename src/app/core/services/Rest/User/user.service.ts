@@ -26,6 +26,10 @@ export class UserService {
         return this.user;
     }
 
+    getUserById(id: string): Observable<User> {
+        return this.http.get<User>(`${this.constantsService.getConstant("URL_USER_BY_ID")}/${id}`);
+    }
+
     register(newUser: User): Observable<HttpResponse<User>> {
         return this.http.post<User>(`${this.constantsService.getConstant('URL_REGISTER')}`, newUser, {observe: "response"});
     }
