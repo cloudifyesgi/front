@@ -3,6 +3,7 @@ import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {testing} from "rxjs-compat/umd";
 import {HomeComponent} from "../../views/home/home.component";
+import {UserService} from "../../core/services/Rest/User/user.service";
 
 @Component({
     selector: 'app-file-card',
@@ -14,8 +15,9 @@ export class FileCardComponent implements OnInit {
     @Input() file: FileModel;
     testFile: FileModel;
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
+    isHidden: boolean;
 
-    constructor(private fileService: FileService, private homeComponent: HomeComponent) {
+    constructor(private fileService: FileService, private homeComponent: HomeComponent, private userService: UserService) {
     }
 
     ngOnInit() {
@@ -68,4 +70,7 @@ export class FileCardComponent implements OnInit {
             });
     }
 
+    showMenu(_id) {
+        this.homeComponent.showMenu(_id, this.userService);
+    }
 }

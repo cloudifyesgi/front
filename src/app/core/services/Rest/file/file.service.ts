@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {ConstantsService} from "../../constants/constants.service";
 import {FileModel} from '../../../models/entities/file';
+import {History} from "../../../models/entities/history";
 import {Observable} from "rxjs";
 import {User} from "../../../models/entities/user";
 import {UserService} from "../User/user.service";
@@ -56,5 +57,10 @@ export class FileService {
     getFileVersion(name, number): Observable<HttpResponse<FileModel>> {
         const url = this.constantsService.getConstant('URL_GET_FILE_BY_VERSION').replace(':name', name).replace(':number', number);
         return this.http.get<FileModel>(url, {observe: "response"});
+    }
+
+    getFileHistory(file_id): Observable<HttpResponse<Array<History>>> {
+        const url = this.constantsService.getConstant('URL_GET_HISTORY_BY_FILE').replace(':id', file_id);
+        return this.http.get<Array<History>>(url, {observe: "response"});
     }
 }

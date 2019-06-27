@@ -8,6 +8,22 @@
         </div>
     </div>
 </nav>
+<div class="app aside-menu-show" style="background-color:#e4e5e6">
+        <aside class="aside-menu" [hidden]="isHidden">
+            Infos :
+            <ul>
+                <li *ngIf="fileMenu">Nom du fichier : {{fileMenu.name}}</li>
+                <li *ngIf="fileMenu">Date de création du fichier : {{fileMenu.date_create | date :  "dd/MM/yyyy"}}</li>
+                <li *ngIf="fileMenu">Version du fichier : {{fileMenu.file_version}}</li>
+                <li *ngIf="fileMenu">Type du fichier : {{fileMenu.file_type}}</li>
+                <li *ngIf="fileMenu">Créateur : {{fileMenu.user_create}}</li>
+                <li *ngIf="fileMenu">Dernière modification : {{fileMenu.user_update}}</li>
+            </ul>
+            Historique :
+            <ul *ngFor="let history of fileHistory">
+                <li *ngIf="fileHistory">{{history.action}} le {{history.createdAt | date :  "dd/MM/yyyy"}} par {{history.user}}</li>
+            </ul>
+        </aside>
 <div class="homeContainer">
     <div class="card">
         <div class="card-header">
@@ -34,15 +50,12 @@
             </div>
         </div>
         <div class="center">
-            <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
-                           (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
-                <ng-template let-openFileSelector="openFileSelector">
-                    Optional custom content that replaces the the entire default content.
-                    <button type="button" (click)="openFileSelector()">Browse Files</button>
-                </ng-template>
+            <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
             </ngx-file-drop>
         </div>
     </div>
 </div>
+</div>
+
 
 

@@ -6,10 +6,12 @@ import {Directory} from "../../core/models/entities/directory";
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {FileModel} from "../../core/models/entities/file";
+import {History} from "../../core/models/entities/history";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {Upload} from "../../core/models/entities/upload";
 import {DatePipe} from "@angular/common";
 import {LocalStorageService} from "../../core/services/localStorage/local-storage.service";
+import {copyAnimationEvent} from "@angular/animations/browser/src/render/shared";
 
 @Component({
     selector: 'app-home',
@@ -25,6 +27,9 @@ export class HomeComponent implements OnInit {
     currentDirectory: Directory;
     files: Array<FileModel>;
     filesToUpload: NgxFileDropEntry[] = [];
+    isHidden = true;
+    fileMenu: FileModel;
+    fileHistory: Array<History>;
 
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
@@ -109,10 +114,28 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    fileOver(event) {
+    async showMenu(_id, service) {
+        await this.fileService.getFileInfo(_id).subscribe( (data) => {
+            this.fileMenu = data.body;
+            const u_update = service.getUserName(this.fileMenu.user_update).toPromise();
+            u_update.then( value => this.fileMenu.user_update = value.name + ' ' + value.firstname);
+            const u_create = service.getUserName(this.fileMenu.user_create).toPromise();
+            u_create.then( value => this.fileMenu.user_create = value.name + ' ' + value.firstname);
+        });
+        await this.fileService.getFileHistory(_id).subscribe( (data) => {
+            this.fileHistory = data.body;
+            this.fileHistory.forEach( function (value) {
+                const u = service.getUserName(value.user).toPromise();
+                u.then(n => value.user = n.name + ' ' + n.firstname);
+            });
+        });
+        this.isHidden = !this.isHidden;
     }
 
-    fileLeave(event) {
+    getUserName(id): string {
+        this.userService.getUserName(id).subscribe( (data) => {
+            return data.name + data.firstname;
+        });
+        return '';
     }
-
 }

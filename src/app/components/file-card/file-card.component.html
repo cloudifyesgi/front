@@ -1,4 +1,4 @@
-<div class="card cursor-pointer" (dblclick)="getFile(file._id)" (click)="getPreviousVersion(file.name, 2)">
+<div class="card cursor-pointer" (dblclick)="getFile(file._id)" (click)="showMenu(file._id)">
     <div class="card-block p-1">
         <i class="fa fa-folder p-1 font-2xl mr-1 float-left"></i>
         <div class="h5 text-black-50 mb-0 mt-h">{{file.name}}</div>
