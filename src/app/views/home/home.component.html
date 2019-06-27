@@ -2,33 +2,39 @@
     <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
 </nav>
-<div class="homeContainer">
-    <div class="card">
-        <div class="card-header">
-            folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
-                      data-target="#getNameDirectory"></i>
+
+<div class="row homeContainer">
+    <div class="col dataBlock">
+        <div class="card">
+            <div class="card-header">
+                folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
+                          data-target="#getNameDirectory"></i>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <app-folder-card (messageEvent)="setSelectedElement($event, 'dir')" *ngFor="let directory of children" [directory]="directory"
+                                         class="col-2 col-sm-4"></app-folder-card>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <app-folder-card (messageEvent)="setSelectedElement($event)" *ngFor="let directory of children" [directory]="directory"
-                                     class="col-2"></app-folder-card>
+
+        <div class="card">
+            <div class="card-header">
+                Files
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <app-file-card *ngFor="let file of files" [file]="file" class="col-2 col-sm-4"></app-file-card>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header">
-            Files
-        </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <app-file-card *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
-                </div>
-            </div>
-        </div>
+    <div class="col-3" *ngIf="selectedElement">
+        <app-info-card [element]="selectedElement"></app-info-card>
     </div>
 </div>
 

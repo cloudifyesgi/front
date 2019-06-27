@@ -1,5 +1,5 @@
 export interface File {
-    id?: string;
+    _id?: string;
     name?: string;
     date_create?: string;
     file_version?: string;
@@ -7,4 +7,6 @@ export interface File {
     user_create?: string;
     user_update?: string;
     directory?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

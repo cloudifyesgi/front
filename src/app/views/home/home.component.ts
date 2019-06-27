@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
     children: Array<Directory>;
     parents: Array<Directory>;
     currentDirectory: Directory;
+    currentType: string;
     selectedElement: Directory | File;
     files: Array<File>;
 
@@ -82,6 +83,7 @@ export class HomeComponent implements OnInit {
         this.directoryService.create(this.directoryForm.value.directoryName, this.currentDirectory._id).subscribe(
             response => {
                 console.log(response);
+                this.children.push(response.body);
                 jQuery('#getNameDirectory').modal('hide');
             },
             err => {
@@ -90,7 +92,8 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    setSelectedElement($event: Directory | File) {
+    setSelectedElement($event: Directory, type: string) {
         this.selectedElement = $event;
+        this.currentType = type;
     }
 }
