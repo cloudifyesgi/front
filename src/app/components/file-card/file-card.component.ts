@@ -1,5 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {File} from "../../core/models/entities/file";
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {FileModel} from "../../core/models/entities/file";
+import {FileService} from "../../core/services/Rest/file/file.service";
+import {testing} from "rxjs-compat/umd";
+import {HomeComponent} from "../../views/home/home.component";
+import {UserService} from "../../core/services/Rest/User/user.service";
 
 @Component({
     selector: 'app-file-card',
@@ -8,12 +12,65 @@ import {File} from "../../core/models/entities/file";
 })
 export class FileCardComponent implements OnInit {
 
-    @Input() file: File;
+    @Input() file: FileModel;
+    testFile: FileModel;
+    @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
+    isHidden: boolean;
 
-    constructor() {
+    constructor(private fileService: FileService, private homeComponent: HomeComponent, private userService: UserService) {
     }
 
     ngOnInit() {
     }
 
+    async getFile(idFile: string) {
+        const binaryData = [];
+        let url;
+        let link;
+        const response = await this.fileService.getFileInfo(idFile).toPromise();
+        const file_name = response.body.name;
+        await this.fileService.getFileById(idFile).subscribe( res => {
+            binaryData.push(res.body);
+            url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
+            link = this.downloadZipLink.nativeElement;
+            link.href = url;
+            link.download = file_name;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
+    deleteFile(id) {
+        this.fileService.deleteFile(id).subscribe(
+            (data) => {
+                this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
+    getVersions(name) {
+        this.fileService.getFileByVersions(name).subscribe(
+            (data) => {
+                console.log(data.body);
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
+    getPreviousVersion(name, number) {
+        this.fileService.getFileVersion(name, number).subscribe(
+            (data) => {
+                console.log(data.body);
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
+    showMenu(_id) {
+        this.homeComponent.showMenu(_id, this.userService);
+    }
 }

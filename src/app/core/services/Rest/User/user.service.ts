@@ -34,4 +34,8 @@ export class UserService {
         this.localStorage.set('user', user.email);
         this.user = user;
     }
+
+    getUserName(id): Observable<User> {
+        return this.http.get<User>(`${this.constantsService.getConstant("URL_USER_NAME")}/${id}`);
+    }
 }

@@ -1,5 +1,5 @@
-export interface File {
-    id?: string;
+export interface FileModel {
+    _id: string;
     name?: string;
     date_create?: string;
     file_version?: string;

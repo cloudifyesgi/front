@@ -20,4 +20,7 @@ export class FolderCardComponent implements OnInit {
     openFolder(idFolder: string) {
         this.router.navigate(['folders/' + idFolder]);
     }
+
+    handleClick() {
+    }
 }

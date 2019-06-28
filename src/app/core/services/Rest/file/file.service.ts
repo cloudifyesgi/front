@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {ConstantsService} from "../../constants/constants.service";
-import {File} from '../../../models/entities/file';
+import {FileModel} from '../../../models/entities/file';
+import {History} from "../../../models/entities/history";
 import {Observable} from "rxjs";
 import {User} from "../../../models/entities/user";
 import {UserService} from "../User/user.service";
+import {Upload} from "../../../models/entities/upload";
 
 @Injectable({
     providedIn: 'root'
@@ -22,25 +24,43 @@ export class FileService {
         return <Observable<Array<File>>>this.http.get(this.constantsService.getConstant('URL_FILE'));
     }
 
-    getFileById(id): Observable<File> {
-        return this.http.get<File>(`${this.constantsService.getConstant("URL_FILE")}/${id}`);
+    getFileById(id): Observable<HttpResponse<File>> {
+        return this.http.get<File>(`${this.constantsService.getConstant("URL_DOWNLOAD")}/${id}`, {responseType: 'blob' as 'json', observe: "response"});
     }
 
-    async getFile(id): Promise<File> {
-        this.file = await this.getFileById(id).toPromise();
-        return this.file;
+    getFileInfo(id): Observable<HttpResponse<FileModel>> {
+        return this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
-    deleteFile(id): Observable<boolean> {
-        return <Observable<boolean>>this.http.delete(`${this.constantsService.getConstant("URL_FILE")}/${id}`);
+    deleteFile(id): Observable<HttpResponse<FileModel>> {
+        return this.http.delete<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
     getFileByUser(UserId): Observable<Array<File>> {
         return <Observable<Array<File>>>this.http.get(`${this.constantsService.getConstant("URL_FILE")}/${UserId}`);
     }
 
-    getFilesByDirectory(id): Observable<HttpResponse<Array<File>>> {
+    getFilesByDirectory(id): Observable<HttpResponse<Array<FileModel>>> {
         const url = this.constantsService.getConstant('URL_GET_FILES_BY_DIRECTORY').replace(':id', id);
-        return this.http.get<Array<File>>(url, {observe: "response"});
+        return this.http.get<Array<FileModel>>(url, {observe: "response"});
+    }
+
+    uploadFile(file: FormData): Observable<HttpResponse<File>> {
+        return this.http.post<File>(this.constantsService.getConstant('URL_FILE'), file, {observe: "response"});
+    }
+
+    getFileByVersions(name): Observable<HttpResponse<Array<FileModel>>> {
+        const url = this.constantsService.getConstant('URL_GET_FILES_BY_VERSION').replace(':name', name);
+        return this.http.get<Array<FileModel>>(url, {observe: "response"});
+    }
+
+    getFileVersion(name, number): Observable<HttpResponse<FileModel>> {
+        const url = this.constantsService.getConstant('URL_GET_FILE_BY_VERSION').replace(':name', name).replace(':number', number);
+        return this.http.get<FileModel>(url, {observe: "response"});
+    }
+
+    getFileHistory(file_id): Observable<HttpResponse<Array<History>>> {
+        const url = this.constantsService.getConstant('URL_GET_HISTORY_BY_FILE').replace(':id', file_id);
+        return this.http.get<Array<History>>(url, {observe: "response"});
     }
 }

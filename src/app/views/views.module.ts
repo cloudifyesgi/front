@@ -13,6 +13,7 @@ import {AgGridModule} from 'ag-grid-angular';
 import {ComponentsModule} from "../components/components.module";
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './authentication/register/register.component';
+import {NgxFileDropModule} from "ngx-file-drop";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -26,7 +27,8 @@ import { RegisterComponent } from './authentication/register/register.component'
         HttpClientModule,
         CommonModule,
         ComponentsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxFileDropModule
 
     ],
     declarations: [
