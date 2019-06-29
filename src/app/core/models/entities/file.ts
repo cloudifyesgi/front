@@ -7,4 +7,6 @@ export interface FileModel {
     user_create?: string;
     user_update?: string;
     directory?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
