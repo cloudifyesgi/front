@@ -16,7 +16,15 @@
         <div class="card-body">
             <div class="container-fluid">
                 <div class="row">
-                    <app-folder-card *ngFor="let directory of children" [directory]="directory" class="col-2"></app-folder-card>
+                    <div *ngFor="let directory of children" class="col-2">
+                        <div class="card cursor-pointer" (dblclick)="openFolder(directory._id)"
+                             (click)="selectFolder($event, directory)">
+                            <div class="card-block p-1">
+                                <i class="fa fa-folder p-1 font-2xl mr-1 iconCard float-left"></i>
+                                <div class="h5 h5 p-1 font-2lg mr-1 textCard">{{directory.name}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
