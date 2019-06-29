@@ -13,6 +13,7 @@ import {History} from "../../core/models/entities/history";
 export class InfoCardComponent implements OnInit, OnChanges {
 
     @Input() element: Directory | File;
+    @Input() type: string;
     name: string;
     histories: Array<History>;
 
@@ -21,12 +22,14 @@ export class InfoCardComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.getUserName();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getUserName();
-        this.getHistories(this.element._id);
+        console.log(typeof this.element);
+        if (this.type === 'dir') {
+            this.getHistories(this.element._id);
+        }
     }
 
     getUserName(): void {
