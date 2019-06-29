@@ -3,7 +3,9 @@ import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {testing} from "rxjs-compat/umd";
 import {HomeComponent} from "../../views/home/home.component";
+import {ShareFolderComponent} from "../../views/share/share-folder.component";
 import {UserService} from "../../core/services/Rest/User/user.service";
+import {ShareFileComponent} from "../../views/share-file/share-file.component";
 
 @Component({
     selector: 'app-file-card',
@@ -15,9 +17,12 @@ export class FileCardComponent implements OnInit {
     @Input() file: FileModel;
     testFile: FileModel;
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
-    isHidden: boolean;
 
-    constructor(private fileService: FileService, private homeComponent: HomeComponent, private userService: UserService) {
+    constructor(private fileService: FileService,
+                private homeComponent: HomeComponent,
+                private shareFolderComponent: ShareFolderComponent,
+                private shareFileCompoonent: ShareFileComponent,
+                private userService: UserService) {
     }
 
     ngOnInit() {
@@ -43,7 +48,13 @@ export class FileCardComponent implements OnInit {
     deleteFile(id) {
         this.fileService.deleteFile(id).subscribe(
             (data) => {
-                this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
+                if (this.homeComponent) {
+                    this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
+                } else if (this.shareFolderComponent) {
+                    this.shareFolderComponent.getFiles(this.shareFolderComponent.currentDirectory._id);
+                } else if (this.shareFileCompoonent) {
+                    this.shareFileCompoonent.getFiles(this.shareFileCompoonent.currentDirectory._id);
+                }
             },
             (err) => {
                 console.log(err);
@@ -71,6 +82,12 @@ export class FileCardComponent implements OnInit {
     }
 
     showMenu(_id) {
-        this.homeComponent.showMenu(_id, this.userService);
+        if (this.homeComponent) {
+            this.homeComponent.showMenu(_id, this.userService);
+        } else if (this.shareFolderComponent) {
+            this.shareFolderComponent.showMenu(_id, this.userService);
+        } else if (this.shareFileCompoonent) {
+            this.shareFileCompoonent.showMenu(_id, this.userService);
+        }
     }
 }

@@ -15,6 +15,10 @@ import {AppModule} from "../app.module";
 import {RouterModule} from "@angular/router";
 import { FolderCardComponent } from './folder-card/folder-card.component';
 import { FileCardComponent } from './file-card/file-card.component';
+import {HomeComponent} from "../views/home/home.component";
+import {DatePipe} from "@angular/common";
+import {ShareFolderComponent} from "../views/share/share-folder.component";
+import {ShareFileComponent} from "../views/share-file/share-file.component";
 
 
 @NgModule({
@@ -37,7 +41,7 @@ import { FileCardComponent } from './file-card/file-card.component';
         FolderCardComponent,
         FileCardComponent
     ],
-    providers: [LocalStorageService]
+    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent]
 })
 export class ComponentsModule {
 }
