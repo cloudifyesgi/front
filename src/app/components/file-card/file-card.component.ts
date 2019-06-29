@@ -16,6 +16,7 @@ export class FileCardComponent implements OnInit {
 
     @Input() file: FileModel;
     testFile: FileModel;
+    // @ts-ignore
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
     constructor(private fileService: FileService,
