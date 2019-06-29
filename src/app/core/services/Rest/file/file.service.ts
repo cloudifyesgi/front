@@ -20,8 +20,8 @@ export class FileService {
                 private userService: UserService) {
     }
 
-    getFiles(): Observable<Array<File>> {
-        return <Observable<Array<File>>>this.http.get(this.constantsService.getConstant('URL_FILE'));
+    getFile(id): Observable<HttpResponse<FileModel>> {
+        return this.http.get<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}`, {observe: "response"});
     }
 
     getFileById(id): Observable<HttpResponse<File>> {

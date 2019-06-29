@@ -8,6 +8,8 @@ import {HomeComponent} from "./home/home.component";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {TokenInterceptor} from "../core/providers/auth.interceptor";
 import {RegisterComponent} from "./authentication/register/register.component";
+import {ShareFolderComponent} from "./share/share-folder.component";
+import {ShareFileComponent} from "./share-file/share-file.component";
 
 
 const routes: Routes = [
@@ -38,6 +40,14 @@ const routes: Routes = [
             {
                 path: 'folders/:directoryId',
                 component: HomeComponent
+            },
+            {
+                path: 'shared/folders/:directoryId',
+                component: ShareFolderComponent
+            },
+            {
+                path: 'shared/files/:fileId',
+                component: ShareFileComponent
             }
         ]
     }
