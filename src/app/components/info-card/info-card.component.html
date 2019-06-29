@@ -1,0 +1,64 @@
+<div class="card text-center infoContainer">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true"
+                   href="#info">Informations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" role="tab" aria-controls="history" aria-selected="true"
+                   href="#history">Historique</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" role="tab" aria-controls="version" aria-selected="true"
+                   href="#version">Version</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div id="info" class="tab-pane fade show active text-align-left" role="tabpanel" aria-labelledby="home-tab">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{element.name}}</h5>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Nom
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{name}}</h5>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Créé par
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{element.createdAt | amLocale:'fr' | amDateFormat:'LLLL'}}</h5>
+                    </div>
+                    <div class="card-footer text-muted">
+                        créé le
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{element.updatedAt | amLocale:'fr' | amDateFormat:'LLLL'}}</h5>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Modifié le
+                    </div>
+                </div>
+
+            </div>
+            <div id="history" class="tab-pane fade" role="tabpanel" aria-labelledby="history-tab">
+                <app-history-card *ngFor="let history of histories" [history]="history"></app-history-card>
+            </div>
+            <div id="version" class="tab-pane fade" role="tabpanel" aria-labelledby="version-tab">
+                salut c'est les infos
+            </div>
+        </div>
+
+    </div>
+</div>

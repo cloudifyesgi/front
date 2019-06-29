@@ -3,15 +3,15 @@ import {User} from "../../core/models/entities/user";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
 import {Directory} from "../../core/models/entities/directory";
-import {ActivatedRoute, Route, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {FileModel} from "../../core/models/entities/file";
 import {History} from "../../core/models/entities/history";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
-import {Upload} from "../../core/models/entities/upload";
 import {DatePipe} from "@angular/common";
-import {LocalStorageService} from "../../core/services/localStorage/local-storage.service";
-import {copyAnimationEvent} from "@angular/animations/browser/src/render/shared";
+import {FormBuilder} from "@angular/forms";
+
+declare var jQuery: any;
 
 @Component({
     selector: 'app-home',
@@ -30,13 +30,22 @@ export class HomeComponent implements OnInit {
     isHidden = true;
     fileMenu: FileModel;
     fileHistory: Array<History>;
+    selectedElement: Directory | FileModel;
+    currentType: string;
+
+    directoryForm = this.fb.group(
+        {
+            directoryName: ['', []]
+        }
+    );
 
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
                 private fileService: FileService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private datePipe: DatePipe) {
+                private datePipe: DatePipe,
+                private fb: FormBuilder) {
     }
 
     async ngOnInit() {
@@ -137,5 +146,38 @@ export class HomeComponent implements OnInit {
             return data.name + data.firstname;
         });
         return '';
+    }
+    createDirectory() {
+        console.log(this.currentDirectory.name);
+        console.log(this.directoryForm.value);
+        this.directoryService.create(this.directoryForm.value.directoryName, this.currentDirectory._id).subscribe(
+            response => {
+                console.log(response);
+                this.children.push(response.body);
+                jQuery('#getNameDirectory').modal('hide');
+            },
+            err => {
+                console.log(err);
+            }
+        );
+    }
+
+    editSelectedElement() {
+        if (this.currentType === 'dir') {
+            console.log(`edit ${this.selectedElement.name}`);
+        }
+    }
+
+    removeSelectedElement() {
+        if (this.currentType === 'dir') {
+            if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
+                console.log('delete ' + this.selectedElement.name);
+            }
+        }
+    }
+
+    setSelectedElement($event: Directory, type: string) {
+        this.selectedElement = $event;
+        this.currentType = type;
     }
 }

@@ -7,20 +7,22 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 import {ConstantsService} from "./services/constants/constants.service";
 import {HttpClientModule} from "@angular/common/http";
 import {LocalStorageService} from "./services/localStorage/local-storage.service";
+import { FileIconDirective } from './directives/FileIcon/file-icon.directive';
 
 @NgModule({
     declarations: [
-        NavbarComponent
+        NavbarComponent,
+        FileIconDirective
     ],
     imports: [
         ReactiveFormsModule,
-        BrowserAnimationsModule,
         CommonModule,
         RouterModule,
         HttpClientModule
     ],
     exports: [
-        NavbarComponent
+        NavbarComponent,
+        FileIconDirective
     ],
     providers: [
         ConstantsService,
