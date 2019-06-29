@@ -4,7 +4,8 @@
     <div class="breadcrumb-menu" *ngIf="selectedElement">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
-            <a class="btn cursor-pointer" (click)="editSelectedElement()"><i class="cui-pencil icon-tools"></i></a>
+            <a class="btn cursor-pointer" data-toggle="modal"
+               data-target="#getNameDirectory" (click)="editSelectedElement()"><i class="cui-pencil icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
             <a class="btn cursor-pointer" href="#"><i class="cui-info icon-tools"></i></a>
         </div>
@@ -16,15 +17,15 @@
         <div class="card">
             <div class="card-header">
                 folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
-                          data-target="#getNameDirectory"></i>
+                          data-target="#getNameDirectory" (click)="unsetSelectedElement()"></i>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
                     <div class="row">
                         <app-folder-card
+                            (messageEvent)="setSelectedElement($event, 'dir')"
+                            *ngFor="let directory of children" [directory]="directory"
                             [ngClass]="{'selected-card': selectedElement && selectedElement._id === directory._id}"
-                            (messageEvent)="setSelectedElement($event, 'dir')" *ngFor="let directory of children"
-                            [directory]="directory"
                             class="col-2 col-sm-4"></app-folder-card>
                     </div>
                 </div>
@@ -38,7 +39,9 @@
             <div class="card-body">
                 <div class="container-fluid">
                     <div class="row">
-                        <app-file-card *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
+                        <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
+                                       [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
+                                       *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
                     </div>
                 </div>
             </div>
@@ -63,10 +66,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form (submit)="createDirectory()">
+            <form (submit)="submitFormModal()">
                 <div class="modal-body">
                     <div [formGroup]="directoryForm">
-                        <input type="text" class="form-control" name="directoryNameField" formControlName="directoryName">
+                        <input type="text" class="form-control" name="directoryNameField"
+                               formControlName="directoryName">
                     </div>
                 </div>
                 <div class="modal-footer">

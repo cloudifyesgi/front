@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {Router} from "@angular/router";
+import {FileModel} from "../../core/models/entities/file";
 
 declare var $: any;
 
@@ -13,7 +14,7 @@ declare var $: any;
 export class FolderCardComponent implements OnInit {
 
     @Input() directory: Directory;
-    @Output() messageEvent = new EventEmitter<Directory | File>();
+    @Output() messageEvent = new EventEmitter<Directory | FileModel>();
 
     constructor(private router: Router) {
     }
@@ -25,9 +26,7 @@ export class FolderCardComponent implements OnInit {
         this.router.navigate(['folders/' + idFolder]);
     }
 
-    selectFolder($event, directory: Directory) {
-        /*$('.selected-card').removeClass('selected-card');
-        $(event.currentTarget).addClass('selected-card');*/
-        this.messageEvent.emit(directory);
+    selectFolder() {
+        this.messageEvent.emit(this.directory);
     }
 }
