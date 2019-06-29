@@ -92,6 +92,20 @@ export class HomeComponent implements OnInit {
         );
     }
 
+    editSelectedElement() {
+        if (this.currentType === 'dir') {
+            console.log(`edit ${this.selectedElement.name}`);
+        }
+    }
+
+    removeSelectedElement() {
+        if (this.currentType === 'dir') {
+            if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
+                console.log('delete ' + this.selectedElement.name);
+            }
+        }
+    }
+
     setSelectedElement($event: Directory, type: string) {
         this.selectedElement = $event;
         this.currentType = type;

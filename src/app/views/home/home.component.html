@@ -1,6 +1,14 @@
 <nav class="breadcrumb">
     <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    <div class="breadcrumb-menu" *ngIf="selectedElement">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="editSelectedElement()"><i class="cui-pencil icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
+            <a class="btn cursor-pointer" href="#"><i class="cui-info icon-tools"></i></a>
+        </div>
+    </div>
 </nav>
 
 <div class="row homeContainer">
@@ -13,7 +21,7 @@
             <div class="card-body">
                 <div class="container-fluid">
                     <div class="row">
-                        <app-folder-card (messageEvent)="setSelectedElement($event, 'dir')" *ngFor="let directory of children" [directory]="directory"
+                        <app-folder-card [ngClass]="{'selected-card': selectedElement && selectedElement._id === directory._id}" (messageEvent)="setSelectedElement($event, 'dir')" *ngFor="let directory of children" [directory]="directory"
                                          class="col-2 col-sm-4"></app-folder-card>
                     </div>
                 </div>
@@ -34,7 +42,7 @@
         </div>
     </div>
     <div class="col-3" *ngIf="selectedElement">
-        <app-info-card [element]="selectedElement"></app-info-card>
+        <app-info-card [element]="selectedElement" [type]="currentType"></app-info-card>
     </div>
 </div>
 

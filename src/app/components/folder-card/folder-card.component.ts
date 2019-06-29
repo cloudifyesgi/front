@@ -26,8 +26,8 @@ export class FolderCardComponent implements OnInit {
     }
 
     selectFolder($event, directory: Directory) {
-        $('.selected-card').removeClass('selected-card');
-        $(event.currentTarget).addClass('selected-card');
+        /*$('.selected-card').removeClass('selected-card');
+        $(event.currentTarget).addClass('selected-card');*/
         this.messageEvent.emit(directory);
     }
 }

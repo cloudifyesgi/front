@@ -22,4 +22,8 @@ export class DefaultLayoutComponent {
             attributes: true
         });
     }
+
+    test() {
+        console.log('drtfghjk,jnhbvc');
+    }
 }
