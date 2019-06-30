@@ -31,4 +31,13 @@ export class DirectoryService {
         return this.http.get<GetChildren>(url, {observe: "response"});
     }
 
+    update(fields = {}): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_DIRECTORY');
+        return this.http.put<any>(url, fields, {observe: "response"});
+    }
+
+    delete(id: string): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`, {observe: "response"});
+    }
+
 }

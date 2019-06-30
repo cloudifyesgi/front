@@ -1,7 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
-import {testing} from "rxjs-compat/umd";
 import {HomeComponent} from "../../views/home/home.component";
 import {ShareFolderComponent} from "../../views/share/share-folder.component";
 import {UserService} from "../../core/services/Rest/User/user.service";
@@ -48,10 +47,8 @@ export class FileCardComponent implements OnInit {
         });
     }
 
-    deleteFile(id, idParent, callback = function (_id) {
-    }) {
+    deleteFile(id, idParent, callback) {
         console.log("hey");
-
         this.fileService.deleteFile(id).subscribe(
             (data) => {
                 if (this.homeComponent) {
@@ -66,6 +63,18 @@ export class FileCardComponent implements OnInit {
             (err) => {
                 console.log(err);
             });
+    }
+
+    renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
+        console.log('rename ' + id + ' to ' + newName);
+        this.fileService.updateFile({id: id, name: newName}).subscribe(
+            response => {
+                if (response.status === 200) {
+                    callback(idParent);
+                }
+            }
+        );
+        callback(idParent);
     }
 
     getVersions(name) {
@@ -96,6 +105,8 @@ export class FileCardComponent implements OnInit {
         } else if (this.shareFileCompoonent) {
             this.shareFileCompoonent.showMenu(_id, this.userService);
         }
+    }
+
     selectFile() {
         this.messageEvent.emit(this.file);
     }

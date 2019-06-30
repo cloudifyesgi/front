@@ -28,7 +28,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getUserName();
-        console.log(typeof this.element);
+        console.log(this.element);
         if (this.type === 'dir') {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {

@@ -5,9 +5,9 @@
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
             <a class="btn cursor-pointer" data-toggle="modal"
-               data-target="#getNameDirectory" (click)="editSelectedElement()"><i class="cui-pencil icon-tools"></i></a>
+               data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
-            <a class="btn cursor-pointer" href="#"><i class="cui-info icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
     </div>
 </nav>
@@ -51,7 +51,7 @@
             </div>
         </div>
     </div>
-    <div class="col-3" *ngIf="selectedElement">
+    <div [ngClass]="{'ag-hidden': isHidden}" class="col-3" *ngIf="selectedElement">
         <app-info-card [element]="selectedElement" [type]="currentType"></app-info-card>
     </div>
 </div>

@@ -11,6 +11,7 @@ import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "n
 import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
 import {FileCardComponent} from "../../components/file-card/file-card.component";
+import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
 
 declare var jQuery: any;
 
@@ -34,6 +35,7 @@ export class HomeComponent implements OnInit, OnChanges {
     selectedElement: Directory | FileModel;
     currentType: string;
     @ViewChild(FileCardComponent) fileCardComponent;
+    @ViewChild(FolderCardComponent) folderCardComponent;
 
     directoryForm = this.fb.group(
         {
@@ -102,6 +104,9 @@ export class HomeComponent implements OnInit, OnChanges {
             // Is it a file?
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+                const filename = droppedFile.relativePath;
+                const fileNameArray = filename.split('.');
+                const ext = fileNameArray[fileNameArray.length - 1];
                 fileEntry.file((file: File) => {
 
                     const formData = new FormData();
@@ -109,7 +114,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     formData.append('name', droppedFile.relativePath);
                     formData.append('date_create', this.datePipe.transform(Date.now(), 'yyyy-MM-dd'));
                     formData.append('file_version', '1');
-                    formData.append('file_type', 'txt');
+                    formData.append('file_type', ext);
                     formData.append('user_create', this.user._id.toString());
                     formData.append('user_update', this.user._id.toString());
                     formData.append('directory', this.currentDirectory._id);
@@ -134,11 +139,7 @@ export class HomeComponent implements OnInit, OnChanges {
 
     submitFormModal() {
         if (this.selectedElement) {
-            if (this.currentType === 'dir') {
-                alert('edit dir');
-            } else if (this.currentType === 'file') {
-                alert('edit file');
-            }
+            this.editSelectedElement();
         } else {
             this.createDirectory();
         }
@@ -158,17 +159,27 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     editSelectedElement() {
+        const callback = (id: string) => {
+            this.getFiles(id);
+            this.getFolders(id);
+            jQuery('#getNameDirectory').modal('hide');
+        };
+
         if (this.currentType === 'dir') {
-            console.log(`edit ${this.selectedElement.name}`);
+            this.folderCardComponent.renameFolder(this.directoryForm.value.directoryName, this.selectedElement._id,
+                this.currentDirectory._id, callback);
         } else if (this.currentType === 'file') {
-            console.log(`edit file ${this.selectedElement.name}`);
+            this.fileCardComponent.renameFile(this.directoryForm.value.directoryName, this.selectedElement._id,
+                this.currentDirectory._id, callback);
         }
     }
 
     removeSelectedElement() {
         if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
             if (this.currentType === 'dir') {
-                console.log('delete folder ' + this.selectedElement.name);
+                this.folderCardComponent.deleteFolder(this.selectedElement._id, this.currentDirectory._id, (id) => {
+                    this.getFolders(id);
+                });
             } else if (this.currentType === 'file') {
                 this.fileCardComponent.deleteFile(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFiles(id);
@@ -179,7 +190,7 @@ export class HomeComponent implements OnInit, OnChanges {
 
     }
 
-    setSelectedElement($event: Directory, type: string) {
+    setSelectedElement($event: Directory | FileModel, type: string) {
         this.selectedElement = $event;
         this.currentType = type;
     }
@@ -187,5 +198,13 @@ export class HomeComponent implements OnInit, OnChanges {
     unsetSelectedElement() {
         this.selectedElement = null;
         this.currentType = null;
+    }
+
+    showMenu(id, salut) {
+
+    }
+
+    toggleInfoCard() {
+        this.isHidden = !this.isHidden;
     }
 }
