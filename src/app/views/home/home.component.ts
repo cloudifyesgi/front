@@ -10,6 +10,8 @@ import {History} from "../../core/models/entities/history";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
+import {Link} from "../../core/models/entities/link";
+import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 
 declare var jQuery: any;
 
@@ -32,6 +34,7 @@ export class HomeComponent implements OnInit {
     fileHistory: Array<History>;
     selectedElement: Directory | FileModel;
     currentType: string;
+    new_link: Link;
 
     directoryForm = this.fb.group(
         {
@@ -45,7 +48,8 @@ export class HomeComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private datePipe: DatePipe,
-                private fb: FormBuilder) {
+                private fb: FormBuilder,
+                private shareLinkService: ShareLinkService) {
     }
 
     async ngOnInit() {
@@ -179,5 +183,26 @@ export class HomeComponent implements OnInit {
     setSelectedElement($event: Directory, type: string) {
         this.selectedElement = $event;
         this.currentType = type;
+    }
+
+    async generateLink(name, type, expiry_date, is_activated, user, directory, file) {
+        this.new_link = {
+            link: name,
+            link_type: type,
+            expiry_date: expiry_date,
+            is_activated: is_activated,
+            user: user,
+            directory: directory,
+            file: file
+        };
+        await this.shareLinkService.postLink(this.new_link).subscribe( (data) => {
+                if (data.status === 201) {
+                    console.log('lien envoyé');
+                }
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
     }
 }

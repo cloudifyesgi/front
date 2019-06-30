@@ -32,7 +32,7 @@ export class ShareFolderComponent implements OnInit {
     ReadOnly: boolean;
     @Input() directory: Directory;
     @Output() messageEvent = new EventEmitter<Directory | File>();
-    parentDirectory: Directory;
+    sharedParentDirectory: Directory;
 
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
@@ -82,23 +82,22 @@ export class ShareFolderComponent implements OnInit {
         this.directoryService.getChildDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
-                    this.parents = [];
                     if (isParent) {
                         this.children = response.body.children;
                         this.currentDirectory = response.body.breadcrumb.pop();
-                        this.parentDirectory = this.currentDirectory;
+                        this.sharedParentDirectory = this.currentDirectory;
                     } else {
+                        this.parents = [];
                         this.children = response.body.children;
                         this.currentDirectory = response.body.breadcrumb.pop();
                         let i_dir = response.body.breadcrumb.pop();
-                        if (i_dir._id === parentId) {
-                            this.parentDirectory = i_dir;
-                        } else {
-                            while (i_dir._id !== parentId) {
-                                this.parents.push(i_dir);
-                                i_dir = response.body.breadcrumb.pop();
+                        while (i_dir !== undefined) {
+                            if (i_dir._id === parentId) {
+                                this.sharedParentDirectory = i_dir;
+                                break;
                             }
-                            this.parentDirectory = i_dir;
+                            this.parents.push(i_dir);
+                            i_dir = response.body.breadcrumb.pop();
                         }
                         this.parents.reverse();
                     }
@@ -143,7 +142,7 @@ export class ShareFolderComponent implements OnInit {
     }
 
     openFolder(idFolder: string) {
-        this.router.navigate(['shared/folders/' + this.parentDirectory._id + '/' + idFolder]);
+        this.router.navigate(['shared/folders/' + this.sharedParentDirectory._id + '/' + idFolder]);
     }
 
     selectFolder($event, directory: Directory) {

@@ -1,5 +1,6 @@
 <nav class="breadcrumb">
-    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
+    <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{sharedParentDirectory._id}}/0">{{sharedParentDirectory.name}}</a>
+    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{sharedParentDirectory._id}}/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
     <div class="breadcrumb-menu">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
