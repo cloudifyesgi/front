@@ -12,6 +12,7 @@ import {HomeComponent} from "../home/home.component";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {Link} from "../../core/models/entities/link";
 import {toDate} from "@angular/common/src/i18n/format_date";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-share',
@@ -40,7 +41,8 @@ export class ShareFolderComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private homeComponent: HomeComponent,
-                private shareLinkService: ShareLinkService) {
+                private shareLinkService: ShareLinkService,
+                private toastr: ToastrService) {
     }
 
     async ngOnInit() {
@@ -50,9 +52,11 @@ export class ShareFolderComponent implements OnInit {
                 console.log('on est dans le dossier parent partagé');
                 await this.getLink(params.parentId).then( value => this.link = value.body);
                 if (this.link === null) {
+                    this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
                 }
                 if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
+                    this.toastr.error('Ce lien de partage a expiré', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
                 }
                 this.ReadOnly = this.link.link_type === 'readonly';
@@ -62,9 +66,11 @@ export class ShareFolderComponent implements OnInit {
                 console.log('on est dans un sous dossier partagé');
                 await this.getLink(params.parentId).then( value => this.link = value.body);
                 if (this.link === null) {
+                    this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
                 }
                 if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
+                    this.toastr.error('Ce lien de partage a expiré', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
                 }
                 this.ReadOnly = this.link.link_type === 'readonly';
