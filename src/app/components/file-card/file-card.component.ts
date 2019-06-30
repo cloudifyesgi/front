@@ -23,7 +23,7 @@ export class FileCardComponent implements OnInit {
     constructor(private fileService: FileService,
                 private homeComponent: HomeComponent,
                 private shareFolderComponent: ShareFolderComponent,
-                private shareFileCompoonent: ShareFileComponent,
+                private shareFileComponent: ShareFileComponent,
                 private userService: UserService) {
     }
 
@@ -55,8 +55,8 @@ export class FileCardComponent implements OnInit {
                     this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
                 } else if (this.shareFolderComponent) {
                     this.shareFolderComponent.getFiles(this.shareFolderComponent.currentDirectory._id);
-                } else if (this.shareFileCompoonent) {
-                    this.shareFileCompoonent.getFiles(this.shareFileCompoonent.currentDirectory._id);
+                } else if (this.shareFileComponent) {
+                    this.shareFileComponent.getFiles(this.shareFileComponent.currentDirectory._id);
                 }
                 callback(idParent);
             },
@@ -102,8 +102,8 @@ export class FileCardComponent implements OnInit {
             this.homeComponent.showMenu(_id, this.userService);
         } else if (this.shareFolderComponent) {
             this.shareFolderComponent.showMenu(_id, this.userService);
-        } else if (this.shareFileCompoonent) {
-            this.shareFileCompoonent.showMenu(_id, this.userService);
+        } else if (this.shareFileComponent) {
+            this.shareFileComponent.showMenu(_id, this.userService);
         }
     }
 

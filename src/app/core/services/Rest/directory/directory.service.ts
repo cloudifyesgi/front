@@ -14,8 +14,8 @@ export class DirectoryService {
                 private constantsService: ConstantsService) {
     }
 
-    getDirectory(): Observable<HttpResponse<Array<Directory>>> {
-        return this.http.get<Array<Directory>>(this.constantsService.getConstant('URL_DIRECTORY'),
+    getDirectory(id): Observable<HttpResponse<Directory>> {
+        return this.http.get<Directory>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`,
             {observe: "response"});
     }
 

@@ -13,6 +13,10 @@
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="version" aria-selected="true"
                    href="#version">Version</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" role="tab" aria-controls="share" aria-selected="true"
+                   href="#share">Partage</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -57,6 +61,9 @@
             </div>
             <div id="version" class="tab-pane fade" role="tabpanel" aria-labelledby="version-tab">
                 salut c'est les infos
+            </div>
+            <div id="share" class="tab-pane fade" role="tabpanel" aria-labelledby="sharing-tab">
+                <app-share-card [element]="element" [type]="type"></app-share-card>
             </div>
         </div>
 

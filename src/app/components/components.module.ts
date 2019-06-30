@@ -20,6 +20,7 @@ import { InfoCardComponent } from './info-card/info-card.component';
 import { HistoryCardComponent } from './history-card/history-card.component';
 import {Moment} from "moment";
 import {MomentModule} from "ngx-moment";
+import { ShareCardComponent } from './share-card/share-card.component';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import {MomentModule} from "ngx-moment";
         CoreModule,
         MomentModule
     ],
-    declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent, InfoCardComponent, HistoryCardComponent],
+    declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent, InfoCardComponent, HistoryCardComponent, ShareCardComponent],
     exports: [
         FolderCardComponent,
         FileCardComponent,

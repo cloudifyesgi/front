@@ -5,6 +5,7 @@ import {LocalStorageService} from "../../localStorage/local-storage.service";
 import {Observable} from "rxjs";
 import {Link} from "../../../models/entities/link";
 import {FileModel} from "../../../models/entities/file";
+import {User} from "../../../models/entities/user";
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,9 @@ export class ShareLinkService {
     getLinkForFile(id): Observable<HttpResponse<Link>> {
         const url = this.constantsService.getConstant('URL_LINK_FILE').replace(':id', id);
         return this.http.get<Link>(url, {observe: "response"});
+    }
+
+    postLink(link: Link): Observable<HttpResponse<Link>> {
+        return this.http.post<Link>(`${this.constantsService.getConstant('URL_LINK')}`, link, {observe: "response"});
     }
 }

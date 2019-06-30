@@ -12,6 +12,9 @@ import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
 import {FileCardComponent} from "../../components/file-card/file-card.component";
 import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
+import {Link} from "../../core/models/entities/link";
+import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
+import {ToastrService} from "ngx-toastr";
 
 declare var jQuery: any;
 
@@ -34,6 +37,7 @@ export class HomeComponent implements OnInit, OnChanges {
     fileHistory: Array<History>;
     selectedElement: Directory | FileModel;
     currentType: string;
+    new_link: Link;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
 
@@ -43,13 +47,24 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     );
 
+    linkForm = this.fb.group(
+        {
+            linkName: ['', []],
+            linkType: ['', []],
+            linkExpiry: ['', []],
+            linkActivated: ['', []],
+        }
+    );
+
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
                 private fileService: FileService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private datePipe: DatePipe,
-                private fb: FormBuilder) {
+                private fb: FormBuilder,
+                private shareLinkService: ShareLinkService,
+                private toastr: ToastrService) {
     }
 
     async ngOnInit() {
@@ -193,6 +208,32 @@ export class HomeComponent implements OnInit, OnChanges {
     setSelectedElement($event: Directory | FileModel, type: string) {
         this.selectedElement = $event;
         this.currentType = type;
+    }
+
+    async generateLink() {
+        if (!this.selectedElement) {
+            this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
+            return;
+        }
+        this.new_link = {
+            link: this.linkForm.value.linkName,
+            link_type: this.linkForm.value.linkType,
+            expiry_date: this.linkForm.value.linkExpiry,
+            is_activated: this.linkForm.value.linkActivated,
+            user: this.user._id.toString(),
+            directory: this.selectedElement._id,
+            file: this.selectedElement._id
+        };
+        await this.shareLinkService.postLink(this.new_link).subscribe( (data) => {
+                if (data.status === 201) {
+                    console.log('lien envoyé');
+                }
+                jQuery('#linkGenerator').modal('hide');
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
     }
 
     unsetSelectedElement() {
