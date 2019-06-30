@@ -26,6 +26,10 @@ export class UserService {
         return this.user;
     }
 
+    getUserById(id: string): Observable<User> {
+        return this.http.get<User>(`${this.constantsService.getConstant("URL_USER_BY_ID")}/${id}`);
+    }
+
     register(newUser: User): Observable<HttpResponse<User>> {
         return this.http.post<User>(`${this.constantsService.getConstant('URL_REGISTER')}`, newUser, {observe: "response"});
     }
@@ -33,5 +37,9 @@ export class UserService {
     setUser(user: User): void {
         this.localStorage.set('user', user.email);
         this.user = user;
+    }
+
+    getUserName(id): Observable<User> {
+        return this.http.get<User>(`${this.constantsService.getConstant("URL_USER_NAME")}/${id}`);
     }
 }

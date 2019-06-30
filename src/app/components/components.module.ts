@@ -5,15 +5,22 @@ import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {ButtonsModule} from 'ngx-bootstrap/buttons';
 import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
 import {DefaultLayoutComponent} from "./default-layout";
-import {BrowserModule} from "@angular/platform-browser";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {AppRoutingModule} from "../app.routing";
 import {AppAsideModule, AppBreadcrumbModule, AppFooterModule, AppHeaderModule, AppSidebarModule} from "@coreui/angular";
 import {PerfectScrollbarModule} from "ngx-perfect-scrollbar";
 import {TabsModule} from "ngx-bootstrap";
-import {AppModule} from "../app.module";
 import {RouterModule} from "@angular/router";
-import { FileCardComponent } from './file-card/file-card.component';
+import {HomeComponent} from "../views/home/home.component";
+import {DatePipe} from "@angular/common";
+import {ShareFolderComponent} from "../views/share/share-folder.component";
+import {ShareFileComponent} from "../views/share-file/share-file.component";
+import {FolderCardComponent} from './folder-card/folder-card.component';
+import {FileCardComponent} from './file-card/file-card.component';
+import {CoreModule} from "../core/core.module";
+import { InfoCardComponent } from './info-card/info-card.component';
+import { HistoryCardComponent } from './history-card/history-card.component';
+import {Moment} from "moment";
+import {MomentModule} from "ngx-moment";
+import { ShareCardComponent } from './share-card/share-card.component';
 
 
 @NgModule({
@@ -29,13 +36,17 @@ import { FileCardComponent } from './file-card/file-card.component';
         FormsModule,
         ChartsModule,
         ButtonsModule.forRoot(),
-        RouterModule
+        RouterModule,
+        CoreModule,
+        MomentModule
     ],
-    declarations: [DefaultLayoutComponent, FileCardComponent],
+    declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent, InfoCardComponent, HistoryCardComponent, ShareCardComponent],
     exports: [
-        FileCardComponent
+        FolderCardComponent,
+        FileCardComponent,
+        InfoCardComponent
     ],
-    providers: [LocalStorageService]
+    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent]
 })
 export class ComponentsModule {
 }

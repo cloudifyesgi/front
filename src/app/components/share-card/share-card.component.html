@@ -1,0 +1,52 @@
+<div *ngIf="Link">
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{Link.link}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Nom du lien
+        </div>
+    </div>
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{Link.link_type}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Type du lien
+        </div>
+    </div>
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{Link.expiry_date | amLocale:'fr' | amDateFormat:'LLLL'}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Expire le
+        </div>
+    </div>
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{Link.is_activated}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Est activé
+        </div>
+    </div>
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{Link.user}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Créé par
+        </div>
+    </div>
+</div>
+<div *ngIf="!Link">
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">Pas de lien</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Il n'y a pas de lien de partage pour cette élément
+        </div>
+    </div>
+</div>

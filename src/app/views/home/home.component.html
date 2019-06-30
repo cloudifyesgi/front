@@ -1,29 +1,118 @@
-<div class="homeContainer">
-    <div class="card">
-        <div class="card-header">
-            folder
+<nav class="breadcrumb">
+    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
+    <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    <div class="breadcrumb-menu" *ngIf="selectedElement">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
+            <a class="btn cursor-pointer" data-toggle="modal"
+               data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <app-file-card *ngFor="let directory of directories" [directory]="directory" class="col-2"></app-file-card>
+    </div>
+</nav>
+
+<div class="row homeContainer">
+    <div class="col dataBlock">
+        <div class="card">
+            <div class="card-header">
+                folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
+                          data-target="#getNameDirectory" (click)="unsetSelectedElement()"></i>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <app-folder-card
+                            (messageEvent)="setSelectedElement($event, 'dir')"
+                            *ngFor="let directory of children" [directory]="directory"
+                            [ngClass]="{'selected-card': selectedElement && selectedElement._id === directory._id}"
+                            class="col-2 col-sm-4"></app-folder-card>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Files
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
+                                       [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
+                                       *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
+                    </div>
+                </div>
+            </div>
+            <div class="center">
+                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
+                </ngx-file-drop>
             </div>
         </div>
     </div>
+    <div [ngClass]="{'ag-hidden': isHidden}" class="col-3" *ngIf="selectedElement">
+        <app-info-card [element]="selectedElement" [type]="currentType"></app-info-card>
+    </div>
+</div>
 
-    <div class="card">
-        <div class="card-header">
-            Files
-        </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <app-file-card *ngFor="let directory of directories" [directory]="directory" class="col-2"></app-file-card>
-                </div>
+<div class="modal fade" id="getNameDirectory" tabindex="-1" role="dialog" aria-labelledby="getNameDirectoryTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="getNameDirectoryTitle">Entrer le nom du dossier : </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form (submit)="submitFormModal()">
+                <div class="modal-body">
+                    <div [formGroup]="directoryForm">
+                        <input type="text" class="form-control" name="directoryNameField"
+                               formControlName="directoryName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="linkGenerator" tabindex="-1" role="dialog" aria-labelledby="linkGeneratorTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="linkGeneratorTitle">Entrez les informations du lien : </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (submit)="generateLink()">
+                <div class="modal-body">
+                    <div [formGroup]="linkForm">
+                        <span>Nom du lien</span>
+                        <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
+                        <span>Type du lien</span>
+                        <input type="text" class="form-control" name="linkTypeField" formControlName="linkType">
+                        <span>Date d'expiration du lien</span>
+                        <input type="text" class="form-control" name="linkExpiryField" formControlName="linkExpiry">
+                        <span>Lien actif</span>
+                        <input type="text" class="form-control" name="linkActivatedField" formControlName="linkActivated">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 

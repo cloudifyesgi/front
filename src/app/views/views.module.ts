@@ -7,13 +7,15 @@ import {LocalStorageService} from "../core/services/localStorage/local-storage.s
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ViewsRouting} from "./views.routing";
 import {LoginComponent} from "./authentication/login/login.component";
-import {DefaultCloudifyComponent} from "./default-cloudify/default-cloudify.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {AgGridModule} from 'ag-grid-angular';
 import {ComponentsModule} from "../components/components.module";
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './authentication/register/register.component';
+import {NgxFileDropModule} from "ngx-file-drop";
+import { ShareFolderComponent } from './share/share-folder.component';
+import { ShareFileComponent } from './share-file/share-file.component';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -26,17 +28,18 @@ import { RegisterComponent } from './authentication/register/register.component'
         ButtonsModule.forRoot(),
         HttpClientModule,
         CommonModule,
-        AgGridModule.withComponents([DefaultCloudifyComponent]),
         ComponentsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgxFileDropModule
 
     ],
     declarations: [
         DashboardComponent,
         LoginComponent,
-        DefaultCloudifyComponent,
         HomeComponent,
-        RegisterComponent
+        RegisterComponent,
+        ShareFolderComponent,
+        ShareFileComponent
     ],
     providers: [LocalStorageService]
 })

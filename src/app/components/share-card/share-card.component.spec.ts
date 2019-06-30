@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DefaultCloudifyComponent } from './default-cloudify.component';
+import { ShareCardComponent } from './share-card.component';
 
-describe('DefaultCloudifyComponent', () => {
-  let component: DefaultCloudifyComponent;
-  let fixture: ComponentFixture<DefaultCloudifyComponent>;
+describe('ShareCardComponent', () => {
+  let component: ShareCardComponent;
+  let fixture: ComponentFixture<ShareCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DefaultCloudifyComponent ]
+      declarations: [ ShareCardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DefaultCloudifyComponent);
+    fixture = TestBed.createComponent(ShareCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
