@@ -4,6 +4,7 @@ import {FileModel} from "../../core/models/entities/file";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {HistoryService} from "../../core/services/Rest/history/history.service";
 import {History} from "../../core/models/entities/history";
+import {FileService} from "../../core/services/Rest/file/file.service";
 
 @Component({
     selector: 'app-info-card',
@@ -18,6 +19,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     histories: Array<History>;
 
     constructor(private userService: UserService,
+                private fileService: FileService,
                 private historyService: HistoryService) {
     }
 
@@ -26,9 +28,12 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getUserName();
-        console.log(typeof this.element);
+        console.log(this.element);
         if (this.type === 'dir') {
             this.getHistories(this.element._id);
+        } else if (this.type === 'file') {
+            console.log('file histories');
+            this.getFileHistories(this.element._id);
         }
     }
 
@@ -43,12 +48,21 @@ export class InfoCardComponent implements OnInit, OnChanges {
     getHistories(id: string) {
         this.historyService.getHistoryByDir(id).subscribe(
             result => {
-                if (result.status) {
+                if (result.status === 200) {
                     console.log(result.body);
                     this.histories = result.body;
                 }
             }
         );
+    }
+
+    getFileHistories(id: string) {
+        this.fileService.getFileHistory(id).subscribe((data) => {
+            if (data.status === 200) {
+                console.log(data.body);
+                this.histories = data.body;
+            }
+        });
     }
 
 }

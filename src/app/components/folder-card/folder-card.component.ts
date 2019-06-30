@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {Router} from "@angular/router";
+import {FileModel} from "../../core/models/entities/file";
+import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
 
 declare var $: any;
 
@@ -13,9 +15,10 @@ declare var $: any;
 export class FolderCardComponent implements OnInit {
 
     @Input() directory: Directory;
-    @Output() messageEvent = new EventEmitter<Directory | File>();
+    @Output() messageEvent = new EventEmitter<Directory | FileModel>();
 
-    constructor(private router: Router) {
+    constructor(private router: Router,
+                private  directoryService: DirectoryService) {
     }
 
     ngOnInit() {
@@ -25,9 +28,27 @@ export class FolderCardComponent implements OnInit {
         this.router.navigate(['folders/' + idFolder]);
     }
 
-    selectFolder($event, directory: Directory) {
-        /*$('.selected-card').removeClass('selected-card');
-        $(event.currentTarget).addClass('selected-card');*/
-        this.messageEvent.emit(directory);
+    renameFolder(newName: string, id: string, idParent: string, callback: (id: string) => void) {
+        this.directoryService.update({id: id, name: newName}).subscribe(
+            response => {
+                if (response.status === 200) {
+                    callback(idParent);
+                }
+            }
+        );
+    }
+
+    deleteFolder(id, idParent, callback: (id: string) => void) {
+        this.directoryService.delete(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    callback(idParent);
+                }
+            }
+        );
+    }
+
+    selectFolder() {
+        this.messageEvent.emit(this.directory);
     }
 }

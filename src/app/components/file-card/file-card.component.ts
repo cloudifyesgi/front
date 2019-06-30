@@ -1,11 +1,11 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
-import {testing} from "rxjs-compat/umd";
 import {HomeComponent} from "../../views/home/home.component";
 import {ShareFolderComponent} from "../../views/share/share-folder.component";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {ShareFileComponent} from "../../views/share-file/share-file.component";
+import {Directory} from "../../core/models/entities/directory";
 
 @Component({
     selector: 'app-file-card',
@@ -15,6 +15,7 @@ import {ShareFileComponent} from "../../views/share-file/share-file.component";
 export class FileCardComponent implements OnInit {
 
     @Input() file: FileModel;
+    @Output() messageEvent = new EventEmitter<Directory | FileModel>();
     testFile: FileModel;
     // @ts-ignore
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
@@ -35,7 +36,7 @@ export class FileCardComponent implements OnInit {
         let link;
         const response = await this.fileService.getFileInfo(idFile).toPromise();
         const file_name = response.body.name;
-        await this.fileService.getFileById(idFile).subscribe( res => {
+        await this.fileService.getFileById(idFile).subscribe(res => {
             binaryData.push(res.body);
             url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
             link = this.downloadZipLink.nativeElement;
@@ -46,7 +47,8 @@ export class FileCardComponent implements OnInit {
         });
     }
 
-    deleteFile(id) {
+    deleteFile(id, idParent, callback) {
+        console.log("hey");
         this.fileService.deleteFile(id).subscribe(
             (data) => {
                 if (this.homeComponent) {
@@ -56,10 +58,23 @@ export class FileCardComponent implements OnInit {
                 } else if (this.shareFileCompoonent) {
                     this.shareFileCompoonent.getFiles(this.shareFileCompoonent.currentDirectory._id);
                 }
+                callback(idParent);
             },
             (err) => {
                 console.log(err);
             });
+    }
+
+    renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
+        console.log('rename ' + id + ' to ' + newName);
+        this.fileService.updateFile({id: id, name: newName}).subscribe(
+            response => {
+                if (response.status === 200) {
+                    callback(idParent);
+                }
+            }
+        );
+        callback(idParent);
     }
 
     getVersions(name) {
@@ -90,5 +105,9 @@ export class FileCardComponent implements OnInit {
         } else if (this.shareFileCompoonent) {
             this.shareFileCompoonent.showMenu(_id, this.userService);
         }
+    }
+
+    selectFile() {
+        this.messageEvent.emit(this.file);
     }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {User} from "../../core/models/entities/user";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
@@ -10,6 +10,8 @@ import {History} from "../../core/models/entities/history";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
+import {FileCardComponent} from "../../components/file-card/file-card.component";
+import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
 
 declare var jQuery: any;
 
@@ -19,7 +21,7 @@ declare var jQuery: any;
     styleUrls: ['./home.component.scss'],
     providers: [DatePipe]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnChanges {
 
     user: User;
     children: Array<Directory>;
@@ -32,6 +34,8 @@ export class HomeComponent implements OnInit {
     fileHistory: Array<History>;
     selectedElement: Directory | FileModel;
     currentType: string;
+    @ViewChild(FileCardComponent) fileCardComponent;
+    @ViewChild(FolderCardComponent) folderCardComponent;
 
     directoryForm = this.fb.group(
         {
@@ -53,7 +57,13 @@ export class HomeComponent implements OnInit {
             this.user = await this.userService.getUser();
             this.getFolders(params.directoryId);
             this.getFiles(params.directoryId);
+            this.unsetSelectedElement();
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.selectedElement = null;
+        this.currentType = null;
     }
 
     getFolders(id: string) {
@@ -76,6 +86,7 @@ export class HomeComponent implements OnInit {
         this.fileService.getFilesByDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
+                    console.log(response.body);
                     this.files = response.body;
                 } else {
                     this.router.navigateByUrl('folder/0');
@@ -93,6 +104,9 @@ export class HomeComponent implements OnInit {
             // Is it a file?
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+                const filename = droppedFile.relativePath;
+                const fileNameArray = filename.split('.');
+                const ext = fileNameArray[fileNameArray.length - 1];
                 fileEntry.file((file: File) => {
 
                     const formData = new FormData();
@@ -100,7 +114,7 @@ export class HomeComponent implements OnInit {
                     formData.append('name', droppedFile.relativePath);
                     formData.append('date_create', this.datePipe.transform(Date.now(), 'yyyy-MM-dd'));
                     formData.append('file_version', '1');
-                    formData.append('file_type', 'txt');
+                    formData.append('file_type', ext);
                     formData.append('user_create', this.user._id.toString());
                     formData.append('user_update', this.user._id.toString());
                     formData.append('directory', this.currentDirectory._id);
@@ -123,33 +137,15 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    async showMenu(_id, service) {
-        await this.fileService.getFileInfo(_id).subscribe( (data) => {
-            this.fileMenu = data.body;
-            const u_update = service.getUserName(this.fileMenu.user_update).toPromise();
-            u_update.then( value => this.fileMenu.user_update = value.name + ' ' + value.firstname);
-            const u_create = service.getUserName(this.fileMenu.user_create).toPromise();
-            u_create.then( value => this.fileMenu.user_create = value.name + ' ' + value.firstname);
-        });
-        await this.fileService.getFileHistory(_id).subscribe( (data) => {
-            this.fileHistory = data.body;
-            this.fileHistory.forEach( function (value) {
-                const u = service.getUserName(value.user).toPromise();
-                u.then(n => value.user = n.name + ' ' + n.firstname);
-            });
-        });
-        this.isHidden = !this.isHidden;
+    submitFormModal() {
+        if (this.selectedElement) {
+            this.editSelectedElement();
+        } else {
+            this.createDirectory();
+        }
     }
 
-    getUserName(id): string {
-        this.userService.getUserName(id).subscribe( (data) => {
-            return data.name + data.firstname;
-        });
-        return '';
-    }
     createDirectory() {
-        console.log(this.currentDirectory.name);
-        console.log(this.directoryForm.value);
         this.directoryService.create(this.directoryForm.value.directoryName, this.currentDirectory._id).subscribe(
             response => {
                 console.log(response);
@@ -163,21 +159,52 @@ export class HomeComponent implements OnInit {
     }
 
     editSelectedElement() {
+        const callback = (id: string) => {
+            this.getFiles(id);
+            this.getFolders(id);
+            jQuery('#getNameDirectory').modal('hide');
+        };
+
         if (this.currentType === 'dir') {
-            console.log(`edit ${this.selectedElement.name}`);
+            this.folderCardComponent.renameFolder(this.directoryForm.value.directoryName, this.selectedElement._id,
+                this.currentDirectory._id, callback);
+        } else if (this.currentType === 'file') {
+            this.fileCardComponent.renameFile(this.directoryForm.value.directoryName, this.selectedElement._id,
+                this.currentDirectory._id, callback);
         }
     }
 
     removeSelectedElement() {
-        if (this.currentType === 'dir') {
-            if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
-                console.log('delete ' + this.selectedElement.name);
+        if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
+            if (this.currentType === 'dir') {
+                this.folderCardComponent.deleteFolder(this.selectedElement._id, this.currentDirectory._id, (id) => {
+                    this.getFolders(id);
+                });
+            } else if (this.currentType === 'file') {
+                this.fileCardComponent.deleteFile(this.selectedElement._id, this.currentDirectory._id, (id) => {
+                    this.getFiles(id);
+                });
+                console.log('delete file ' + this.selectedElement.name);
             }
         }
+
     }
 
-    setSelectedElement($event: Directory, type: string) {
+    setSelectedElement($event: Directory | FileModel, type: string) {
         this.selectedElement = $event;
         this.currentType = type;
+    }
+
+    unsetSelectedElement() {
+        this.selectedElement = null;
+        this.currentType = null;
+    }
+
+    showMenu(id, salut) {
+
+    }
+
+    toggleInfoCard() {
+        this.isHidden = !this.isHidden;
     }
 }
