@@ -12,6 +12,7 @@ import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
+import {ToastrService} from "ngx-toastr";
 
 declare var jQuery: any;
 
@@ -42,6 +43,15 @@ export class HomeComponent implements OnInit {
         }
     );
 
+    linkForm = this.fb.group(
+        {
+            linkName: ['', []],
+            linkType: ['', []],
+            linkExpiry: ['', []],
+            linkActivated: ['', []],
+        }
+    );
+
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
                 private fileService: FileService,
@@ -49,7 +59,8 @@ export class HomeComponent implements OnInit {
                 private router: Router,
                 private datePipe: DatePipe,
                 private fb: FormBuilder,
-                private shareLinkService: ShareLinkService) {
+                private shareLinkService: ShareLinkService,
+                private toastr: ToastrService) {
     }
 
     async ngOnInit() {
@@ -185,20 +196,25 @@ export class HomeComponent implements OnInit {
         this.currentType = type;
     }
 
-    async generateLink(name, type, expiry_date, is_activated, user, directory, file) {
+    async generateLink() {
+        if (!this.selectedElement) {
+            this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
+            return;
+        }
         this.new_link = {
-            link: name,
-            link_type: type,
-            expiry_date: expiry_date,
-            is_activated: is_activated,
-            user: user,
-            directory: directory,
-            file: file
+            link: this.linkForm.value.linkName,
+            link_type: this.linkForm.value.linkType,
+            expiry_date: this.linkForm.value.linkExpiry,
+            is_activated: this.linkForm.value.linkActivated,
+            user: this.user._id.toString(),
+            directory: this.selectedElement._id,
+            file: this.selectedElement._id
         };
         await this.shareLinkService.postLink(this.new_link).subscribe( (data) => {
                 if (data.status === 201) {
                     console.log('lien envoyé');
                 }
+                jQuery('#linkGenerator').modal('hide');
             },
             (err) => {
                 console.log(err);

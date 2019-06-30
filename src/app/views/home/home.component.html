@@ -17,6 +17,8 @@
             <div class="card-header">
                 folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
                           data-target="#getNameDirectory"></i>
+                        <i *ngIf="selectedElement" class="fa fa-share btn cursor-pointer float-lg-none btn-create" data-toggle="modal"
+                           data-target="#linkGenerator"></i>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -67,6 +69,38 @@
                 <div class="modal-body">
                     <div [formGroup]="directoryForm">
                         <input type="text" class="form-control" name="directoryNameField" formControlName="directoryName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="linkGenerator" tabindex="-1" role="dialog" aria-labelledby="linkGeneratorTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="linkGeneratorTitle">Entrez les informations du lien : </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (submit)="generateLink()">
+                <div class="modal-body">
+                    <div [formGroup]="linkForm">
+                        <span>Nom du lien</span>
+                        <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
+                        <span>Type du lien</span>
+                        <input type="text" class="form-control" name="linkTypeField" formControlName="linkType">
+                        <span>Date d'expiration du lien</span>
+                        <input type="text" class="form-control" name="linkExpiryField" formControlName="linkExpiry">
+                        <span>Lien actif</span>
+                        <input type="text" class="form-control" name="linkActivatedField" formControlName="linkActivated">
                     </div>
                 </div>
                 <div class="modal-footer">
