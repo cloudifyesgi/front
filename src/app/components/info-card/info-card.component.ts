@@ -15,6 +15,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     @Input() element: Directory | FileModel;
     @Input() type: string;
+    @Input() versions: Array<FileModel>;
     name: string;
     histories: Array<History>;
 
@@ -32,8 +33,8 @@ export class InfoCardComponent implements OnInit, OnChanges {
         if (this.type === 'dir') {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {
-            console.log('file histories');
             this.getFileHistories(this.element._id);
+            this.getVersions(this.element.name);
         }
     }
 
@@ -45,24 +46,34 @@ export class InfoCardComponent implements OnInit, OnChanges {
         );
     }
 
-    getHistories(id: string) {
+    getHistories(id: string): void {
         this.historyService.getHistoryByDir(id).subscribe(
             result => {
                 if (result.status === 200) {
                     console.log(result.body);
-                    this.histories = result.body;
+                    this.histories = result.body.reverse();
                 }
             }
         );
     }
 
-    getFileHistories(id: string) {
+    getFileHistories(id: string): void {
         this.fileService.getFileHistory(id).subscribe((data) => {
             if (data.status === 200) {
                 console.log(data.body);
-                this.histories = data.body;
+                this.histories = data.body.reverse();
             }
         });
+    }
+
+    getVersions(name: string): void {
+        this.fileService.getFileByVersions(name).subscribe(
+            (data) => {
+                this.versions = data.body.reverse();
+            },
+            (err) => {
+                console.log(err);
+            });
     }
 
 }
