@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
@@ -21,7 +21,7 @@ export class ShareCardComponent implements OnInit, OnChanges {
       this.getLinkInfo();
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
       this.getLinkInfo();
   }
 
@@ -31,9 +31,11 @@ export class ShareCardComponent implements OnInit, OnChanges {
               response => {
                   if (response.status === 200) {
                       this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
+                      if (this.Link) {
+                          this.userService.getUserName(this.Link.user).subscribe((data) => {
+                              this.Link.user = data.name + ' ' + data.firstname;
+                          });
+                      }
                   }
               },
               err => console.log(err)
