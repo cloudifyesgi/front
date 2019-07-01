@@ -1,6 +1,6 @@
 <nav class="breadcrumb">
-    <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{sharedParentDirectory._id}}/0">{{sharedParentDirectory.name}}</a>
-    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{sharedParentDirectory._id}}/{{item._id}}">{{item.name}}</a>
+    <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/0">{{sharedParentDirectory.name}}</a>
+    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
 </nav>
 <div class="homeContainer">

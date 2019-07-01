@@ -30,4 +30,8 @@ export class ShareLinkService {
     postLink(link: Link): Observable<HttpResponse<Link>> {
         return this.http.post<Link>(`${this.constantsService.getConstant('URL_LINK')}`, link, {observe: "response"});
     }
+
+    getLink(id): Observable<HttpResponse<Link>> {
+        return this.http.get<Link>(`${this.constantsService.getConstant('URL_LINK')}/${id}`, {observe: "response"});
+    }
 }
