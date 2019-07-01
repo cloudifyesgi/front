@@ -77,16 +77,6 @@ export class FileCardComponent implements OnInit {
         callback(idParent);
     }
 
-    getVersions(name) {
-        this.fileService.getFileByVersions(name).subscribe(
-            (data) => {
-                console.log(data.body);
-            },
-            (err) => {
-                console.log(err);
-            });
-    }
-
     getPreviousVersion(name, number) {
         this.fileService.getFileVersion(name, number).subscribe(
             (data) => {
