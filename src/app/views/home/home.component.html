@@ -1,7 +1,14 @@
 <nav class="breadcrumb">
-    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
-    <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
-    <div class="breadcrumb-menu" *ngIf="selectedElement">
+    <div *ngIf="modeDisplay === 'home' || modeDisplay === 'trash'">
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    </div>
+    <div *ngIf="modeDisplay === 'sharedFolder'">
+        <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/0">{{sharedParentDirectory.name}}</a>
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    </div>
+        <div class="breadcrumb-menu" *ngIf="selectedElement">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
             <a class="btn cursor-pointer" data-toggle="modal"
@@ -43,7 +50,7 @@
                                    *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
                 </div>
             </div>
-            <div class="center">
+            <div *ngIf="ReadOnly == true" class="center">
                 <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>

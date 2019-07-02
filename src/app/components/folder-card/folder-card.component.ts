@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FileModel} from "../../core/models/entities/file";
 import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
 
@@ -14,18 +14,34 @@ declare var $: any;
 
 export class FolderCardComponent implements OnInit {
 
+    modeDisplay: string;
+    linkId: string;
     @Input() directory: Directory;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
 
     constructor(private router: Router,
+                private route: ActivatedRoute,
                 private  directoryService: DirectoryService) {
     }
 
     ngOnInit() {
+        this.route.data.subscribe(
+            data => {
+                this.modeDisplay = data.modeDisplay;
+                if (this.modeDisplay === 'sharedFolder') {
+                    this.route.params.subscribe( (params) => {
+                        this.linkId = params.linkId;
+                    });
+                }
+            });
     }
 
     openFolder(idFolder: string) {
-        this.router.navigate(['folders/' + idFolder]);
+        if (this.modeDisplay === 'home' || this.modeDisplay === 'trash' ) {
+            this.router.navigate(['folders/' + idFolder]);
+        } else if (this.modeDisplay === 'sharedFolder') {
+            this.router.navigate(['shared/folders/' + this.linkId + '/' + idFolder]);
+        }
     }
 
     renameFolder(newName: string, id: string, idParent: string, callback: (id: string) => void) {

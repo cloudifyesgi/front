@@ -33,12 +33,14 @@ export class HomeComponent implements OnInit, OnChanges {
     files: Array<FileModel>;
     filesToUpload: NgxFileDropEntry[] = [];
     isHidden = true;
-    fileMenu: FileModel;
-    fileHistory: Array<History>;
     selectedElement: Directory | FileModel;
     currentType: string;
     new_link: Link;
+    link: Link;
+    ReadOnly = true;
     modeDisplay: string;
+    sharedParentDirectory: Directory;
+    parentID: string;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
 
@@ -69,17 +71,14 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     async ngOnInit() {
-        this.route.params.subscribe(async (params) => {
-            this.user = await this.userService.getUser();
-            this.getFolders(params.directoryId);
-            this.getFiles(params.directoryId);
-            this.unsetSelectedElement();
-        });
-
         this.route.data.subscribe(
             data => {
                 this.modeDisplay = data.modeDisplay;
-                console.log(this.modeDisplay);
+                if (this.modeDisplay === 'home' || this.modeDisplay === 'trash') {
+                    this.initHomeMode();
+                } else if (this.modeDisplay === 'sharedFolder') {
+                    this.initShareMode();
+                }
             }
         );
     }
@@ -89,12 +88,95 @@ export class HomeComponent implements OnInit, OnChanges {
         this.currentType = null;
     }
 
-    getFolders(id: string) {
+    initHomeMode() {
+        this.route.params.subscribe(async (params) => {
+            this.user = await this.userService.getUser();
+            this.getFolders(params.directoryId);
+            this.getFiles(params.directoryId);
+            this.unsetSelectedElement();
+        });
+    }
+
+    initShareMode() {
+        this.route.params.subscribe(async (params) => {
+            await this.getLinkById(params.linkId).then(value => this.link = value.body);
+            if (this.link === undefined) {
+                this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
+                return this.router.navigateByUrl('folders/0');
+            }
+            this.parentID = this.link.directory;
+            this.user = await this.userService.getUser();
+            if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
+                this.toastr.error('Ce lien de partage a expiré', 'Erreur');
+                return this.router.navigateByUrl('folders/0');
+            }
+            this.ReadOnly = this.link.link_type === 'readonly';
+            if (params.directoryId === '0') {
+                this.getFoldersForParent();
+            } else {
+                this.getFoldersForChildren();
+            }
+        });
+    }
+
+    getFoldersForParent() {
+        this.getFolders(this.parentID, true, 0);
+        this.getFiles(this.parentID);
+    }
+
+    getFoldersForChildren() {
+        this.getFolders(this.currentDirectory._id, false, this.parentID);
+        this.getFiles(this.currentDirectory._id);
+    }
+
+    getFolders(id: string, isParent = null, parentId = null) {
         if (this.modeDisplay === 'home') {
             this.getActiveFolders(id);
         } else if (this.modeDisplay === 'trash') {
             this.getDeletedFolders(id);
+        } else if (this.modeDisplay === 'sharedFolder') {
+            this.getSharedFolders(id, isParent, parentId);
         }
+    }
+
+    getSharedFolders(id, isParent, parentId) {
+        this.directoryService.getChildDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    if (isParent) {
+                        this.children = response.body.children;
+                        this.currentDirectory = response.body.breadcrumb.pop();
+                        this.sharedParentDirectory = this.currentDirectory;
+                    } else {
+                        this.parents = [];
+                        this.children = response.body.children;
+                        this.currentDirectory = response.body.breadcrumb.pop();
+                        let i_dir = response.body.breadcrumb.pop();
+                        while (i_dir !== undefined) {
+                            if (i_dir._id === parentId) {
+                                this.sharedParentDirectory = i_dir;
+                                break;
+                            }
+                            this.parents.push(i_dir);
+                            i_dir = response.body.breadcrumb.pop();
+                        }
+                        this.parents.reverse();
+                    }
+                } else {
+                    this.router.navigateByUrl('folder/0');
+                }
+
+            },
+            err => console.log(err)
+        );
+    }
+
+    async getLink(id) {
+        return await this.shareLinkService.getLinkForDir(id).toPromise();
+    }
+
+    async getLinkById(id) {
+        return await this.shareLinkService.getLink(id).toPromise();
     }
 
     getActiveFolders(id: string) {
@@ -130,7 +212,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getFiles(id: string) {
-        if (this.modeDisplay === 'home') {
+        if (this.modeDisplay === 'home' || this.modeDisplay === 'sharedFolder') {
             this.getActiveFiles(id);
         } else if (this.modeDisplay === 'trash') {
             this.getDeletedFiles(id);
