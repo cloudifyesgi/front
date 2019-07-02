@@ -1,12 +1,7 @@
 <nav class="breadcrumb">
-    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
+    <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/0">{{sharedParentDirectory.name}}</a>
+    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
     <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
-    <div class="breadcrumb-menu">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn" href="#"><i class="cui-settings"></i>Upload</a>
-            <a class="btn" href="#"><i class="fas fa-plus-square"></i>Créer un dossier</a>
-        </div>
-    </div>
 </nav>
 <div class="homeContainer">
     <div class="card">
@@ -16,7 +11,15 @@
         <div class="card-body">
             <div class="container-fluid">
                 <div class="row">
-                    <app-folder-card *ngFor="let directory of children" [directory]="directory" class="col-2"></app-folder-card>
+                    <div *ngFor="let directory of children" class="col-2">
+                        <div class="card cursor-pointer" (dblclick)="openFolder(directory._id)"
+                             (click)="selectFolder($event, directory)">
+                            <div class="card-block p-1">
+                                <i class="fa fa-folder p-1 font-2xl mr-1 iconCard float-left"></i>
+                                <div class="h5 h5 p-1 font-2lg mr-1 textCard">{{directory.name}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ export const navItems = [
     children: [
       {
         name: 'Cloudify',
-        url: './defaultCloudify',
+        url: '/folders',
         icon: 'cui-star'
       },
       {
@@ -43,7 +43,7 @@ export const navItems = [
   },
   {
     name: 'Bin',
-    url: '/dashboard',
+    url: '/trash/0',
     icon: 'cui-trash'
   },
   {

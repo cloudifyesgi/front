@@ -25,7 +25,10 @@ export class FileService {
     }
 
     getFileById(id): Observable<HttpResponse<File>> {
-        return this.http.get<File>(`${this.constantsService.getConstant("URL_DOWNLOAD")}/${id}`, {responseType: 'blob' as 'json', observe: "response"});
+        return this.http.get<File>(`${this.constantsService.getConstant("URL_DOWNLOAD")}/${id}`, {
+            responseType: 'blob' as 'json',
+            observe: "response"
+        });
     }
 
     getFileInfo(id): Observable<HttpResponse<FileModel>> {
@@ -42,6 +45,10 @@ export class FileService {
 
     getFilesByDirectory(id): Observable<HttpResponse<Array<FileModel>>> {
         const url = this.constantsService.getConstant('URL_GET_FILES_BY_DIRECTORY').replace(':id', id);
+        return this.http.get<Array<FileModel>>(url, {observe: "response"});
+    }
+    getDeletedFiles(id): Observable<HttpResponse<Array<FileModel>>> {
+        const url = this.constantsService.getConstant('URL_GET_DELETED_FILES').replace(':id', id);
         return this.http.get<Array<FileModel>>(url, {observe: "response"});
     }
 
@@ -62,5 +69,10 @@ export class FileService {
     getFileHistory(file_id): Observable<HttpResponse<Array<History>>> {
         const url = this.constantsService.getConstant('URL_GET_HISTORY_BY_FILE').replace(':id', file_id);
         return this.http.get<Array<History>>(url, {observe: "response"});
+    }
+
+    updateFile(fields = {}): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_FILE');
+        return this.http.put<any>(url, fields, {observe: "response"});
     }
 }

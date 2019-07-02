@@ -14,8 +14,8 @@ export class DirectoryService {
                 private constantsService: ConstantsService) {
     }
 
-    getDirectory(): Observable<HttpResponse<Array<Directory>>> {
-        return this.http.get<Array<Directory>>(this.constantsService.getConstant('URL_DIRECTORY'),
+    getDirectory(id): Observable<HttpResponse<Directory>> {
+        return this.http.get<Directory>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`,
             {observe: "response"});
     }
 
@@ -29,6 +29,20 @@ export class DirectoryService {
     getChildDirectory(id): Observable<HttpResponse<GetChildren>> {
         const url = this.constantsService.getConstant('URL_GET_CHILD_DIRECTORY').replace(':id', id);
         return this.http.get<GetChildren>(url, {observe: "response"});
+    }
+
+    getDeletedFolders(id): Observable<HttpResponse<GetChildren>> {
+        const url = this.constantsService.getConstant('URL_GET_DELETED_DIRECTORY').replace(':id', id);
+        return this.http.get<GetChildren>(url, {observe: "response"});
+    }
+
+    update(fields = {}): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_DIRECTORY');
+        return this.http.put<any>(url, fields, {observe: "response"});
+    }
+
+    delete(id: string): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`, {observe: "response"});
     }
 
 }

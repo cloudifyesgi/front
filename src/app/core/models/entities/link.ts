@@ -1,5 +1,5 @@
 export interface Link {
-    _id: string;
+    _id?: string;
     link?: string;
     link_type: string;
     expiry_date: string;
