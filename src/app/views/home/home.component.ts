@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, OnChanges {
     currentType: string;
     new_link: Link;
     link: Link;
-    ReadOnly = true;
+    ReadOnly = false;
     modeDisplay: string;
     sharedParentDirectory: Directory;
     parentID: string;
@@ -111,10 +111,12 @@ export class HomeComponent implements OnInit, OnChanges {
                 return this.router.navigateByUrl('folders/0');
             }
             this.ReadOnly = this.link.link_type === 'readonly';
+            console.log('this.link.link_type = ' + this.link.link_type);
+            console.log('ReadOnly : ' + this.ReadOnly);
             if (params.directoryId === '0') {
                 this.getFoldersForParent();
             } else {
-                this.getFoldersForChildren();
+                this.getFoldersForChildren(params.directoryId);
             }
         });
     }
@@ -124,9 +126,9 @@ export class HomeComponent implements OnInit, OnChanges {
         this.getFiles(this.parentID);
     }
 
-    getFoldersForChildren() {
-        this.getFolders(this.currentDirectory._id, false, this.parentID);
-        this.getFiles(this.currentDirectory._id);
+    getFoldersForChildren(directoryId) {
+        this.getFolders(directoryId, false, this.parentID);
+        this.getFiles(directoryId);
     }
 
     getFolders(id: string, isParent = null, parentId = null) {
@@ -143,12 +145,12 @@ export class HomeComponent implements OnInit, OnChanges {
         this.directoryService.getChildDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
+                    this.parents = [];
                     if (isParent) {
                         this.children = response.body.children;
                         this.currentDirectory = response.body.breadcrumb.pop();
                         this.sharedParentDirectory = this.currentDirectory;
                     } else {
-                        this.parents = [];
                         this.children = response.body.children;
                         this.currentDirectory = response.body.breadcrumb.pop();
                         let i_dir = response.body.breadcrumb.pop();
@@ -376,10 +378,6 @@ export class HomeComponent implements OnInit, OnChanges {
     unsetSelectedElement() {
         this.selectedElement = null;
         this.currentType = null;
-    }
-
-    showMenu(id, salut) {
-
     }
 
     toggleInfoCard() {

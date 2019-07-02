@@ -165,6 +165,7 @@ export class ShareFolderComponent implements OnInit {
     }
 
     selectFolder($event, directory: Directory) {
+        console.log('je ne devrais pas passer  par là');
         /*$('.selected-card').removeClass('selected-card');
         $(event.currentTarget).addClass('selected-card');*/
         this.messageEvent.emit(directory);

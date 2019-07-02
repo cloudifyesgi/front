@@ -8,7 +8,7 @@
         <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
         <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
     </div>
-        <div class="breadcrumb-menu" *ngIf="selectedElement">
+        <div class="breadcrumb-menu" *ngIf="selectedElement && !ReadOnly">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
             <a class="btn cursor-pointer" data-toggle="modal"
@@ -23,7 +23,7 @@
     <div class="col dataBlock">
         <div class="card">
             <div class="card-header">
-                folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
+                folder <i *ngIf="!ReadOnly" class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
                           data-target="#getNameDirectory" (click)="unsetSelectedElement()"></i>
             </div>
             <div class="card-body">
@@ -50,7 +50,7 @@
                                    *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
                 </div>
             </div>
-            <div *ngIf="ReadOnly == true" class="center">
+            <div *ngIf="!ReadOnly" class="center">
                 <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>
@@ -106,11 +106,6 @@
                         </div>
                         <div class="form-group">
                             <span>Type du lien :</span>&nbsp;
-                            <!--<input type="text" class="form-control" name="linkTypeField" formControlName="linkType">-->
-                            <!--<select class="form-control" name="linkTypeField" formControlName="linkType">
-                                <option value="write">write</option>
-                                <option value="readonly">readonly</option>
-                            </select>-->
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
                                 <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;

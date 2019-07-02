@@ -50,7 +50,10 @@ const routes: Routes = [
             },
             {
                 path: 'shared/folders/:linkId/:directoryId',
-                component: ShareFolderComponent
+                component: HomeComponent,
+                data: {
+                    modeDisplay: 'sharedFolder'
+                }
             },
             {
                 path: 'shared/files/:fileId',
