@@ -49,7 +49,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'shared/folders/:parentId/:directoryId',
+                path: 'shared/folders/:linkId/:directoryId',
                 component: ShareFolderComponent
             },
             {

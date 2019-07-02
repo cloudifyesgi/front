@@ -93,14 +93,35 @@
             <form (submit)="generateLink()">
                 <div class="modal-body">
                     <div [formGroup]="linkForm">
-                        <span>Nom du lien</span>
-                        <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
-                        <span>Type du lien</span>
-                        <input type="text" class="form-control" name="linkTypeField" formControlName="linkType">
-                        <span>Date d'expiration du lien</span>
-                        <input type="text" class="form-control" name="linkExpiryField" formControlName="linkExpiry">
-                        <span>Lien actif</span>
-                        <input type="text" class="form-control" name="linkActivatedField" formControlName="linkActivated">
+                        <div class="form-group">
+                            <span>Nom du lien</span>
+                            <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
+                        </div>
+                        <div class="form-group">
+                            <span>Type du lien :</span>&nbsp;
+                            <!--<input type="text" class="form-control" name="linkTypeField" formControlName="linkType">-->
+                            <!--<select class="form-control" name="linkTypeField" formControlName="linkType">
+                                <option value="write">write</option>
+                                <option value="readonly">readonly</option>
+                            </select>-->
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
+                                <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
+                                       value="readonly">
+                                <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span>Date d'expiration du lien</span><br>
+                            <input type="date" class="form-check-inline center text-center" name="linkExpiryField" formControlName="linkExpiry">
+                        </div>
+                        <div class="form-group">
+                            <label>Lien actif : </label>&nbsp;
+                            <input type="checkbox" class="inline" name="linkActivatedField" formControlName="linkActivated">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
