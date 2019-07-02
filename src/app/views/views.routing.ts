@@ -25,9 +25,6 @@ const routes: Routes = [
         path: '',
         component: DefaultLayoutComponent,
         canActivate: [AuthenticationGuard],
-        data: {
-            title: 'Dashboard'
-        },
         children: [
             {
                 path: '',
@@ -39,7 +36,17 @@ const routes: Routes = [
             },
             {
                 path: 'folders/:directoryId',
-                component: HomeComponent
+                component: HomeComponent,
+                data: {
+                    modeDisplay: 'home'
+                }
+            },
+            {
+                path: 'trash/:directoryId',
+                component: HomeComponent,
+                data: {
+                    modeDisplay: 'trash'
+                }
             },
             {
                 path: 'shared/folders/:parentId/:directoryId',

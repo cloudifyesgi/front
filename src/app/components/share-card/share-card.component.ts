@@ -6,52 +6,56 @@ import {Link} from "../../core/models/entities/link";
 import {UserService} from "../../core/services/Rest/User/user.service";
 
 @Component({
-  selector: 'app-share-card',
-  templateUrl: './share-card.component.html',
-  styleUrls: ['./share-card.component.scss']
+    selector: 'app-share-card',
+    templateUrl: './share-card.component.html',
+    styleUrls: ['./share-card.component.scss']
 })
 export class ShareCardComponent implements OnInit, OnChanges {
     @Input() element: Directory | FileModel;
     @Input() type: string;
     Link: Link;
 
-  constructor(private shareLinkService: ShareLinkService, private userService: UserService) { }
+    constructor(private shareLinkService: ShareLinkService, private userService: UserService) {
+    }
 
-  ngOnInit() {
-      this.getLinkInfo();
-  }
+    ngOnInit() {
+        this.getLinkInfo();
+    }
 
-  ngOnChanges() {
-      this.getLinkInfo();
-  }
+    ngOnChanges() {
+        this.getLinkInfo();
+    }
 
-  getLinkInfo() {
-      if (this.type === 'dir') {
-          this.shareLinkService.getLinkForDir(this.element._id).subscribe(
-              response => {
-                  if (response.status === 200) {
-                      this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
-                  }
-              },
-              err => console.log(err)
-          );
-      } else {
-          this.shareLinkService.getLinkForFile(this.element._id).subscribe(
-              response => {
-                  if (response.status === 200) {
-                      this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
-                  }
-              },
-              err => console.log(err)
-          );
-      }
-  }
+    getLinkInfo() {
+        if (this.type === 'dir') {
+            this.shareLinkService.getLinkForDir(this.element._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.Link = response.body;
+                        this.userService.getUserName(this.Link.user).subscribe((data) => {
+                            this.Link.user = data.name + ' ' + data.firstname;
+                        });
+                    }
+                },
+                err => console.log(err)
+            );
+        } else {
+            this.shareLinkService.getLinkForFile(this.element._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.Link = response.body;
+                        if (this.Link) {
+                            this.userService.getUserName(this.Link.user).subscribe((data) => {
+                                console.log(data);
+                                this.Link.user = data.name + ' ' + data.firstname;
+                            });
+                        }
+                    }
+                },
+                err => console.log(err)
+            );
+        }
+    }
 
 
 }

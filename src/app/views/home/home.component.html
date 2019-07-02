@@ -37,12 +37,10 @@
                 Files
             </div>
             <div class="card-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
-                                       [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
-                                       *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
-                    </div>
+                <div class="d-flex flex-row flex-wrap">
+                    <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
+                                   [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
+                                   *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
                 </div>
             </div>
             <div class="center">

@@ -34,6 +34,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {ToastrModule} from "ngx-toastr";
+import {MomentModule} from "ngx-moment";
 
 @NgModule({
     imports: [
