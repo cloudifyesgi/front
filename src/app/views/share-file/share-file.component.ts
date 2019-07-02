@@ -10,6 +10,7 @@ import {FileService} from "../../core/services/Rest/file/file.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-share-file',
@@ -35,7 +36,8 @@ export class ShareFileComponent implements OnInit {
                 private fileService: FileService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private shareLinkService: ShareLinkService) {
+                private shareLinkService: ShareLinkService,
+                private toastr: ToastrService) {
     }
 
     async ngOnInit() {
@@ -43,9 +45,11 @@ export class ShareFileComponent implements OnInit {
             this.user = await this.userService.getUser();
             await this.getLink(params.fileId).then( value => this.link = value.body);
             if (this.link === null) {
+                this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
+                this.toastr.error('Ce lien de partage n\'est pas valide ou est expiré', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
             this.user = await this.userService.getUser();

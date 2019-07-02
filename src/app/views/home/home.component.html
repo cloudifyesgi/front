@@ -10,7 +10,8 @@
     </div>
         <div class="breadcrumb-menu" *ngIf="selectedElement && !ReadOnly">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
+            <a class="btn cursor-pointer" data-toggle="modal"
+               data-target="#linkGenerator"><i class="icon-link icon-tools"></i></a>
             <a class="btn cursor-pointer" data-toggle="modal"
                data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
@@ -107,22 +108,22 @@
                         <div class="form-group">
                             <span>Type du lien :</span>&nbsp;
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
+                                <input class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
                                 <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
+                                <input class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
                                        value="readonly">
                                 <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <span>Date d'expiration du lien</span><br>
-                            <input type="date" class="form-check-inline center text-center" name="linkExpiryField" formControlName="linkExpiry">
+                            <input type="date" class="form-check-inline center text-center form-control" name="linkExpiryField" formControlName="linkExpiry">
                         </div>
                         <div class="form-group">
                             <label>Lien actif : </label>&nbsp;
-                            <input type="checkbox" class="inline" name="linkActivatedField" formControlName="linkActivated">
+                            <input type="checkbox" class="inline form-control" name="linkActivatedField" formControlName="linkActivated">
                         </div>
                     </div>
                 </div>

@@ -100,10 +100,11 @@ export class HomeComponent implements OnInit, OnChanges {
     initShareMode() {
         this.route.params.subscribe(async (params) => {
             await this.getLinkById(params.linkId).then(value => this.link = value.body);
-            if (this.link === undefined) {
+            if (this.link === undefined || this.link === null) {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
+            console.log(this.link);
             this.parentID = this.link.directory;
             this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
@@ -360,9 +361,14 @@ export class HomeComponent implements OnInit, OnChanges {
             expiry_date: this.linkForm.value.linkExpiry,
             is_activated: this.linkForm.value.linkActivated,
             user: this.user._id.toString(),
-            directory: this.selectedElement._id,
-            file: this.selectedElement._id
+            directory: null,
+            file: null
         };
+        if (this.currentType === 'dir') {
+            this.new_link.directory = this.selectedElement._id;
+        } else {
+            this.new_link.file = this.selectedElement._id;
+        }
         await this.shareLinkService.postLink(this.new_link).subscribe((data) => {
                 if (data.status === 201) {
                     console.log('lien envoyé');
