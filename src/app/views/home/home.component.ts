@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit, OnChanges {
     selectedElement: Directory | FileModel;
     currentType: string;
     new_link: Link;
+    modeDisplay: string;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
 
@@ -74,6 +75,13 @@ export class HomeComponent implements OnInit, OnChanges {
             this.getFiles(params.directoryId);
             this.unsetSelectedElement();
         });
+
+        this.route.data.subscribe(
+            data => {
+                this.modeDisplay = data.modeDisplay;
+                console.log(this.modeDisplay);
+            }
+        );
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -82,6 +90,14 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getFolders(id: string) {
+        if (this.modeDisplay === 'home') {
+            this.getActiveFolders(id);
+        } else if (this.modeDisplay === 'trash') {
+            this.getDeletedFolders(id);
+        }
+    }
+
+    getActiveFolders(id: string) {
         this.directoryService.getChildDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
@@ -97,8 +113,47 @@ export class HomeComponent implements OnInit, OnChanges {
         );
     }
 
+    getDeletedFolders(id: string) {
+        this.directoryService.getDeletedFolders(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    this.children = response.body.children;
+                    this.currentDirectory = response.body.breadcrumb.pop();
+                    this.parents = response.body.breadcrumb;
+                } else {
+                    this.router.navigateByUrl('folder/0');
+                }
+
+            },
+            err => console.log(err)
+        );
+    }
+
     getFiles(id: string) {
+        if (this.modeDisplay === 'home') {
+            this.getActiveFiles(id);
+        } else if (this.modeDisplay === 'trash') {
+            this.getDeletedFiles(id);
+        }
+    }
+
+    getActiveFiles(id: string) {
         this.fileService.getFilesByDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    console.log(response.body);
+                    this.files = response.body;
+                } else {
+                    this.router.navigateByUrl('folder/0');
+                }
+
+            },
+            err => console.log(err)
+        );
+    }
+
+    getDeletedFiles(id: string) {
+        this.fileService.getDeletedFiles(id).subscribe(
             response => {
                 if (response.status === 200) {
                     console.log(response.body);
@@ -224,7 +279,7 @@ export class HomeComponent implements OnInit, OnChanges {
             directory: this.selectedElement._id,
             file: this.selectedElement._id
         };
-        await this.shareLinkService.postLink(this.new_link).subscribe( (data) => {
+        await this.shareLinkService.postLink(this.new_link).subscribe((data) => {
                 if (data.status === 201) {
                     console.log('lien envoyé');
                 }

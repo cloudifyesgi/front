@@ -16,11 +16,12 @@ import {ShareFileComponent} from "../views/share-file/share-file.component";
 import {FolderCardComponent} from './folder-card/folder-card.component';
 import {FileCardComponent} from './file-card/file-card.component';
 import {CoreModule} from "../core/core.module";
-import { InfoCardComponent } from './info-card/info-card.component';
-import { HistoryCardComponent } from './history-card/history-card.component';
+import {InfoCardComponent} from './info-card/info-card.component';
+import {HistoryCardComponent} from './history-card/history-card.component';
 import {Moment} from "moment";
 import {MomentModule} from "ngx-moment";
-import { ShareCardComponent } from './share-card/share-card.component';
+import {ShareCardComponent} from './share-card/share-card.component';
+import {VersionCardComponent} from "./version-card/version-card.component";
 
 
 @NgModule({
@@ -40,11 +41,19 @@ import { ShareCardComponent } from './share-card/share-card.component';
         CoreModule,
         MomentModule
     ],
-    declarations: [DefaultLayoutComponent, FolderCardComponent, FileCardComponent, InfoCardComponent, HistoryCardComponent, ShareCardComponent],
+    declarations: [
+        DefaultLayoutComponent,
+        FolderCardComponent,
+        FileCardComponent,
+        InfoCardComponent,
+        HistoryCardComponent,
+        ShareCardComponent,
+        VersionCardComponent],
     exports: [
         FolderCardComponent,
         FileCardComponent,
-        InfoCardComponent
+        InfoCardComponent,
+        VersionCardComponent
     ],
     providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent]
 })

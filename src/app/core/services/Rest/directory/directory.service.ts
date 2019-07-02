@@ -31,6 +31,11 @@ export class DirectoryService {
         return this.http.get<GetChildren>(url, {observe: "response"});
     }
 
+    getDeletedFolders(id): Observable<HttpResponse<GetChildren>> {
+        const url = this.constantsService.getConstant('URL_GET_DELETED_DIRECTORY').replace(':id', id);
+        return this.http.get<GetChildren>(url, {observe: "response"});
+    }
+
     update(fields = {}): Observable<HttpResponse<any>> {
         const url = this.constantsService.getConstant('URL_DIRECTORY');
         return this.http.put<any>(url, fields, {observe: "response"});

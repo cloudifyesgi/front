@@ -39,7 +39,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     }
 
     getUserName(): void {
-        this.userService.getUserById(this.element.user_create).subscribe(
+        this.userService.getUserById((this.element.user_create as string)).subscribe(
             result => {
                 this.name = `${result.firstname} ${result.name}`;
             }

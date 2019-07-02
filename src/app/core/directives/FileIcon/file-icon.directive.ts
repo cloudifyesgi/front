@@ -11,7 +11,6 @@ export class FileIconDirective implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.fileExt);
         let className = 'fa fa-file';
         const ext = this.fileExt.toLowerCase();
         if (ext === 'pdf') {

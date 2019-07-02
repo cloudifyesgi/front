@@ -47,6 +47,10 @@ export class FileService {
         const url = this.constantsService.getConstant('URL_GET_FILES_BY_DIRECTORY').replace(':id', id);
         return this.http.get<Array<FileModel>>(url, {observe: "response"});
     }
+    getDeletedFiles(id): Observable<HttpResponse<Array<FileModel>>> {
+        const url = this.constantsService.getConstant('URL_GET_DELETED_FILES').replace(':id', id);
+        return this.http.get<Array<FileModel>>(url, {observe: "response"});
+    }
 
     uploadFile(file: FormData): Observable<HttpResponse<File>> {
         return this.http.post<File>(this.constantsService.getConstant('URL_FILE'), file, {observe: "response"});
