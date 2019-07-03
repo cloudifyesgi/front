@@ -59,10 +59,10 @@
             <div id="history" class="tab-pane fade" role="tabpanel" aria-labelledby="history-tab">
                 <app-history-card *ngFor="let history of histories" [history]="history"></app-history-card>
             </div>
-            <div id="version" class="tab-pane fade" role="tabpanel" aria-labelledby="version-tab">
+            <div id="version" class="tab-pane fade" role="tabpanel" aria-labelledby="version-tab" *ngIf="type === 'file'">
                 <app-version-card *ngFor="let version of versions" [version]="version"></app-version-card>
             </div>
-            <div id="share" class="tab-pane fade" role="tabpanel" aria-labelledby="sharing-tab"  *ngIf="type === 'file'">
+            <div id="share" class="tab-pane fade" role="tabpanel" aria-labelledby="sharing-tab">
                 <app-share-card [element]="element" [type]="type"></app-share-card>
             </div>
         </div>
