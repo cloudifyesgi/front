@@ -20,8 +20,8 @@ export class FolderCardComponent implements OnInit {
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
 
     constructor(private router: Router,
-                private route: ActivatedRoute,
-                private  directoryService: DirectoryService) {
+                private  directoryService: DirectoryService,
+                private  route: ActivatedRoute) {
     }
 
     ngOnInit() {

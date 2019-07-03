@@ -6,7 +6,6 @@ import {Directory} from "../../core/models/entities/directory";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {FileModel} from "../../core/models/entities/file";
-import {History} from "../../core/models/entities/history";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";

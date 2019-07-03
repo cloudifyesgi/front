@@ -1,7 +1,7 @@
 import {UserGroup} from "./userGroup";
 
 export interface User {
-    _id?: number;
+    _id?: string;
     email?: string;
     password?: string;
     name: string;
