@@ -6,6 +6,7 @@ export const constants = {
     'URL_USER_BY_ID': '/user/id',
     'URL_FILE': '/file',
     'URL_DIRECTORY': '/directory',
+    'URL_DIRECTORY_IS_DELETED': '/directory/:id/isDeleted',
     'URL_GET_CHILD_DIRECTORY': '/directory/:id/children',
     'URL_GET_DELETED_DIRECTORY': '/directory/:id/deletedChildren',
     'URL_GET_FILES_BY_DIRECTORY': '/directory/:id/files',

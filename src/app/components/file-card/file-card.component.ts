@@ -16,9 +16,7 @@ export class FileCardComponent implements OnInit {
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
-    constructor(private fileService: FileService,
-                private homeComponent: HomeComponent,
-                private userService: UserService) {
+    constructor(private fileService: FileService) {
     }
 
     ngOnInit() {
@@ -42,7 +40,6 @@ export class FileCardComponent implements OnInit {
     }
 
     deleteFile(id, idParent, callback) {
-        console.log("hey");
         this.fileService.deleteFile(id).subscribe(
             (data) => {
                 callback(idParent);
@@ -53,7 +50,6 @@ export class FileCardComponent implements OnInit {
     }
 
     renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
-        console.log('rename ' + id + ' to ' + newName);
         this.fileService.updateFile({id: id, name: newName}).subscribe(
             response => {
                 if (response.status === 200) {

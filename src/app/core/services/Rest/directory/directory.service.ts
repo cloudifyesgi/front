@@ -45,4 +45,9 @@ export class DirectoryService {
         return this.http.delete<any>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`, {observe: "response"});
     }
 
+    isDeleted(id: string): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_DIRECTORY_IS_DELETED').replace(':id', id);
+        return this.http.get<any>(url, {observe: "response"});
+    }
+
 }

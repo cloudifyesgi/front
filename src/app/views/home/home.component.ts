@@ -103,7 +103,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
-            console.log(this.link);
             this.parentID = this.link.directory;
             this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
@@ -111,8 +110,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 return this.router.navigateByUrl('folders/0');
             }
             this.ReadOnly = this.link.link_type === 'readonly';
-            console.log('this.link.link_type = ' + this.link.link_type);
-            console.log('ReadOnly : ' + this.ReadOnly);
             if (params.directoryId === '0') {
                 this.getFoldersForParent();
             } else {
@@ -225,7 +222,6 @@ export class HomeComponent implements OnInit, OnChanges {
         this.fileService.getFilesByDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
-                    console.log(response.body);
                     this.files = response.body;
                 } else {
                     this.router.navigateByUrl('folder/0');
@@ -240,7 +236,6 @@ export class HomeComponent implements OnInit, OnChanges {
         this.fileService.getDeletedFiles(id).subscribe(
             response => {
                 if (response.status === 200) {
-                    console.log(response.body);
                     this.files = response.body;
                 } else {
                     this.router.navigateByUrl('folder/0');
@@ -275,7 +270,6 @@ export class HomeComponent implements OnInit, OnChanges {
 
                     this.fileService.uploadFile(formData).subscribe(
                         (data) => {
-                            console.log('data.status' + data.status);
                             this.getFiles(this.currentDirectory._id);
                         },
                         (err) => {
@@ -284,9 +278,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     );
                 });
             } else {
-                // It was a directory (empty directories are added, otherwise only files)
                 const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-                console.log(droppedFile.relativePath, fileEntry);
             }
         }
     }
@@ -302,7 +294,6 @@ export class HomeComponent implements OnInit, OnChanges {
     createDirectory() {
         this.directoryService.create(this.directoryForm.value.directoryName, this.currentDirectory._id).subscribe(
             response => {
-                console.log(response);
                 this.children.push(response.body);
                 jQuery('#getNameDirectory').modal('hide');
             },
@@ -338,7 +329,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.fileCardComponent.deleteFile(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFiles(id);
                 });
-                console.log('delete file ' + this.selectedElement.name);
             }
         }
 
@@ -370,7 +360,6 @@ export class HomeComponent implements OnInit, OnChanges {
         }
         await this.shareLinkService.postLink(this.new_link).subscribe((data) => {
                 if (data.status === 201) {
-                    console.log('lien envoyé');
                 }
                 jQuery('#linkGenerator').modal('hide');
             },

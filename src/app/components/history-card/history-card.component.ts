@@ -21,16 +21,13 @@ export class HistoryCardComponent implements OnInit {
     }
 
     getText() {
-        console.log(this.history.action);
         switch (this.history.action) {
             case 'created' :
                 this.text = ``;
                 this.color = 'success';
                 break;
             case 'addedDir' :
-                console.log('apapapap');
                 if (typeof this.history.child_directory !== "string") {
-                    console.log("hey");
                     this.text = `${this.history.child_directory.name}`;
                     this.color = 'info';
                 }
