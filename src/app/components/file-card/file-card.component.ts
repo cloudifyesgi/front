@@ -42,8 +42,7 @@ export class FileCardComponent implements OnInit {
     }
 
     deleteFile(id, idParent, callback) {
-        console.log("hey");
-        this.fileService.deleteFile(id).subscribe(
+        this.fileService.deleteFile(id, idParent).subscribe(
             (data) => {
                 callback(idParent);
             },
@@ -64,8 +63,8 @@ export class FileCardComponent implements OnInit {
         callback(idParent);
     }
 
-    getPreviousVersion(name, number) {
-        this.fileService.getFileVersion(name, number).subscribe(
+    getPreviousVersion(name, number, directory) {
+        this.fileService.getFileVersion(name, number, directory).subscribe(
             (data) => {
                 console.log(data.body);
             },

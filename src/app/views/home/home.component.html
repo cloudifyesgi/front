@@ -58,7 +58,7 @@
         </div>
     </div>
     <div [ngClass]="{'ag-hidden': isHidden}" class="col-3" *ngIf="selectedElement">
-        <app-info-card [element]="selectedElement" [type]="currentType"></app-info-card>
+        <app-info-card [currentDirectory]="currentDirectory" [element]="selectedElement" [type]="currentType"></app-info-card>
     </div>
 </div>
 
