@@ -74,22 +74,4 @@ export class ShareFileComponent implements OnInit {
         );
     }
 
-    async showMenu(_id, service) {
-        await this.fileService.getFileInfo(_id).subscribe( (data) => {
-            this.fileMenu = data.body;
-            const u_update = service.getUserName(this.fileMenu.user_update).toPromise();
-            u_update.then( value => this.fileMenu.user_update = value.name + ' ' + value.firstname);
-            const u_create = service.getUserName(this.fileMenu.user_create).toPromise();
-            u_create.then( value => this.fileMenu.user_create = value.name + ' ' + value.firstname);
-        });
-        await this.fileService.getFileHistory(_id).subscribe( (data) => {
-            this.fileHistory = data.body;
-            this.fileHistory.forEach( function (value) {
-                const u = service.getUserName(value.user).toPromise();
-                u.then(n => value.user = n.name + ' ' + n.firstname);
-            });
-        });
-        this.isHidden = !this.isHidden;
-    }
-
 }
