@@ -389,4 +389,26 @@ export class HomeComponent implements OnInit, OnChanges {
     toggleInfoCard() {
         this.isHidden = !this.isHidden;
     }
+
+    async deleteLink() {
+        if (this.currentType === 'dir') {
+            await this.shareLinkService.getLinkForDir(this.selectedElement._id).toPromise().then(value => this.link = value.body);
+        } else if (this.currentType === 'file') {
+            await this.shareLinkService.getLinkForFile(this.selectedElement._id).toPromise().then(value => this.link = value.body);
+        }
+        if (this.link && ( this.link.directory === this.selectedElement._id || this.link.file === this.selectedElement._id )) {
+            if (confirm('Voulez vous vraiment supprimer le lien de partage sur ' + this.selectedElement.name + ' ?')) {
+                this.shareLinkService.deleteLink(this.link._id).subscribe( (data) => {
+                    console.log(data.status);
+                }, (err) => {
+                    console.log(err);
+                });
+                this.getFolders(this.currentDirectory._id);
+                this.toastr.info('Le lien de partage a été supprimé', 'Succès');
+            }
+        } else {
+            this.toastr.error('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name, 'Pas de lien');
+            console.log('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name);
+        }
+    }
 }
