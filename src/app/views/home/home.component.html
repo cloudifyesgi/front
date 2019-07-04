@@ -14,6 +14,8 @@
                data-target="#linkGenerator"><i class="icon-link icon-tools"></i></a>
             <a class="btn cursor-pointer" data-toggle="modal"
                data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
+            <a class="btn cursor-pointer" data-toggle="modal"
+               data-target="#shareElement"><i class="cui-share icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="deleteLink()"><i class="cui-user-unfollow icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
@@ -68,7 +70,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="getNameDirectoryTitle">Entrer le nom du dossier : </h5>
+                <h5 class="modal-title" id="getNameDirectoryTitle">Entrez le nom du dossier : </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -81,7 +83,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-primary">Créer</button>
                 </div>
             </form>
@@ -129,7 +131,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-primary">Créer</button>
                 </div>
             </form>
@@ -137,5 +139,43 @@
     </div>
 </div>
 
-
-
+<div class="modal fade" id="shareElement" tabindex="-1" role="dialog" aria-labelledby="shareElementTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="getEmailToShare">Partage entre utilisateurs </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (submit)="shareElement()">
+                <div class="modal-body">
+                    <div [formGroup]="shareForm">
+                        <div class="form-group">
+                            <span>Entrez l'email de l'utilisateur à qui vous souhaitez partager l'élément : </span>
+                            <input type="text" class="form-control" name="shareEmail"
+                               formControlName="shareEmail">
+                        </div>
+                        <div class="form-group">
+                            <span>Type du lien :</span>&nbsp;
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="writeRadio2" value="write" checked>
+                                <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="readonlyRadio2"
+                                       value="readonly">
+                                <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Partager</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

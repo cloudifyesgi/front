@@ -14,6 +14,8 @@ import {FolderCardComponent} from "../../components/folder-card/folder-card.comp
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {ToastrService} from "ngx-toastr";
+import {Share} from "../../core/models/entities/share";
+import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 
 declare var jQuery: any;
 
@@ -40,6 +42,7 @@ export class HomeComponent implements OnInit, OnChanges {
     modeDisplay: string;
     sharedParentDirectory: Directory;
     parentID: string;
+    share: Share;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
 
@@ -58,6 +61,13 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     );
 
+    shareForm = this.fb.group(
+        {
+            shareEmail: ['', []],
+            shareType: ['', []],
+        }
+    );
+
     constructor(private userService: UserService,
                 private directoryService: DirectoryService,
                 private fileService: FileService,
@@ -66,7 +76,8 @@ export class HomeComponent implements OnInit, OnChanges {
                 private datePipe: DatePipe,
                 private fb: FormBuilder,
                 private shareLinkService: ShareLinkService,
-                private toastr: ToastrService) {
+                private toastr: ToastrService,
+                private shareEmailService: ShareEmailService) {
     }
 
     async ngOnInit() {
@@ -392,9 +403,9 @@ export class HomeComponent implements OnInit, OnChanges {
         } else if (this.currentType === 'file') {
             await this.shareLinkService.getLinkForFile(this.selectedElement._id).toPromise().then(value => this.link = value.body);
         }
-        if (this.link && ( this.link.directory === this.selectedElement._id || this.link.file === this.selectedElement._id )) {
+        if (this.link && (this.link.directory === this.selectedElement._id || this.link.file === this.selectedElement._id)) {
             if (confirm('Voulez vous vraiment supprimer le lien de partage sur ' + this.selectedElement.name + ' ?')) {
-                this.shareLinkService.deleteLink(this.link._id).subscribe( (data) => {
+                this.shareLinkService.deleteLink(this.link._id).subscribe((data) => {
                     console.log(data.status);
                 }, (err) => {
                     console.log(err);
@@ -406,5 +417,38 @@ export class HomeComponent implements OnInit, OnChanges {
             this.toastr.error('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name, 'Pas de lien');
             console.log('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name);
         }
+    }
+
+    async shareElement() {
+        if (!this.selectedElement) {
+            this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
+            return;
+        }
+        this.share = {
+            right: this.shareForm.value.shareType,
+            directory: null,
+            file: null,
+            user: null,
+            email: this.shareForm.value.shareEmail
+        };
+        if (this.currentType === 'dir') {
+            this.share.directory = this.selectedElement._id;
+        } else {
+            this.share.file = this.selectedElement._id;
+        }
+        await this.shareEmailService.postShare(this.share).subscribe((data) => {
+                if (data.status === 201) {
+                    console.log('element partagé');
+                    this.toastr.info('Element partagé', 'Succès');
+                } else if (data.status === 303) {
+                    console.log('email doesnt exist');
+                    this.toastr.error('Cette email n\'existe pas', 'Erreur');
+                }
+                jQuery('#shareElement').modal('hide');
+            },
+            (err) => {
+                this.toastr.error('Cette email n\'existe pas', 'Erreur');
+                console.log(err);
+            });
     }
 }
