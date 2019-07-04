@@ -39,6 +39,7 @@ export class HomeComponent implements OnInit, OnChanges {
     ReadOnly = false;
     modeDisplay: string;
     sharedParentDirectory: Directory;
+    isParent: boolean;
     parentID: string;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
@@ -89,6 +90,7 @@ export class HomeComponent implements OnInit, OnChanges {
 
     initHomeMode() {
         this.route.params.subscribe(async (params) => {
+            this.isParent = params.directoryId === '0';
             this.user = await this.userService.getUser();
             this.getFolders(params.directoryId);
             this.getFiles(params.directoryId);
@@ -331,7 +333,10 @@ export class HomeComponent implements OnInit, OnChanges {
                 });
             }
         }
+    }
 
+    async downloadCurrentDir() {
+        await this.folderCardComponent.downloadDir(this.currentDirectory._id);
     }
 
     setSelectedElement($event: Directory | FileModel, type: string) {

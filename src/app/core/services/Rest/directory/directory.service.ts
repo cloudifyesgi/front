@@ -50,4 +50,11 @@ export class DirectoryService {
         return this.http.get<any>(url, {observe: "response"});
     }
 
+    download(id): Observable<HttpResponse<any>> {
+        return this.http.get<any>(`${this.constantsService.getConstant("URL_DOWNLOAD_DIR")}/${id}`, {
+            responseType: 'blob' as 'json',
+            observe: "response"
+        });
+    }
+
 }

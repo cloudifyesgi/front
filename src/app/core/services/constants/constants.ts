@@ -10,6 +10,7 @@ export const constants = {
     'URL_GET_CHILD_DIRECTORY': '/directory/:id/children',
     'URL_GET_DELETED_DIRECTORY': '/directory/:id/deletedChildren',
     'URL_GET_FILES_BY_DIRECTORY': '/directory/:id/files',
+    'URL_DOWNLOAD_DIR': '/download/folder',
     'URL_GET_DELETED_FILES': '/directory/:id/deletedFiles',
     'URL_HISTORY': '/history',
     'URL_HISTORY_BY_DIR': '/directory/:id/histories',

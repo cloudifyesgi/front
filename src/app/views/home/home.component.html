@@ -2,6 +2,7 @@
     <div *ngIf="modeDisplay === 'home' || modeDisplay === 'trash'">
         <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
         <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+        <a *ngIf="!isParent" class="btn cursor-pointer" (click)="downloadCurrentDir()"><i class="cui-cloud-download icon-tools"></i></a>
     </div>
     <div *ngIf="modeDisplay === 'sharedFolder'">
         <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/0">{{sharedParentDirectory.name}}</a>
