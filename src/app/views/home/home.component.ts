@@ -195,7 +195,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getDeletedFolders(id: string) {
-        this.directoryService.getDeletedFolders(id).subscribe(
+        this.directoryService.getDeletedFolders('0').subscribe(
             response => {
                 if (response.status === 200) {
                     this.children = response.body.children;
