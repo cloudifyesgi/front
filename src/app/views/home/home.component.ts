@@ -104,7 +104,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
-            console.log(this.link);
             this.parentID = this.link.directory;
             this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
@@ -112,8 +111,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 return this.router.navigateByUrl('folders/0');
             }
             this.ReadOnly = this.link.link_type === 'readonly';
-            console.log('this.link.link_type = ' + this.link.link_type);
-            console.log('ReadOnly : ' + this.ReadOnly);
             if (params.directoryId === '0') {
                 this.getFoldersForParent();
             } else {
