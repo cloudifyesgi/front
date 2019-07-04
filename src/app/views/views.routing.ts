@@ -11,6 +11,7 @@ import {RegisterComponent} from "./authentication/register/register.component";
 import {ShareFolderComponent} from "./share/share-folder.component";
 import {ShareFileComponent} from "./share-file/share-file.component";
 import {DirectoryAccessGuard} from "../core/guards/directoryAccess/directory-access.guard";
+import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.guard";
 
 
 const routes: Routes = [
@@ -38,7 +39,7 @@ const routes: Routes = [
             {
                 path: 'folders/:directoryId',
                 component: HomeComponent,
-                canActivate: [DirectoryAccessGuard],
+                canActivate: [DirectoryAccessGuard, DeletedAccessGuard],
                 data: {
                     modeDisplay: 'home'
                 }

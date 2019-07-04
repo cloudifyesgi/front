@@ -30,7 +30,6 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getUserName();
-        console.log(this.element);
         if (this.type === 'dir') {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {
@@ -51,7 +50,6 @@ export class InfoCardComponent implements OnInit, OnChanges {
         this.historyService.getHistoryByDir(id).subscribe(
             result => {
                 if (result.status === 200) {
-                    console.log(result.body);
                     this.histories = result.body.reverse();
                 }
             }
@@ -61,7 +59,6 @@ export class InfoCardComponent implements OnInit, OnChanges {
     getFileHistories(id: string): void {
         this.fileService.getFileHistory(id).subscribe((data) => {
             if (data.status === 200) {
-                console.log(data.body);
                 this.histories = data.body.reverse();
             }
         });

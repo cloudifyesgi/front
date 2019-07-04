@@ -1,8 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
-import {HomeComponent} from "../../views/home/home.component";
-import {UserService} from "../../core/services/Rest/User/user.service";
 import {Directory} from "../../core/models/entities/directory";
 
 @Component({
@@ -16,9 +14,7 @@ export class FileCardComponent implements OnInit {
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
-    constructor(private fileService: FileService,
-                private homeComponent: HomeComponent,
-                private userService: UserService) {
+    constructor(private fileService: FileService) {
     }
 
     ngOnInit() {
@@ -52,7 +48,6 @@ export class FileCardComponent implements OnInit {
     }
 
     renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
-        console.log('rename ' + id + ' to ' + newName);
         this.fileService.updateFile({id: id, name: newName}).subscribe(
             response => {
                 if (response.status === 200) {
@@ -71,9 +66,6 @@ export class FileCardComponent implements OnInit {
             (err) => {
                 console.log(err);
             });
-    }
-
-    showMenu(_id) {
     }
 
     selectFile() {
