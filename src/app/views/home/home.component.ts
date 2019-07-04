@@ -103,7 +103,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
-            console.log(this.link);
             this.parentID = this.link.directory;
             this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
@@ -111,8 +110,6 @@ export class HomeComponent implements OnInit, OnChanges {
                 return this.router.navigateByUrl('folders/0');
             }
             this.ReadOnly = this.link.link_type === 'readonly';
-            console.log('this.link.link_type = ' + this.link.link_type);
-            console.log('ReadOnly : ' + this.ReadOnly);
             if (params.directoryId === '0') {
                 this.getFoldersForParent();
             } else {
@@ -387,5 +384,27 @@ export class HomeComponent implements OnInit, OnChanges {
 
     toggleInfoCard() {
         this.isHidden = !this.isHidden;
+    }
+
+    async deleteLink() {
+        if (this.currentType === 'dir') {
+            await this.shareLinkService.getLinkForDir(this.selectedElement._id).toPromise().then(value => this.link = value.body);
+        } else if (this.currentType === 'file') {
+            await this.shareLinkService.getLinkForFile(this.selectedElement._id).toPromise().then(value => this.link = value.body);
+        }
+        if (this.link && ( this.link.directory === this.selectedElement._id || this.link.file === this.selectedElement._id )) {
+            if (confirm('Voulez vous vraiment supprimer le lien de partage sur ' + this.selectedElement.name + ' ?')) {
+                this.shareLinkService.deleteLink(this.link._id).subscribe( (data) => {
+                    console.log(data.status);
+                }, (err) => {
+                    console.log(err);
+                });
+                this.getFolders(this.currentDirectory._id);
+                this.toastr.info('Le lien de partage a été supprimé', 'Succès');
+            }
+        } else {
+            this.toastr.error('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name, 'Pas de lien');
+            console.log('Il n y\'a pas de lien de partage sur ' + this.selectedElement.name);
+        }
     }
 }

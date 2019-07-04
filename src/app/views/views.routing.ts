@@ -58,7 +58,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'shared/files/:fileId',
+                path: 'shared/files/:linkId',
                 component: ShareFileComponent
             }
         ]

@@ -34,4 +34,8 @@ export class ShareLinkService {
     getLink(id): Observable<HttpResponse<Link>> {
         return this.http.get<Link>(`${this.constantsService.getConstant('URL_LINK')}/${id}`, {observe: "response"});
     }
+
+    deleteLink(id): Observable<HttpResponse<Link>> {
+        return this.http.delete<Link>(`${this.constantsService.getConstant('URL_LINK')}/${id}`, {observe: "response"});
+    }
 }

@@ -42,23 +42,23 @@ export class ShareFileComponent implements OnInit {
 
     async ngOnInit() {
         this.route.params.subscribe(async (params) => {
-            this.user = await this.userService.getUser();
-            await this.getLink(params.fileId).then( value => this.link = value.body);
-            if (this.link === null) {
+            await this.getLinkById(params.linkId).then(value => this.link = value.body);
+            if (this.link === undefined || this.link === null) {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
+            this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
-                this.toastr.error('Ce lien de partage n\'est pas valide ou est expiré', 'Erreur');
+                this.toastr.error('Ce lien de partage a expiré', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
-            this.user = await this.userService.getUser();
-            this.getFiles(params.fileId);
+            this.ReadOnly = this.link.link_type === 'readonly';
+            this.getFiles(this.link.file);
         });
     }
 
-    async getLink(id) {
-        return await this.shareLinkService.getLinkForFile(id).toPromise();
+    async getLinkById(id) {
+        return await this.shareLinkService.getLink(id).toPromise();
     }
 
     getFiles(id: string) {

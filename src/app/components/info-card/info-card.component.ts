@@ -16,6 +16,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     @Input() element: Directory | FileModel;
     @Input() type: string;
     @Input() versions: Array<FileModel>;
+    @Input() currentDirectory: Directory;
     name: string;
     histories: Array<History>;
 
@@ -34,7 +35,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {
             this.getFileHistories(this.element._id);
-            this.getVersions(this.element.name);
+            this.getVersions(this.element.name, this.currentDirectory._id);
         }
     }
 
@@ -66,8 +67,8 @@ export class InfoCardComponent implements OnInit, OnChanges {
         });
     }
 
-    getVersions(name: string): void {
-        this.fileService.getFileByVersions(name).subscribe(
+    getVersions(name: string, directory: string): void {
+        this.fileService.getFileByVersions(name, directory).subscribe(
             (data) => {
                 this.versions = data.body.reverse();
             },
