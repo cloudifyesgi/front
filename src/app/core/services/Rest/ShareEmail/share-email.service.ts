@@ -29,4 +29,16 @@ export class ShareEmailService {
     getFiles(user_id): Observable<HttpResponse<Array<FileModel>>> {
         return this.http.get<Array<FileModel>>(`${this.constantsService.getConstant('URL_SHARE_FILE')}/${user_id}`, {observe: "response"});
     }
+
+    getSharesForDir(dir_id): Observable<HttpResponse<Array<Share>>> {
+        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARE_BY_DIR')}/${dir_id}`, {observe: "response"});
+    }
+
+    getSharesForFile(file_id): Observable<HttpResponse<Array<Share>>> {
+        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARE_BY_FILE')}/${file_id}`, {observe: "response"});
+    }
+
+    deleteShare(id): Observable<HttpResponse<Share>> {
+        return this.http.delete<Share>(`${this.constantsService.getConstant('URL_SHARE')}/${id}`, {observe: "response"});
+    }
 }

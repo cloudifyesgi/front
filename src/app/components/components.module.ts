@@ -22,6 +22,7 @@ import {Moment} from "moment";
 import {MomentModule} from "ngx-moment";
 import {ShareCardComponent} from './share-card/share-card.component';
 import {VersionCardComponent} from "./version-card/version-card.component";
+import { MailShareCardComponent } from './mail-share-card/mail-share-card.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import {VersionCardComponent} from "./version-card/version-card.component";
         InfoCardComponent,
         HistoryCardComponent,
         ShareCardComponent,
-        VersionCardComponent],
+        VersionCardComponent,
+        MailShareCardComponent],
     exports: [
         FolderCardComponent,
         FileCardComponent,

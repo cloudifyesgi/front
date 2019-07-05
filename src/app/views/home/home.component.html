@@ -10,14 +10,14 @@
     </div>
         <div class="breadcrumb-menu" *ngIf="selectedElement && !ReadOnly">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="showLinkGenerator()" class="btn cursor-pointer" data-toggle="modal"
                data-target="#linkGenerator"><i class="icon-link icon-tools"></i></a>
-            <a *ngIf="(modeDisplay !== 'sharedClouds') || (modeDisplay === 'sharedClouds' && currentType !== 'dir') " class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="showNameRenamer()" class="btn cursor-pointer" data-toggle="modal"
                data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
-            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="showShareForm()" class="btn cursor-pointer" data-toggle="modal"
                data-target="#shareElement"><i class="cui-share icon-tools"></i></a>
-            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" (click)="deleteLink()"><i class="cui-user-unfollow icon-tools"></i></a>
-            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
+            <a *ngIf="showDeleteLinkButton()" class="btn cursor-pointer" (click)="deleteLink()"><i class="cui-user-unfollow icon-tools"></i></a>
+            <a *ngIf="showDeleteButton()" class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
     </div>
@@ -153,9 +153,9 @@
                 <div class="modal-body">
                     <div [formGroup]="shareForm">
                         <div class="form-group">
-                            <span>Entrez l'email de l'utilisateur à qui vous souhaitez partager l'élément : </span>
+                            <span>Entrez le(s) mail(s) : (avec une virgule et un espace entre les mails)  </span>
                             <input type="text" class="form-control" name="shareEmail"
-                               formControlName="shareEmail">
+                               formControlName="shareEmail" placeholder="Exemple : jean@dupont.com, frederic@sananes.fr, luiz@valdez.fr">
                         </div>
                         <div class="form-group">
                             <span>Type du lien :</span>&nbsp;

@@ -5,6 +5,8 @@ import {UserService} from "../../core/services/Rest/User/user.service";
 import {HistoryService} from "../../core/services/Rest/history/history.service";
 import {History} from "../../core/models/entities/history";
 import {FileService} from "../../core/services/Rest/file/file.service";
+import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
+import {Share} from "../../core/models/entities/share";
 
 @Component({
     selector: 'app-info-card',
@@ -19,10 +21,12 @@ export class InfoCardComponent implements OnInit, OnChanges {
     @Input() currentDirectory: Directory;
     name: string;
     histories: Array<History>;
+    Rights: Array<Share>;
 
     constructor(private userService: UserService,
                 private fileService: FileService,
-                private historyService: HistoryService) {
+                private historyService: HistoryService,
+                private shareEmailService: ShareEmailService) {
     }
 
     ngOnInit() {
@@ -30,7 +34,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.getUserName();
-        console.log(this.element);
+        this.getShare();
         if (this.type === 'dir') {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {
@@ -75,6 +79,46 @@ export class InfoCardComponent implements OnInit, OnChanges {
             (err) => {
                 console.log(err);
             });
+    }
+
+    getShare() {
+        console.log('je vais chercher les partages pour :' + this.element.name + ' avec l\'id : ' + this.element._id);
+        if (this.type === 'dir') {
+            this.shareEmailService.getSharesForDir(this.element._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.Rights = response.body;
+                        console.log('les voici :');
+                        console.log(response.body);
+                    }
+                },
+                err => console.log(err)
+            );
+        } else {
+            this.shareEmailService.getSharesForFile(this.element._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.Rights = response.body;
+                    }
+                },
+                err => console.log(err)
+            );
+        }
+    }
+
+    refresh() {
+        this.getUserName();
+        this.getShare();
+        if (this.type === 'dir') {
+            this.getHistories(this.element._id);
+        } else if (this.type === 'file') {
+            this.getFileHistories(this.element._id);
+            this.getVersions(this.element.name, this.currentDirectory._id);
+        }
+    }
+
+    onSharedDelete() {
+        this.refresh();
     }
 
 }

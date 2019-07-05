@@ -454,12 +454,14 @@ export class HomeComponent implements OnInit, OnChanges {
             this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
             return;
         }
+        const emails = this.shareForm.value.shareEmail.split(', ');
+
         this.share = {
             right: this.shareForm.value.shareType,
             directory: null,
             file: null,
             user: null,
-            email: this.shareForm.value.shareEmail
+            email: emails
         };
         if (this.currentType === 'dir') {
             this.share.directory = this.selectedElement._id;
@@ -477,8 +479,28 @@ export class HomeComponent implements OnInit, OnChanges {
                 jQuery('#shareElement').modal('hide');
             },
             (err) => {
-                this.toastr.error('Cette email n\'existe pas', 'Erreur');
+                this.toastr.error('L\'un des email spécifié n\'existe pas ou le format n\'est pas respecté', 'Erreur');
                 console.log(err);
             });
+    }
+
+    showLinkGenerator() {
+        return this.modeDisplay !== 'sharedClouds';
+    }
+
+    showNameRenamer() {
+        return (this.modeDisplay !== 'sharedClouds') || (this.modeDisplay === 'sharedClouds' && this.currentType !== 'dir');
+    }
+
+    showShareForm() {
+        return this.modeDisplay !== 'sharedClouds';
+    }
+
+    showDeleteLinkButton() {
+        return this.modeDisplay !== 'sharedClouds';
+    }
+
+    showDeleteButton() {
+        return this.modeDisplay !== 'sharedClouds';
     }
 }
