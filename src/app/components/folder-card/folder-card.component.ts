@@ -41,6 +41,8 @@ export class FolderCardComponent implements OnInit {
             this.router.navigate(['folders/' + idFolder]);
         } else if (this.modeDisplay === 'sharedFolder') {
             this.router.navigate(['shared/folders/' + this.linkId + '/' + idFolder]);
+        } else if (this.modeDisplay === 'sharedClouds') {
+            this.router.navigate(['sharedClouds/' + idFolder]);
         }
     }
 

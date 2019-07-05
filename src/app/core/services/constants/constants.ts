@@ -19,5 +19,7 @@ export const constants = {
     'URL_LINK_FILE': '/link/file/:id',
     'URL_LINK_DIR': '/link/dir/:id',
     'URL_LINK': '/link',
-    'URL_SHARE': '/right'
+    'URL_SHARE': '/right',
+    'URL_SHARE_DIR': '/right/directory',
+    'URL_SHARE_FILE': '/right/file'
 };

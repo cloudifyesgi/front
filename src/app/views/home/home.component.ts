@@ -88,6 +88,8 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.initHomeMode();
                 } else if (this.modeDisplay === 'sharedFolder') {
                     this.initShareMode();
+                } else if (this.modeDisplay === 'sharedClouds') {
+                    this.initCloudMode();
                 }
             }
         );
@@ -103,6 +105,20 @@ export class HomeComponent implements OnInit, OnChanges {
             this.user = await this.userService.getUser();
             this.getFolders(params.directoryId);
             this.getFiles(params.directoryId);
+            this.unsetSelectedElement();
+        });
+    }
+
+    initCloudMode() {
+        this.route.params.subscribe(async (params) => {
+            this.user = await this.userService.getUser();
+            if (params.directoryId === '0') {
+                this.getMailSharedFolders(this.user._id);
+                this.getMailSharedFiles(this.user._id);
+            } else {
+                this.getFolders(params.directoryId);
+                this.getFiles(params.directoryId);
+            }
             this.unsetSelectedElement();
         });
     }
@@ -140,7 +156,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getFolders(id: string, isParent = null, parentId = null) {
-        if (this.modeDisplay === 'home') {
+        if (this.modeDisplay === 'home' || this.modeDisplay === 'sharedClouds') {
             this.getActiveFolders(id);
         } else if (this.modeDisplay === 'trash') {
             this.getDeletedFolders(id);
@@ -179,6 +195,22 @@ export class HomeComponent implements OnInit, OnChanges {
             },
             err => console.log(err)
         );
+    }
+
+    getMailSharedFolders(user_id) {
+        this.shareEmailService.getFolders(user_id).subscribe( response => {
+            if (response.status === 200) {
+                this.children = response.body;
+            }
+        });
+    }
+
+    getMailSharedFiles(user_id) {
+        this.shareEmailService.getFiles(user_id).subscribe( response => {
+            if (response.status === 200) {
+                this.files = response.body;
+            }
+        });
     }
 
     async getLink(id) {
@@ -222,7 +254,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getFiles(id: string) {
-        if (this.modeDisplay === 'home' || this.modeDisplay === 'sharedFolder') {
+        if (this.modeDisplay === 'home' || this.modeDisplay === 'sharedFolder' || this.modeDisplay === 'sharedClouds') {
             this.getActiveFiles(id);
         } else if (this.modeDisplay === 'trash') {
             this.getDeletedFiles(id);
@@ -233,7 +265,6 @@ export class HomeComponent implements OnInit, OnChanges {
         this.fileService.getFilesByDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
-                    console.log(response.body);
                     this.files = response.body;
                 } else {
                     this.router.navigateByUrl('folder/0');
@@ -248,7 +279,6 @@ export class HomeComponent implements OnInit, OnChanges {
         this.fileService.getDeletedFiles(id).subscribe(
             response => {
                 if (response.status === 200) {
-                    console.log(response.body);
                     this.files = response.body;
                 } else {
                     this.router.navigateByUrl('folder/0');

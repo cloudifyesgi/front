@@ -10,14 +10,14 @@
     </div>
         <div class="breadcrumb-menu" *ngIf="selectedElement && !ReadOnly">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" data-toggle="modal"
                data-target="#linkGenerator"><i class="icon-link icon-tools"></i></a>
-            <a class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="(modeDisplay !== 'sharedClouds') || (modeDisplay === 'sharedClouds' && currentType !== 'dir') " class="btn cursor-pointer" data-toggle="modal"
                data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
-            <a class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" data-toggle="modal"
                data-target="#shareElement"><i class="cui-share icon-tools"></i></a>
-            <a class="btn cursor-pointer" (click)="deleteLink()"><i class="cui-user-unfollow icon-tools"></i></a>
-            <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
+            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" (click)="deleteLink()"><i class="cui-user-unfollow icon-tools"></i></a>
+            <a *ngIf="modeDisplay !== 'sharedClouds'" class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
             <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
     </div>
@@ -32,7 +32,7 @@
             </div>
             <div class="card-body">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div *ngIf="children" class="row">
                         <app-folder-card
                             (messageEvent)="setSelectedElement($event, 'dir')"
                             *ngFor="let directory of children" [directory]="directory"
@@ -48,13 +48,13 @@
                 Files
             </div>
             <div class="card-body">
-                <div class="d-flex flex-row flex-wrap">
+                <div *ngIf="files" class="d-flex flex-row flex-wrap">
                     <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
                                    [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
                                    *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
                 </div>
             </div>
-            <div *ngIf="!ReadOnly" class="center">
+            <div *ngIf="!ReadOnly && currentDirectory!== undefined" class="center">
                 <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>
