@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit, OnChanges {
     sharedParentDirectory: Directory;
     parentID: string;
     share: Share;
+    right_type: string;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
     @ViewChild(InfoCardComponent) infoCardComponent;
@@ -381,9 +382,10 @@ export class HomeComponent implements OnInit, OnChanges {
 
     }
 
-    setSelectedElement($event: Directory | FileModel, type: string) {
+    async setSelectedElement($event: Directory | FileModel, type: string) {
         this.selectedElement = $event;
         this.currentType = type;
+        await this.getRightType();
     }
 
     async generateLink() {
@@ -470,14 +472,69 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     showNameRenamer() {
-        return (this.modeDisplay !== 'sharedClouds') || (this.modeDisplay === 'sharedClouds' && this.currentType !== 'dir');
+        if (this.modeDisplay === 'sharedClouds') {
+            if (this.right_type === 'root') {
+                return this.currentType !== 'dir';
+            } else {
+                if (this.right_type === undefined) {
+                    return false;
+                } else {
+                    return (this.right_type === 'write');
+                }
+            }
+        } else {
+            return (this.modeDisplay !== 'sharedClouds') || (this.modeDisplay === 'sharedClouds' && this.currentType !== 'dir');
+        }
+    }
+
+    showCreateDirButton() {
+        if (this.modeDisplay === 'sharedClouds') {
+            if (this.right_type === 'root') {
+                return false;
+            } else {
+                if (this.right_type === undefined) {
+                    return false;
+                } else {
+                    return (this.right_type === 'write');
+                }
+            }
+        } else {
+            return !this.ReadOnly;
+        }
     }
 
     showShareForm() {
-        return this.modeDisplay !== 'sharedClouds';
+        return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
     }
 
     showDeleteButton() {
-        return this.modeDisplay !== 'sharedClouds';
+        if (this.modeDisplay === 'sharedClouds') {
+            if (this.right_type === 'root') {
+                return this.currentType !== 'dir';
+            } else {
+                if (this.right_type === undefined) {
+                    return false;
+                } else {
+                    return (this.right_type === 'write');
+                }
+            }
+        } else {
+            return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
+        }
+    }
+
+    async getRightType() {
+        if (this.modeDisplay === 'sharedClouds') {
+            await this.route.params.subscribe(async (params) => {
+                if (params.directoryId !== '0') {
+                    const res = await this.shareEmailService.getShareForDirAndUser(params.directoryId, this.user._id).toPromise();
+                    if (res.body) {
+                        this.right_type = res.body.right;
+                    }
+                } else {
+                    this.right_type = 'root';
+                }
+            });
+        }
     }
 }

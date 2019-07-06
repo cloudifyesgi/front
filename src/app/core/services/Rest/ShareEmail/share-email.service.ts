@@ -31,11 +31,21 @@ export class ShareEmailService {
     }
 
     getSharesForDir(dir_id): Observable<HttpResponse<Array<Share>>> {
-        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARE_BY_DIR')}/${dir_id}`, {observe: "response"});
+        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARES_BY_DIR')}/${dir_id}`, {observe: "response"});
     }
 
     getSharesForFile(file_id): Observable<HttpResponse<Array<Share>>> {
-        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARE_BY_FILE')}/${file_id}`, {observe: "response"});
+        return this.http.get<Array<Share>>(`${this.constantsService.getConstant('URL_GET_SHARES_BY_FILE')}/${file_id}`, {observe: "response"});
+    }
+
+    getShareForDirAndUser(dir_id, user_id): Observable<HttpResponse<Share>> {
+        const url = this.constantsService.getConstant('URL_GET_SHARE_BY_DIR_AND_USER').replace(':sharedDir', dir_id).replace(':userId', user_id);
+        return this.http.get<Share>(url, {observe: "response"});
+    }
+
+    getShareForFileAndUser(file_id, user_id): Observable<HttpResponse<Share>> {
+        const url = this.constantsService.getConstant('URL_GET_SHARE_BY_FILE_AND_USER').replace(':sharedFile', file_id).replace(':userId', user_id);
+        return this.http.get<Share>(url, {observe: "response"});
     }
 
     deleteShare(id): Observable<HttpResponse<Share>> {

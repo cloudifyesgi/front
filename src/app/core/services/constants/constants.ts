@@ -24,6 +24,8 @@ export const constants = {
     'URL_SHARE': '/right',
     'URL_SHARE_DIR': '/right/directory',
     'URL_SHARE_FILE': '/right/file',
-    'URL_GET_SHARE_BY_DIR': '/right/sharedDir',
-    'URL_GET_SHARE_BY_FILE': '/right/sharedFile'
+    'URL_GET_SHARES_BY_DIR': '/right/sharedDir',
+    'URL_GET_SHARES_BY_FILE': '/right/sharedFile',
+    'URL_GET_SHARE_BY_DIR_AND_USER': '/right/DirShare/:sharedDir/:userId',
+    'URL_GET_SHARE_BY_FILE_AND_USER': '/right/FileShare/:sharedFile/:userId',
 };
