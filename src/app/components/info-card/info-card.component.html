@@ -71,6 +71,16 @@
             </div>
             <div id="share" class="tab-pane fade" role="tabpanel" aria-labelledby="share-tab">
                 <app-mail-share-card *ngFor="let right of Rights" [right]="right" (messageEvent)="onSharedDelete()"></app-mail-share-card>
+                <div *ngIf="Rights && Rights.length === 0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Cet élément n'est pas partagé</h5>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Pas de partage
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

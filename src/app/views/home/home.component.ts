@@ -215,10 +215,6 @@ export class HomeComponent implements OnInit, OnChanges {
         });
     }
 
-    async getLink(id) {
-        return await this.shareLinkService.getLinkForDir(id).toPromise();
-    }
-
     async getLinkById(id) {
         return await this.shareLinkService.getLink(id).toPromise();
     }
@@ -477,10 +473,6 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     showShareForm() {
-        return this.modeDisplay !== 'sharedClouds';
-    }
-
-    showDeleteLinkButton() {
         return this.modeDisplay !== 'sharedClouds';
     }
 

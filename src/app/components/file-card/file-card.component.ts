@@ -73,9 +73,6 @@ export class FileCardComponent implements OnInit {
             });
     }
 
-    showMenu(_id) {
-    }
-
     selectFile() {
         this.messageEvent.emit(this.file);
     }
