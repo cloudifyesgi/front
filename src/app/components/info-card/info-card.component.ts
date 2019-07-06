@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
 import {UserService} from "../../core/services/Rest/User/user.service";
@@ -7,6 +7,7 @@ import {History} from "../../core/models/entities/history";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 import {Share} from "../../core/models/entities/share";
+import {ShareCardComponent} from "../share-card/share-card.component";
 
 @Component({
     selector: 'app-info-card',
@@ -22,6 +23,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     name: string;
     histories: Array<History>;
     Rights: Array<Share>;
+    @ViewChild(ShareCardComponent) shareCardComponent;
 
     constructor(private userService: UserService,
                 private fileService: FileService,

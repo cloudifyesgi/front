@@ -16,6 +16,7 @@ import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.se
 import {ToastrService} from "ngx-toastr";
 import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
+import {InfoCardComponent} from "../../components/info-card/info-card.component";
 
 declare var jQuery: any;
 
@@ -45,6 +46,7 @@ export class HomeComponent implements OnInit, OnChanges {
     share: Share;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
+    @ViewChild(InfoCardComponent) infoCardComponent;
 
     directoryForm = this.fb.group(
         {
@@ -411,6 +413,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     console.log('lien envoyé');
                 }
                 jQuery('#linkGenerator').modal('hide');
+                this.infoCardComponent.shareCardComponent.getLinkInfo();
             },
             (err) => {
                 console.log(err);
@@ -455,10 +458,13 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.toastr.error('Cette email n\'existe pas', 'Erreur');
                 }
                 jQuery('#shareElement').modal('hide');
+                this.infoCardComponent.getShare();
             },
             (err) => {
                 this.toastr.error('L\'un des email spécifié n\'existe pas ou le format n\'est pas respecté', 'Erreur');
-                console.log(err);
+                if (err.status !== 401) {
+                    console.log(err);
+                }
             });
     }
 
