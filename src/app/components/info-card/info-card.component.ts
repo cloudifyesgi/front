@@ -55,7 +55,6 @@ export class InfoCardComponent implements OnInit, OnChanges {
         this.historyService.getHistoryByDir(id).subscribe(
             result => {
                 if (result.status === 200) {
-                    console.log(result.body);
                     this.histories = result.body.reverse();
                 }
             }
@@ -82,14 +81,11 @@ export class InfoCardComponent implements OnInit, OnChanges {
     }
 
     getShare() {
-        console.log('je vais chercher les partages pour :' + this.element.name + ' avec l\'id : ' + this.element._id);
         if (this.type === 'dir') {
             this.shareEmailService.getSharesForDir(this.element._id).subscribe(
                 response => {
                     if (response.status === 200) {
                         this.Rights = response.body;
-                        console.log('les voici :');
-                        console.log(response.body);
                     }
                 },
                 err => console.log(err)

@@ -18,6 +18,8 @@ export const constants = {
     'URL_GET_HISTORY_BY_FILE': '/history/file/:id',
     'URL_LINK_FILE': '/link/file/:id',
     'URL_LINK_DIR': '/link/dir/:id',
+    'URL_LINKS_FILE': '/link/file/links/:id',
+    'URL_LINKS_DIR': '/link/dir/links/:id',
     'URL_LINK': '/link',
     'URL_SHARE': '/right',
     'URL_SHARE_DIR': '/right/directory',

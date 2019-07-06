@@ -1,14 +1,17 @@
-<div *ngIf="Link">
-    <div class="card text-center">
-        <div class="card-body">
-            <h5 class="card-title">{{Link.link}}</h5>
-        </div>
-        <div class="card-footer text-muted">
-            Nom du lien
+<div *ngIf="Links">
+    <div *ngFor="let link of Links">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{link.link}}</h5>
+            </div>
+            <div class="card-footer text-muted">
+                Nom du lien
+            </div>
+            <button type="button" class="btn btn-danger" (click)="deleteLink(link._id)">Cliquez ici pour supprimer le lien</button>
         </div>
     </div>
 </div>
-<div *ngIf="!Link">
+<div *ngIf="Links && Links.length === 0">
     <div class="card text-center">
         <div class="card-body">
             <h5 class="card-title">Pas de lien</h5>

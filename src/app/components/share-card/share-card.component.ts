@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
@@ -13,7 +13,7 @@ import {UserService} from "../../core/services/Rest/User/user.service";
 export class ShareCardComponent implements OnInit, OnChanges {
     @Input() element: Directory | FileModel;
     @Input() type: string;
-    Link: Link;
+    Links: Array<Link>;
 
     constructor(private shareLinkService: ShareLinkService, private userService: UserService) {
     }
@@ -28,27 +28,19 @@ export class ShareCardComponent implements OnInit, OnChanges {
 
   getLinkInfo() {
       if (this.type === 'dir') {
-          this.shareLinkService.getLinkForDir(this.element._id).subscribe(
+          this.shareLinkService.getLinksForDir(this.element._id).subscribe(
               response => {
                   if (response.status === 200) {
-                      this.Link = response.body;
-                      if (this.Link) {
-                          this.userService.getUserName(this.Link.user).subscribe((data) => {
-                              this.Link.user = data.name + ' ' + data.firstname;
-                          });
-                      }
+                      this.Links = response.body;
                   }
               },
               err => console.log(err)
           );
       } else {
-          this.shareLinkService.getLinkForFile(this.element._id).subscribe(
+          this.shareLinkService.getLinksForFile(this.element._id).subscribe(
               response => {
                   if (response.status === 200) {
-                      this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
+                      this.Links = response.body;
                   }
               },
               err => console.log(err)
@@ -57,4 +49,13 @@ export class ShareCardComponent implements OnInit, OnChanges {
   }
 
 
+    deleteLink(id) {
+        this.shareLinkService.deleteLink(id).subscribe( response => {
+            if (response.status === 200) {
+                console.log('lien supprimé');
+                this.getLinkInfo();
+            }},
+            err => console.log(err)
+        );
+    }
 }
