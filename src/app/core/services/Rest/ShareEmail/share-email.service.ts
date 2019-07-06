@@ -18,6 +18,10 @@ export class ShareEmailService {
                 private localStorage: LocalStorageService) {
     }
 
+    getShare(shareId): Observable<HttpResponse<Share>> {
+        return this.http.get<Share>(`${this.constantsService.getConstant('URL_SHARE')}/${shareId}`, {observe: "response"});
+    }
+
     postShare(share): Observable<HttpResponse<Share>> {
         return this.http.post<Share>(`${this.constantsService.getConstant('URL_SHARE')}`, share, {observe: "response"});
     }

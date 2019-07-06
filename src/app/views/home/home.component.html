@@ -34,7 +34,7 @@
                     <div *ngIf="children" class="row">
                         <app-folder-card
                             (messageEvent)="setSelectedElement($event, 'dir')"
-                            *ngFor="let directory of children" [directory]="directory"
+                            *ngFor="let directory of children" [directory]="directory" [shareId]="currentShareId"
                             [ngClass]="{'selected-card': selectedElement && selectedElement._id === directory._id}"
                             class="col-2 col-sm-4"></app-folder-card>
                     </div>
@@ -53,7 +53,7 @@
                                    *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
                 </div>
             </div>
-            <div *ngIf="!ReadOnly && currentDirectory!== undefined" class="center">
+            <div *ngIf="showUploadZone()" class="center">
                 <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>

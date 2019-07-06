@@ -17,6 +17,7 @@ export class FolderCardComponent implements OnInit {
     modeDisplay: string;
     linkId: string;
     @Input() directory: Directory;
+    @Input() shareId: string;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
 
     constructor(private router: Router,
@@ -42,7 +43,7 @@ export class FolderCardComponent implements OnInit {
         } else if (this.modeDisplay === 'sharedFolder') {
             this.router.navigate(['shared/folders/' + this.linkId + '/' + idFolder]);
         } else if (this.modeDisplay === 'sharedClouds') {
-            this.router.navigate(['sharedClouds/' + idFolder]);
+            this.router.navigate(['sharedClouds/' + this.shareId + '/' + idFolder]);
         }
     }
 
