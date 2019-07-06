@@ -33,6 +33,10 @@ export class FolderCardComponent implements OnInit {
                     this.route.params.subscribe( (params) => {
                         this.linkId = params.linkId;
                     });
+                } else if (this.modeDisplay === 'sharedClouds') {
+                    this.route.params.subscribe( (params) => {
+                        this.shareId = params.shareId;
+                    });
                 }
             });
     }

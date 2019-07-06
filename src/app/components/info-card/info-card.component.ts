@@ -66,7 +66,6 @@ export class InfoCardComponent implements OnInit, OnChanges {
     getFileHistories(id: string): void {
         this.fileService.getFileHistory(id).subscribe((data) => {
             if (data.status === 200) {
-                console.log(data.body);
                 this.histories = data.body.reverse();
             }
         });
