@@ -315,14 +315,15 @@ export class HomeComponent implements OnInit, OnChanges {
                             this.getFiles(this.currentDirectory._id);
                         },
                         (err) => {
+                            this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
                             console.log(err);
                         }
                     );
                 });
             } else {
-                // It was a directory (empty directories are added, otherwise only files)
                 const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
                 console.log(droppedFile.relativePath, fileEntry);
+                this.toastr.error('Vous ne pouvez pas upload un dossier vide', 'Erreur');
             }
         }
     }
