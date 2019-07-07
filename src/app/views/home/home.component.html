@@ -8,6 +8,11 @@
         <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
         <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
     </div>
+    <div *ngIf="modeDisplay === 'sharedClouds'">
+        <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/sharedClouds/{{currentShareId}}/{{sharedParentDirectory._id}}">{{sharedParentDirectory.name}}</a>
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/sharedClouds/{{currentShareId}}/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    </div>
         <div class="breadcrumb-menu" *ngIf="selectedElement && !ReadOnly">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <a *ngIf="showLinkGenerator()" class="btn cursor-pointer" data-toggle="modal"

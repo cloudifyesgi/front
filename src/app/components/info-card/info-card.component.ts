@@ -41,7 +41,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
             this.getHistories(this.element._id);
         } else if (this.type === 'file') {
             this.getFileHistories(this.element._id);
-            this.getVersions(this.element.name, this.element.directory);
+            this.getVersions(this.element.name, (this.element as FileModel).directory);
         }
     }
 

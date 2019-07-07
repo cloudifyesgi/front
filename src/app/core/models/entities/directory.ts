@@ -7,5 +7,4 @@ export interface Directory {
     path?: string;
     createdAt?: string;
     updatedAt?: string;
-    directory?: string;
 }

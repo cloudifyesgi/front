@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, OnChanges {
     share: Share;
     right_type: string;
     currentShareId: string;
+    currentShareParentId: string;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
     @ViewChild(InfoCardComponent) infoCardComponent;
@@ -120,9 +121,10 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.getMailSharedFolders(this.user._id);
                 this.getMailSharedFiles(this.user._id);
             } else {
-                this.getFolders(params.directoryId);
-                this.getFiles(params.directoryId);
                 await this.getRightType();
+                await this.getRight(this.currentShareParentId);
+                this.getSharedFolders(params.directoryId, false, this.currentShareParentId);
+                this.getFiles(params.directoryId);
             }
             this.unsetSelectedElement();
         });
@@ -161,11 +163,13 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getFolders(id: string, isParent = null, parentId = null) {
-        if (this.modeDisplay === 'home' || this.modeDisplay === 'sharedClouds') {
+        if (this.modeDisplay === 'home') {
             this.getActiveFolders(id);
         } else if (this.modeDisplay === 'trash') {
             this.getDeletedFolders(id);
         } else if (this.modeDisplay === 'sharedFolder') {
+            this.getSharedFolders(id, isParent, parentId);
+        } else if (this.modeDisplay === 'sharedClouds') {
             this.getSharedFolders(id, isParent, parentId);
         }
     }
@@ -182,6 +186,9 @@ export class HomeComponent implements OnInit, OnChanges {
                     } else {
                         this.children = response.body.children;
                         this.currentDirectory = response.body.breadcrumb.pop();
+                        if (this.currentDirectory._id === parentId) {
+                            return;
+                        }
                         let i_dir = response.body.breadcrumb.pop();
                         while (i_dir !== undefined) {
                             if (i_dir._id === parentId) {
@@ -547,25 +554,36 @@ export class HomeComponent implements OnInit, OnChanges {
 
     async getRightType() {
         if (this.modeDisplay === 'sharedClouds') {
-            await this.route.params.subscribe(async (params) => {
-                if (params.directoryId === undefined || params.directoryId !== '0') {
-                    const res = await this.shareEmailService.getShare(params.shareId).toPromise();
-                    if (res.body) {
-                        this.right_type = res.body.right;
-                    }
-                } else {
-                    this.right_type = 'root';
+            const params = this.route.snapshot.params;
+            if (params.directoryId === undefined || params.directoryId !== '0') {
+                const rep = await this.shareEmailService.getShare(params.shareId).toPromise();
+                if (rep.body) {
+                    this.right_type = rep.body.right;
+                    this.currentShareParentId = rep.body.directory;
                 }
-            });
+                    /*.subscribe( async (data) => {
+                    console.log('data : ', data);
+                });*/
+                /*return await this.test(params.shareId).then(value => {
+                        console.log(value.body);
+                        if (value.body) {
+                            this.right_type = value.body.right;
+                            this.currentShareParentId = value.body.directory;
+                        }
+                        console.log(this.currentShareId);
+                });*/
+            } else {
+                this.right_type = 'root';
+            }
         }
     }
 
     async getRight(_id) {
-        if (this.currentType === 'dir') {
-            const res = await this.shareEmailService.getShareForDirAndUser(_id, this.user._id).toPromise();
+        if (this.currentType === 'file') {
+            const res = await this.shareEmailService.getShareForFileAndUser(_id, this.user._id).toPromise();
             this.currentShareId = res.body._id;
         } else {
-            const res = await this.shareEmailService.getShareForFileAndUser(_id, this.user._id).toPromise();
+            const res = await this.shareEmailService.getShareForDirAndUser(_id, this.user._id).toPromise();
             this.currentShareId = res.body._id;
         }
     }
