@@ -191,8 +191,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.router.navigateByUrl('folder/0');
                 }
 
-            },
-            err => console.log(err)
+            }
         );
     }
 
@@ -207,8 +206,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.router.navigateByUrl('folder/0');
                 }
 
-            },
-            err => console.log(err)
+            }
         );
     }
 
@@ -229,8 +227,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.router.navigateByUrl('folder/0');
                 }
 
-            },
-            err => console.log(err)
+            }
         );
     }
 
@@ -243,8 +240,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.router.navigateByUrl('folder/0');
                 }
 
-            },
-            err => console.log(err)
+            }
         );
     }
 
@@ -298,9 +294,6 @@ export class HomeComponent implements OnInit, OnChanges {
             response => {
                 this.children.push(response.body);
                 jQuery('#getNameDirectory').modal('hide');
-            },
-            err => {
-                console.log(err);
             }
         );
     }

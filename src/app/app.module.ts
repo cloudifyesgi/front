@@ -35,6 +35,9 @@ import {FormsModule} from "@angular/forms";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {ToastrModule} from "ngx-toastr";
 import {MomentModule} from "ngx-moment";
+import {HttpsInterceptor} from "./core/providers/http.interceptor";
+import {RestErrorHandler} from "./core/providers/rest.error-handler";
+import {NotificationService} from "./core/services/Notification/notification.service";
 
 @NgModule({
     imports: [
@@ -57,13 +60,17 @@ import {MomentModule} from "ngx-moment";
         NgxFileDropModule,
         CommonModule,
         BrowserAnimationsModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot({
+            preventDuplicates: true
+        })
     ],
     exports: [AppRoutingModule],
     declarations: [
         AppComponent
     ],
     providers: [
+        RestErrorHandler,
+        NotificationService,
         {
             provide: LocationStrategy,
             useClass: HashLocationStrategy
@@ -71,6 +78,11 @@ import {MomentModule} from "ngx-moment";
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpsInterceptor,
             multi: true
         }
     ],
