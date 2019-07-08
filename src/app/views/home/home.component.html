@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div *ngIf="showUploadZone()" class="center">
-                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
+                <ngx-file-drop dropZoneLabel="Drop files here" id="fileDropZone" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>
         </div>
