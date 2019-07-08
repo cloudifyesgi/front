@@ -13,11 +13,11 @@
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="version" aria-selected="true"
                    href="#version">Version</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="modeDisplay !== 'sharedClouds' && modeDisplay !== 'sharedFolder'">
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="links" aria-selected="true"
                    href="#links">Liens</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="modeDisplay !== 'sharedClouds' && modeDisplay !== 'sharedFolder'">
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="share" aria-selected="true"
                    href="#share">Partage</a>
             </li>

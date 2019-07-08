@@ -420,6 +420,9 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
+                if (this.currentType === 'dir') {
+                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                }
             },
             (err) => {
                 console.log(err);

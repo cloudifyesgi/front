@@ -20,6 +20,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     @Input() type: string;
     @Input() versions: Array<FileModel>;
     @Input() currentDirectory: Directory;
+    @Input() modeDisplay: string;
     name: string;
     histories: Array<History>;
     Rights: Array<Share>;
