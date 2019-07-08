@@ -12,6 +12,7 @@ import {ShareFolderComponent} from "./share/share-folder.component";
 import {ShareFileComponent} from "./share-file/share-file.component";
 import {DirectoryAccessGuard} from "../core/guards/directoryAccess/directory-access.guard";
 import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.guard";
+import {SubscriptionComponent} from './subscription/subscription.component';
 
 
 const routes: Routes = [
@@ -61,6 +62,9 @@ const routes: Routes = [
             {
                 path: 'shared/files/:linkId',
                 component: ShareFileComponent
+            },{
+                path: 'subscription',
+                component: SubscriptionComponent
             }
         ]
     }

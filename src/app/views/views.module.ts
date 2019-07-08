@@ -16,6 +16,7 @@ import { RegisterComponent } from './authentication/register/register.component'
 import {NgxFileDropModule} from "ngx-file-drop";
 import { ShareFolderComponent } from './share/share-folder.component';
 import { ShareFileComponent } from './share-file/share-file.component';
+import { SubscriptionComponent } from './subscription/subscription.component';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -39,7 +40,8 @@ import { ShareFileComponent } from './share-file/share-file.component';
         HomeComponent,
         RegisterComponent,
         ShareFolderComponent,
-        ShareFileComponent
+        ShareFileComponent,
+        SubscriptionComponent
     ],
     providers: [LocalStorageService]
 })

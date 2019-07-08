@@ -1,0 +1,15 @@
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title text-muted text-uppercase text-center">{{subscription.name}}</h5>
+        <h6 class="card-price text-center">{{subscription.price}} €<span class="period">/month</span></h6>
+        <hr>
+        <ul class="fa-ul">
+            <li><span class="fa-li"><i class="fa fa-chevron-right"></i></span><strong>Unlimited sharing</strong></li>
+            <li><span class="fa-li"><i class="fa fa-chevron-right"></i></span> {{subscription.storage / 1000 < 1000? subscription.storage / 1000+"Mo" : subscription.storage / 1000000+"Go"}} available storage</li>
+            <li><span class="fa-li"><i class="fa fa-chevron-right"></i></span> {{subscription.file_size / 1000}}Mo max file size</li>
+            <li><span class="fa-li"><i class="fa fa-chevron-right"></i></span>Up to {{subscription.file_number}} uploadable files</li>
+        </ul>
+        <a *ngIf="isCurrent" class="btn btn-block  text-uppercase">Votre abonnement</a>
+        <a (click)="changeSubscription()" *ngIf="!isCurrent" class="btn btn-block btn-primary text-uppercase">Changer</a>
+    </div>
+</div>
