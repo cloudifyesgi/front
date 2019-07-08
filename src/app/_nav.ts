@@ -1,9 +1,9 @@
 export const navItems = [
   {
     name: 'Personal cloud',
-    url: '/dashboard',
+    url: '/folders',
     icon: 'cui-cloud',
-    children: [
+    /*children: [
       {
         name: 'Cloudify',
         url: '/folders',
@@ -19,11 +19,11 @@ export const navItems = [
         url: './',
         icon: 'cui-star'
       }
-    ]
+    ]*/
   },
   {
     name: 'Shared clouds',
-    url: '/dashboard',
+    url: '/sharedClouds/0',
     icon: 'cui-share'
   },
   {

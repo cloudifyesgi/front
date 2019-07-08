@@ -26,15 +26,18 @@ export class HistoryCardComponent implements OnInit {
                 this.text = ``;
                 this.color = 'success';
                 break;
+            case 'updated' :
+                this.text = ``;
+                this.color = ``;
+                break;
             case 'addedDir' :
                 if (typeof this.history.child_directory !== "string") {
                     this.text = `${this.history.child_directory.name}`;
-                    this.color = 'info';
                 }
                 break;
             case 'addedFile':
                 if (typeof this.history.child_file !== "string") {
-                    if (this.history.child_file.name) {
+                    if (this.history.child_file && this.history.child_file.name) {
                         this.text = `${this.history.child_file.name}`;
                     }
                     this.color = 'primary';

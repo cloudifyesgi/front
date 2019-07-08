@@ -61,6 +61,20 @@ const routes: Routes = [
             {
                 path: 'shared/files/:linkId',
                 component: ShareFileComponent
+            },
+            {
+                path: 'sharedClouds/0',
+                component: HomeComponent,
+                data: {
+                    modeDisplay: 'sharedClouds'
+                }
+            },
+            {
+                path: 'sharedClouds/:shareId/:directoryId',
+                component: HomeComponent,
+                data: {
+                    modeDisplay: 'sharedClouds'
+                }
             }
         ]
     }

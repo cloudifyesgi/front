@@ -27,6 +27,16 @@ export class ShareLinkService {
         return this.http.get<Link>(url, {observe: "response"});
     }
 
+    getLinksForDir(id): Observable<HttpResponse<Array<Link>>> {
+        const url = this.constantsService.getConstant('URL_LINKS_DIR').replace(':id', id);
+        return this.http.get<Array<Link>>(url, {observe: "response"});
+    }
+
+    getLinksForFile(id): Observable<HttpResponse<Array<Link>>> {
+        const url = this.constantsService.getConstant('URL_LINKS_FILE').replace(':id', id);
+        return this.http.get<Array<Link>>(url, {observe: "response"});
+    }
+
     postLink(link: Link): Observable<HttpResponse<Link>> {
         return this.http.post<Link>(`${this.constantsService.getConstant('URL_LINK')}`, link, {observe: "response"});
     }

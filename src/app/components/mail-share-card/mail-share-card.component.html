@@ -1,0 +1,18 @@
+<div *ngIf="right">
+    <div class="card text-center">
+        <div class="card-body">
+            <h5 class="card-title">{{user}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Utilisateur
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{right.right}}</h5>
+        </div>
+        <div class="card-footer text-muted">
+            Droit sur l'élément
+        </div>
+        <button type="button" class="btn btn-danger" (click)="deleteShare()">Cliquez ici pour supprimer le partage</button>
+    </div>
+</div>
+
