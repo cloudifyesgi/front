@@ -559,17 +559,6 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.right_type = rep.body.right;
                     this.currentShareParentId = rep.body.directory;
                 }
-                    /*.subscribe( async (data) => {
-                    console.log('data : ', data);
-                });*/
-                /*return await this.test(params.shareId).then(value => {
-                        console.log(value.body);
-                        if (value.body) {
-                            this.right_type = value.body.right;
-                            this.currentShareParentId = value.body.directory;
-                        }
-                        console.log(this.currentShareId);
-                });*/
             } else {
                 this.right_type = 'root';
             }
