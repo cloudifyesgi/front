@@ -320,6 +320,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.fileService.uploadFile(formData).subscribe(
                         (data) => {
                             this.getFiles(this.currentDirectory._id);
+                            console.log('file uploaded');
                         },
                         (err) => {
                             this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
