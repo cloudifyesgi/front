@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {User} from "../../core/models/entities/user";
 import {FileService} from "../../core/services/Rest/file/file.service";
@@ -11,7 +11,7 @@ import {FileService} from "../../core/services/Rest/file/file.service";
 export class VersionCardComponent implements OnInit {
 
     @Input() version: FileModel;
-    @Input() versions: Array<FileModel>;
+    @Output() reverted = new EventEmitter<string>();
     userCreate: string;
 
     constructor(private fileService: FileService) {
@@ -28,22 +28,12 @@ export class VersionCardComponent implements OnInit {
             this.fileService.getFileVersion(name, number, directory).subscribe(
                 (data) => {
                     console.log(data.body);
-                    this.getVersions(name, directory);
+                    this.reverted.emit(name);
                 },
                 (err) => {
                     console.log(err);
                 });
         }
-    }
-
-    getVersions(name: string, directory: string): void {
-        this.fileService.getFileByVersions(name, directory).subscribe(
-            (data) => {
-                this.versions = data.body.reverse();
-            },
-            (err) => {
-                console.log(err);
-            });
     }
 
 }
