@@ -11,7 +11,6 @@ import {Directory} from "../../core/models/entities/directory";
 export class FileCardComponent implements OnInit {
 
     @Input() file: FileModel;
-    @Input() current_dir: string;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
