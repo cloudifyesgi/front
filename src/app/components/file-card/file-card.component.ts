@@ -11,6 +11,7 @@ import {Directory} from "../../core/models/entities/directory";
 export class FileCardComponent implements OnInit {
 
     @Input() file: FileModel;
+    @Input() current_dir: string;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
@@ -56,16 +57,6 @@ export class FileCardComponent implements OnInit {
             }
         );
         callback(idParent);
-    }
-
-    getPreviousVersion(name, number, directory) {
-        this.fileService.getFileVersion(name, number, directory).subscribe(
-            (data) => {
-                console.log(data.body);
-            },
-            (err) => {
-                console.log(err);
-            });
     }
 
     selectFile() {

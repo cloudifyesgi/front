@@ -12,6 +12,7 @@ export class VersionCardComponent implements OnInit {
 
     @Input() version: FileModel;
     @Output() reverted = new EventEmitter<string>();
+    @Output() update_files = new EventEmitter();
     userCreate: string;
 
     constructor(private fileService: FileService) {
@@ -21,14 +22,12 @@ export class VersionCardComponent implements OnInit {
         this.userCreate = `${(this.version.user_create as User).firstname} ${(this.version.user_create as User).name}`;
     }
 
-
-
     getPreviousVersion(name, number, directory) {
         if (confirm('Êtes vous sûr de vouloir revenir à la version ' + number + ' de ' + name)) {
             this.fileService.getFileVersion(name, number, directory).subscribe(
                 (data) => {
-                    console.log(data.body);
                     this.reverted.emit(name);
+                    this.update_files.emit(data.body[0]._id);
                 },
                 (err) => {
                     console.log(err);

@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
 import {UserService} from "../../core/services/Rest/User/user.service";
@@ -24,6 +24,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
     name: string;
     histories: Array<History>;
     Rights: Array<Share>;
+    @Output() update_files = new EventEmitter();
     @ViewChild(ShareCardComponent) shareCardComponent;
 
     constructor(private userService: UserService,
@@ -117,6 +118,10 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     onSharedDelete() {
         this.refresh();
+    }
+
+    emitUpdateFiles(dir) {
+        this.getFileHistories(dir);
     }
 
 }

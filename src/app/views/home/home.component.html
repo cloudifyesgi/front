@@ -56,7 +56,8 @@
                 <div *ngIf="files" class="d-flex flex-row flex-wrap">
                     <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
                                    [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
-                                   *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">></app-file-card>
+                                   *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">>
+                    </app-file-card>
                 </div>
             </div>
             <div *ngIf="showUploadZone()" class="center">
@@ -66,7 +67,7 @@
         </div>
     </div>
     <div [ngClass]="{'ag-hidden': isHidden}" class="col-3" *ngIf="selectedElement">
-        <app-info-card [currentDirectory]="currentDirectory" [element]="selectedElement" [type]="currentType" [modeDisplay]="modeDisplay"></app-info-card>
+        <app-info-card [currentDirectory]="currentDirectory" [element]="selectedElement" [type]="currentType" [modeDisplay]="modeDisplay" (update_files)="getActiveFiles($event)" ></app-info-card>
     </div>
 </div>
 
