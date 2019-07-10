@@ -87,7 +87,7 @@ describe('User', function () {
         chai.expect(browser.getCurrentUrl()).to.eventually.equal("http://localhost:4200/#/folders/0"); // @TODO change url to https://cloudify.fr/#/folders/0
     });
 
-    xit('should create a folder', function () {
+    it('should create a folder', function () {
         this.timeout(10000);
         const createDirBtn = element(by.id('createDirButton'));
         const submit = element(by.name('create'));
@@ -100,30 +100,84 @@ describe('User', function () {
         chai.expect(folder.getText()).to.eventually.equal('Dossier de test IHM');
     });
 
-    it('should open folder named Dossier de test IHM', function () {
+    it('should open folder named Dossier de test IHM', async function () {
         this.timeout(10000);
         const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
-        browser.actions().doubleClick(folder).perform();
+        await browser.actions().doubleClick(folder).perform();
         const breadcrumb = element(by.css('.breadcrumb-item.active'));
         chai.expect(breadcrumb.getText()).to.eventually.equal('Dossier de test IHM');
     });
 
-    it('should upload a file named fichier.txt', async function () {
+    it('should upload a file named fichier.txt', async function (done) {
         this.timeout(10000);
-        const deferred = protractor.promise.defer();
-        const promise = deferred.promise;
         const fileToUpload = './files/fichier.txt';
         const absolutePath = path.resolve(__dirname, fileToUpload);
 
         const input = await element(by.css('.ngx-file-drop__file-input'));
         await input.sendKeys(absolutePath);
-        browser.sleep(1000);
 
         const all = await element(by.css('.app-body'));
         all.getText().then(function (text) {
             chai.expect(text).to.contain('fichier.txt');
             text.fulfill();
         });
+        setImmediate(done);
+        /*const file_card = await element(by.cssContainingText('.textCard', 'fichier.txt'));
+        file_card.then(chai.expect(file_card.isPresent()).to.exist);*/
     });
 
+    it('should go back to home page', function (done) {
+        this.timeout(10000);
+        const link = element(by.linkText('Home'));
+        link.click();
+
+        chai.expect(browser.getCurrentUrl()).to.eventually.equal("http://localhost:4200/#/folders/0"); // @TODO change url to https://cloudify.fr/#/folders/0
+        setImmediate(done);
+    });
+
+    it('should select Dossier de test IHM and open information panel', function () {
+        this.timeout(10000);
+        browser.driver.manage().window().maximize();
+        const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
+        folder.click();
+        const info_btn = element(by.css('.cui-info.icon-tools'));
+        info_btn.click();
+        const info_tab = element(by.cssContainingText('.nav-link.active', 'Informations'));
+        chai.expect(info_tab.isPresent()).to.exist;
+    });
+
+    it('should open Partage panel and share folder with himself', function () {
+        this.timeout(10000);
+        const share_tab = element(by.cssContainingText('.nav-link', 'Partage'));
+        share_tab.click();
+        browser.sleep(500);
+        const share_btn = element(by.css('.cui-share.icon-tools'));
+        share_btn.click();
+        browser.sleep(1000);
+
+        const email_field = element(by.name('shareEmail'));
+        const readonly_radio = element(by.id('readonlyRadio2'));
+        const submit = element(by.cssContainingText('.btn.btn-primary', 'Partager'));
+
+        email_field.sendKeys('l@l.fr');
+        readonly_radio.click();
+        submit.click();
+
+        // const delete_btn = element(by.cssContainingText('.btn.btn-danger', 'Cliquez ici pour supprimer le partage'));
+        const delete_btn = element(by.buttonText('Cliquez ici pour supprimer le partage'));
+        chai.expect(delete_btn.isPresent()).to.exist;
+    });
+
+    it('should click on SharedClouds and open shared folder', async function () {
+        this.timeout(10000);
+        // const sharedCloud = element(by.partialLinkText('sharedClouds/0'));
+        const sharedCloud = element(by.linkText('Shared clouds'));
+        sharedCloud.click();
+
+        const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
+        await browser.actions().doubleClick(folder).perform();
+
+        const breadcrumb = element(by.css('.breadcrumb-item.active'));
+        chai.expect(breadcrumb.getText()).to.eventually.equal('Dossier de test IHM');
+    });
 });
