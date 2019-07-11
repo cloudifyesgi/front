@@ -14,6 +14,7 @@ export class DocifyEditorComponent implements OnInit {
     htmlText = '';
     currentDocify: Docify;
     updated = false;
+    range: any = null;
     edited = false;
     instanceQuill;
     quillConfig = {
@@ -50,13 +51,23 @@ export class DocifyEditorComponent implements OnInit {
     async ngOnInit() {
         const docifyId = this.route.snapshot.paramMap.get('docifyId');
         await this.docifyService.load(docifyId);
+
+        this.instanceQuill.on('editor-change', () => {
+            console.log("test selection change without");
+            if (this.range) {
+                console.log("test selection change");
+                this.instanceQuill.setSelection(this.range.index, this.range.length);
+                this.range = null;
+            }
+        });
+
         this.docifyService.currentDocify.subscribe(
             docify => {
                 if (!this.edited) {
-                    const range = this.instanceQuill.getSelection();
+                    this.range = this.instanceQuill.getSelection();
+                    console.log(this.range);
                     this.htmlText = docify.content;
                     this.currentDocify = docify;
-                    this.instanceQuill.setSelection(range);
                     this.updated = true;
                 } else {
                     this.edited = false;
