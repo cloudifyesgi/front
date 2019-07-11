@@ -53,10 +53,10 @@ export class DocifyEditorComponent implements OnInit {
         this.docifyService.currentDocify.subscribe(
             docify => {
                 if (!this.edited) {
-                    console.log(docify.content);
-                    console.log(docify);
+                    const range = this.instanceQuill.getselection();
                     this.htmlText = docify.content;
                     this.currentDocify = docify;
+                    this.instanceQuill.setSelection(range);
                     this.updated = true;
                 } else {
                     this.edited = false;
