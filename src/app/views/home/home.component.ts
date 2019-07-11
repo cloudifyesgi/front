@@ -370,7 +370,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     removeSelectedElement() {
-        if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
+        if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name + ' ?')) {
             if (this.currentType === 'dir') {
                 this.folderCardComponent.deleteFolder(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFolders(id);
@@ -379,6 +379,32 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.fileCardComponent.deleteFile(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFiles(id);
                 });
+            }
+        }
+    }
+
+    async undeleteSelectedElement() {
+        if (this.currentType === 'dir') {
+            await this.folderCardComponent.undeleteFolder(this.selectedElement._id);
+            this.toastr.success('Dossier restauré');
+            this.initHomeMode();
+        } else if (this.currentType === 'file') {
+            await this.folderCardComponent.undeleteFile(this.selectedElement._id);
+            this.toastr.success('Fichier restauré');
+            this.initHomeMode();
+        }
+    }
+
+    async hardSelectedElement() {
+        if (confirm('Voulez vous vraiment supprimer définitivement : ' + this.selectedElement.name + ' ?')) {
+            if (this.currentType === 'dir') {
+                await this.folderCardComponent.hardDeleteFolder(this.selectedElement._id);
+                this.toastr.success('Dossier archivé');
+                this.initHomeMode();
+            } else if (this.currentType === 'file') {
+                await this.fileCardComponent.hardDeleteFile(this.selectedElement._id);
+                this.toastr.success('Fichier archivé');
+                this.initHomeMode();
             }
         }
     }
@@ -479,7 +505,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     showLinkGenerator() {
-        return this.modeDisplay !== 'sharedClouds';
+        return (this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash') && !this.ReadOnly;
     }
 
     showNameRenamer() {
@@ -494,7 +520,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (this.modeDisplay !== 'sharedClouds') || (this.modeDisplay === 'sharedClouds' && this.currentType !== 'dir');
+            return (this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash') && !this.ReadOnly;
         }
     }
 
@@ -510,7 +536,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (!this.ReadOnly && this.currentDirectory !== undefined);
+            return (!this.ReadOnly && this.currentDirectory !== undefined) && !this.ReadOnly;
         }
     }
 
@@ -526,12 +552,12 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return !this.ReadOnly;
+            return (this.modeDisplay !== 'trash' && !this.ReadOnly);
         }
     }
 
     showShareForm() {
-        return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
+        return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash' && !this.ReadOnly;
     }
 
     showDeleteButton() {
@@ -546,7 +572,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
+            return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash' && !this.ReadOnly;
         }
     }
 

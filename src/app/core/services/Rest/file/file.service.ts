@@ -36,7 +36,7 @@ export class FileService {
     }
 
     deleteFile(id, idParent): Observable<HttpResponse<FileModel>> {
-        return this.http.delete<FileModel>(`${this.constantsService.getConstant("URL_FILE")}/${id}/${idParent}`, {observe: "response"});
+        return this.http.delete<FileModel>(`${this.constantsService.getConstant("URL_FILE_DELETE")}/${id}/${idParent}`, {observe: "response"});
     }
 
     getFileByUser(UserId): Observable<Array<File>> {
@@ -74,5 +74,15 @@ export class FileService {
     updateFile(fields = {}): Observable<HttpResponse<any>> {
         const url = this.constantsService.getConstant('URL_FILE');
         return this.http.put<any>(url, fields, {observe: "response"});
+    }
+
+    undeleteFile(file_id): Observable<HttpResponse<FileModel>> {
+        const url = this.constantsService.getConstant('URL_UNDELETE_FILE').replace(':id', file_id);
+        return this.http.delete<FileModel>(url, {observe: "response"});
+    }
+
+    hardDeleteFile(file_id): Observable<HttpResponse<FileModel>> {
+        const url = this.constantsService.getConstant('URL_HARD_DELETE_FILE').replace(':id', file_id);
+        return this.http.delete<FileModel>(url, {observe: "response"});
     }
 }

@@ -30,4 +30,10 @@ export const constants = {
     'URL_GET_SHARES_BY_FILE': '/right/sharedFile',
     'URL_GET_SHARE_BY_DIR_AND_USER': '/right/DirShare/:sharedDir/:userId',
     'URL_GET_SHARE_BY_FILE_AND_USER': '/right/FileShare/:sharedFile/:userId',
+    'URL_UNDELETE_FILE': '/file/undelete/:id',
+    'URL_HARD_DELETE_FILE': '/file/hard/:id',
+    'URL_FILE_DELETE': '/file/delete',
+    'URL_UNDELETE_DIR': '/directory/undelete/:id',
+    'URL_HARD_DELETE_DIR': '/directory/hard/:id',
+    'URL_DIR_DELETE': '/directory/delete',
 };

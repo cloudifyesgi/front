@@ -47,6 +47,26 @@ export class FileCardComponent implements OnInit {
             });
     }
 
+    undeleteFile(id) {
+        this.fileService.undeleteFile(id).subscribe(
+            (data) => {
+                console.log('undeleted file');
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
+    hardDeleteFile(id) {
+        this.fileService.hardDeleteFile(id).subscribe(
+            (data) => {
+                console.log('file archived');
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
     renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
         this.fileService.updateFile({id: id, name: newName}).subscribe(
             response => {
