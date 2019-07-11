@@ -8,10 +8,10 @@ import {HomeComponent} from "./home/home.component";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {TokenInterceptor} from "../core/providers/auth.interceptor";
 import {RegisterComponent} from "./authentication/register/register.component";
-import {ShareFolderComponent} from "./share/share-folder.component";
 import {ShareFileComponent} from "./share-file/share-file.component";
 import {DirectoryAccessGuard} from "../core/guards/directoryAccess/directory-access.guard";
 import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.guard";
+import {DocifyEditorComponent} from "./docify-editor/docify-editor.component";
 
 
 const routes: Routes = [
@@ -75,7 +75,11 @@ const routes: Routes = [
                 data: {
                     modeDisplay: 'sharedClouds'
                 }
-            }
+            },
+            {
+                path: 'docify/:docifyId',
+                component: DocifyEditorComponent
+            },
         ]
     }
 ];
