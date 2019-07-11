@@ -5,6 +5,8 @@ import {ActivatedRoute} from "@angular/router";
 import {Docify} from "../../core/models/entities/Docify";
 import katex from 'katex';
 
+declare var $: any;
+
 @Component({
     selector: 'app-docify-editor',
     templateUrl: './docify-editor.component.html',
@@ -13,6 +15,7 @@ import katex from 'katex';
 export class DocifyEditorComponent implements OnInit {
     htmlText = '';
     currentDocify: Docify;
+    oldContent: string;
     updated = false;
     range: any = null;
     edited = false;
@@ -53,11 +56,22 @@ export class DocifyEditorComponent implements OnInit {
         await this.docifyService.load(docifyId);
 
         this.instanceQuill.on('editor-change', () => {
-            console.log("test selection change without");
             if (this.range) {
-                console.log("test selection change");
-                this.instanceQuill.setSelection(this.range.index, this.range.length);
+                const length = this.range.length;
+                let index = this.range.index;
                 this.range = null;
+                if (this.oldContent) {
+                    const oldText = $(this.oldContent).text();
+                    const beforeOld = oldText.slice(0, index);
+                    const currentText = $(this.currentDocify.content).text();
+                    const beforeCurrent = currentText.slice(0, index);
+                    if (beforeOld !== beforeCurrent) {
+                        const diff = currentText.length - oldText.length;
+                        index += diff;
+                    }
+                }
+
+                this.instanceQuill.setSelection(index, length);
             }
         });
 
@@ -65,7 +79,7 @@ export class DocifyEditorComponent implements OnInit {
             docify => {
                 if (!this.edited) {
                     this.range = this.instanceQuill.getSelection();
-                    console.log(this.range);
+                    this.oldContent = this.htmlText;
                     this.htmlText = docify.content;
                     this.currentDocify = docify;
                     this.updated = true;
@@ -91,7 +105,6 @@ export class DocifyEditorComponent implements OnInit {
 
     onContentChanged(event) {
         if (!this.updated) {
-            console.log(event.html);
             this.edited = true;
             this.currentDocify.content = event.html;
             this.docifyService.update(this.currentDocify);
