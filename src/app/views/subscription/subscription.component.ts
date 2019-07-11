@@ -33,4 +33,7 @@ export class SubscriptionComponent implements OnInit {
         });
     }
 
+    async updateCurrentTransaction($event) {
+        await this.getCurrentTransaction();
+    }
 }

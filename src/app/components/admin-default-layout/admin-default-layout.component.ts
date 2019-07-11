@@ -1,14 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {navItems} from '../../_nav';
 import {UserService} from '../../core/services/Rest/User/user.service';
+import {adminNavItems} from '../../_admin_nav';
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './default-layout.component.html',
-    styleUrls: ['./default-layout.component.scss']
+  selector: 'app-admin-default-layout',
+  templateUrl: './admin-default-layout.component.html',
+  styleUrls: ['./admin-default-layout.component.scss']
 })
-export class DefaultLayoutComponent implements OnInit{
-    public navItems = navItems;
+export class AdminDefaultLayoutComponent implements OnInit {
+
+    public navItems = adminNavItems;
     public sidebarMinimized = true;
     private changes: MutationObserver;
     public element: HTMLElement = document.body;
@@ -30,7 +32,4 @@ export class DefaultLayoutComponent implements OnInit{
         console.log(this.user);
     }
 
-    test() {
-        console.log('drtfghjk,jnhbvc');
-    }
 }

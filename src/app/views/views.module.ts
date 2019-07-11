@@ -17,6 +17,9 @@ import {NgxFileDropModule} from "ngx-file-drop";
 import { ShareFolderComponent } from './share/share-folder.component';
 import { ShareFileComponent } from './share-file/share-file.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
+import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
+import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
+import {DataTablesModule} from 'angular-datatables';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -31,7 +34,8 @@ import { SubscriptionComponent } from './subscription/subscription.component';
         CommonModule,
         ComponentsModule,
         ReactiveFormsModule,
-        NgxFileDropModule
+        NgxFileDropModule,
+        DataTablesModule
 
     ],
     declarations: [
@@ -41,7 +45,8 @@ import { SubscriptionComponent } from './subscription/subscription.component';
         RegisterComponent,
         ShareFolderComponent,
         ShareFileComponent,
-        SubscriptionComponent
+        SubscriptionComponent,
+        SubscriptionsComponent
     ],
     providers: [LocalStorageService]
 })

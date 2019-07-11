@@ -13,6 +13,8 @@ import {ShareFileComponent} from "./share-file/share-file.component";
 import {DirectoryAccessGuard} from "../core/guards/directoryAccess/directory-access.guard";
 import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.guard";
 import {SubscriptionComponent} from './subscription/subscription.component';
+import {SubscriptionsComponent} from './admin/subscriptions/subscriptions.component';
+import {AdminDefaultLayoutComponent} from '../components/admin-default-layout/admin-default-layout.component';
 
 
 const routes: Routes = [
@@ -23,6 +25,17 @@ const routes: Routes = [
     {
         path: 'register',
         component: RegisterComponent
+    },
+    {
+        path: 'admin',
+        component: AdminDefaultLayoutComponent,
+        canActivate: [AuthenticationGuard],
+        children :[
+            {
+                path : 'subscription',
+                component : SubscriptionsComponent
+            }
+        ]
     },
     {
         path: '',

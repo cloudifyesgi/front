@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Directory} from '../../core/models/entities/directory';
 import {Subscription} from '../../core/models/entities/subscription';
 import {TransactionService} from '../../core/services/Rest/transaction/transaction.service';
@@ -13,20 +13,20 @@ import { Router, NavigationEnd } from '@angular/router';
 export class SubscriptionCardComponent implements OnInit {
     @Input() subscription: Subscription;
     @Input() isCurrent: boolean;
+    @Output() messageEvent = new EventEmitter<void>();
 
-    constructor(private transactionService : TransactionService) { }
+
+    constructor(private transactionService : TransactionService,
+                private router: Router) { }
 
     ngOnInit() {
     }
 
     changeSubscription() {
-        console.log("called");
         this.transactionService.create(this.subscription).subscribe((data) =>{
             if( data.status === 201){
-
+                this.messageEvent.emit();
             }
-            console.log(data);
         });
-
     }
 }

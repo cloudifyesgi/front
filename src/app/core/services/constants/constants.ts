@@ -22,6 +22,7 @@ export const constants = {
     'URL_LINK_DIR': '/link/dir/:id',
     'URL_LINK': '/link',
     'URL_ACTIVE_SUBSCRIPTION' : '/subscription/active',
+    'URL_SUBSCRIPTION' : '/subscription',
     'URL_CURRENT_TRANSACTION' : '/transaction/current',
     'URL_TRANSACTION' : '/transaction'
 };

@@ -4,6 +4,7 @@ import {ConstantsService} from "../../constants/constants.service";
 import {LocalStorageService} from "../../localStorage/local-storage.service";
 import {Observable} from "rxjs";
 import {Subscription} from '../../../models/entities/subscription';
+import {Link} from '../../../models/entities/link';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,22 @@ export class SubscriptionService {
     getActiveSubscription(): Observable<HttpResponse<Subscription[]>> {
         return this.http.get<Subscription[]>(`${this.constantsService.getConstant("URL_ACTIVE_SUBSCRIPTION")}`,
             {observe: "response"});
+    }
+
+    getSubscription(): Observable<HttpResponse<Subscription[]>> {
+        return this.http.get<Subscription[]>(`${this.constantsService.getConstant("URL_SUBSCRIPTION")}`,
+            {observe: "response"});
+    }
+
+    postSubscription(subscription: Subscription): Observable<HttpResponse<Subscription>> {
+        return this.http.post<Subscription>(`${this.constantsService.getConstant('URL_SUBSCRIPTION')}`, subscription, {observe: "response"});
+    }
+
+    putSubscription(subscription: Subscription): Observable<HttpResponse<Subscription>> {
+        return this.http.put<Subscription>(`${this.constantsService.getConstant('URL_SUBSCRIPTION')}`, subscription, {observe: "response"});
+    }
+
+    deleteSubscription(subscription: Subscription): Observable<HttpResponse<Subscription>> {
+        return this.http.delete<Subscription>(`${this.constantsService.getConstant('URL_SUBSCRIPTION')}/${subscription._id}`, {observe: "response"});
     }
 }
