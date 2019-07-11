@@ -9,13 +9,15 @@ import {ViewsRouting} from "./views.routing";
 import {LoginComponent} from "./authentication/login/login.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {AgGridModule} from 'ag-grid-angular';
 import {ComponentsModule} from "../components/components.module";
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './authentication/register/register.component';
 import {NgxFileDropModule} from "ngx-file-drop";
 import { ShareFolderComponent } from './share/share-folder.component';
 import { ShareFileComponent } from './share-file/share-file.component';
+import { DocifyEditorComponent } from './docify-editor/docify-editor.component';
+import {QuillModule} from "ngx-quill";
+import {QuillInitializeService} from "../core/services/Quill/quillInitialize.service";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -30,7 +32,8 @@ import { ShareFileComponent } from './share-file/share-file.component';
         CommonModule,
         ComponentsModule,
         ReactiveFormsModule,
-        NgxFileDropModule
+        NgxFileDropModule,
+        QuillModule
 
     ],
     declarations: [
@@ -39,9 +42,13 @@ import { ShareFileComponent } from './share-file/share-file.component';
         HomeComponent,
         RegisterComponent,
         ShareFolderComponent,
-        ShareFileComponent
+        ShareFileComponent,
+        DocifyEditorComponent
     ],
-    providers: [LocalStorageService]
+    providers: [
+        LocalStorageService,
+        QuillInitializeService
+    ]
 })
 export class ViewsModule {
 }

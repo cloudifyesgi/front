@@ -6,6 +6,7 @@ import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/com
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+const config: SocketIoConfig = { url: 'http://localhost:6789', options: {} };
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     suppressScrollX: true
@@ -38,6 +39,8 @@ import {MomentModule} from "ngx-moment";
 import {HttpsInterceptor} from "./core/providers/http.interceptor";
 import {RestErrorHandler} from "./core/providers/rest.error-handler";
 import {NotificationService} from "./core/services/Notification/notification.service";
+import {SocketIoConfig} from "ngx-socket-io/src/config/socket-io.config";
+import {SocketIoModule} from "ngx-socket-io";
 
 @NgModule({
     imports: [
@@ -54,15 +57,14 @@ import {NotificationService} from "./core/services/Notification/notification.ser
         TabsModule.forRoot(),
         ChartsModule,
         CoreModule,
-        BrowserModule,
         FormsModule,
         HttpClientModule,
         NgxFileDropModule,
         CommonModule,
-        BrowserAnimationsModule,
         ToastrModule.forRoot({
             preventDuplicates: true
-        })
+        }),
+        SocketIoModule.forRoot(config)
     ],
     exports: [AppRoutingModule],
     declarations: [

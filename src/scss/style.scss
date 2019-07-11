@@ -4,7 +4,10 @@
 @import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 @import "ag-grid-community/dist/styles/ag-grid.css";
 @import "ag-grid-community/dist/styles/ag-theme-balham.css";
-
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+@import '~katex/dist/katex.css';
 // Import styles with default layout.
 // If you are going to use dark layout please comment next line
 @import "~@coreui/coreui-pro/scss/coreui";
@@ -25,4 +28,6 @@ $spinkit-spinner-color: $body-color;
 @import '~bootstrap/scss/mixins';
 @import '~ngx-toastr/toastr-bs4-alert';
 
-
+.ql-editor {
+    white-space: normal!important;
+}
