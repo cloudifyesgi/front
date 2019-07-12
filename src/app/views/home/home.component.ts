@@ -395,16 +395,28 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     }
 
-    async hardSelectedElement() {
+    async hardDeleteSelectedElement() {
         if (confirm('Voulez vous vraiment supprimer définitivement : ' + this.selectedElement.name + ' ?')) {
             if (this.currentType === 'dir') {
-                await this.folderCardComponent.hardDeleteFolder(this.selectedElement._id);
-                this.toastr.success('Dossier archivé');
-                this.initHomeMode();
+                // await this.folderCardComponent.hardDeleteFolder(this.selectedElement._id);
+                await this.directoryService.hardDeleteDirectory(this.selectedElement._id).subscribe(
+                    response => {
+                        if (response.status === 200) {
+                            console.log('folder archived');
+                            this.toastr.success('Dossier archivé');
+                            this.initHomeMode();
+                        }
+                    }
+                );
             } else if (this.currentType === 'file') {
-                await this.fileCardComponent.hardDeleteFile(this.selectedElement._id);
-                this.toastr.success('Fichier archivé');
-                this.initHomeMode();
+                await this.fileCardComponent.hardDeleteFile(this.selectedElement._id).subscribe(
+                    response => {
+                        if (response.status === 200) {
+                            console.log('file archived');
+                            this.toastr.success('Fichier archivé');
+                            this.initHomeMode();
+                        }
+                    });
             }
         }
     }

@@ -90,8 +90,8 @@ export class FolderCardComponent implements OnInit {
         );
     }
 
-    undeleteFolder(id) {
-        this.directoryService.undeleteDirectory(id).subscribe(
+    async undeleteFolder(id) {
+        await this.directoryService.undeleteDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
                     console.log('undeleted folder');
@@ -100,8 +100,8 @@ export class FolderCardComponent implements OnInit {
         );
     }
 
-    hardDeleteFolder(id) {
-        this.directoryService.hardDeleteDirectory(id).subscribe(
+    async hardDeleteFolder(id) {
+        await this.directoryService.hardDeleteDirectory(id).subscribe(
             response => {
                 if (response.status === 200) {
                     console.log('folder archived');

@@ -8,6 +8,8 @@ const browser = protractor.browser;
 const element = protractor.element;
 const by = protractor.by;
 
+const base_url = "http://localhost:4200"; // @TODO change url to https://cloudify.fr
+
 const urlChanged = function (url) {
     return function () {
         return browser.getCurrentUrl().then(function (actualUrl) {
@@ -50,7 +52,7 @@ describe('User', function () {
     });
 
     it('should not signin', function () {
-        browser.get('http://localhost:4200/#/login');
+        browser.get(base_url + '/#/login');
         this.timeout(10000);
         const userNameField = element(by.name('username'));
         const userPassField = element(by.name('password'));
@@ -64,7 +66,7 @@ describe('User', function () {
         loginForm.submit();
 
         browser.waitForAngular();
-        chai.expect(browser.getCurrentUrl()).to.eventually.equal("http://localhost:4200/#/login"); // @TODO change url to https://www.cloudify.fr/#/login
+        chai.expect(browser.getCurrentUrl()).to.eventually.equal(base_url + "/#/login");
     });
 
     it('should signin', function () {
@@ -83,8 +85,7 @@ describe('User', function () {
         loginForm.submit();
 
         browser.waitForAngular();
-        // browser.wait(urlChanged("http://localhost:4200/#/folders/0"), 2000);
-        chai.expect(browser.getCurrentUrl()).to.eventually.equal("http://localhost:4200/#/folders/0"); // @TODO change url to https://cloudify.fr/#/folders/0
+        chai.expect(browser.getCurrentUrl()).to.eventually.equal(base_url + "/#/folders/0");
     });
 
     it('should create a folder', function () {
@@ -131,7 +132,7 @@ describe('User', function () {
         const link = element(by.linkText('Home'));
         link.click();
 
-        chai.expect(browser.getCurrentUrl()).to.eventually.equal("http://localhost:4200/#/folders/0"); // @TODO change url to https://cloudify.fr/#/folders/0
+        chai.expect(browser.getCurrentUrl()).to.eventually.equal(base_url + "/#/folders/0");
         setImmediate(done);
     });
 
@@ -168,16 +169,41 @@ describe('User', function () {
         chai.expect(delete_btn.isPresent()).to.exist;
     });
 
-    it('should click on SharedClouds and open shared folder', async function () {
+    xit('should click on SharedClouds and open shared folder', async function () {
         this.timeout(10000);
-        // const sharedCloud = element(by.partialLinkText('sharedClouds/0'));
         const sharedCloud = element(by.linkText('Shared clouds'));
         sharedCloud.click();
 
         const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
         await browser.actions().doubleClick(folder).perform();
-
+        await browser.actions().doubleClick(folder).perform();
         const breadcrumb = element(by.css('.breadcrumb-item.active'));
         chai.expect(breadcrumb.getText()).to.eventually.equal('Dossier de test IHM');
+    });
+
+    it('should go back to Personal cloud', function (done) {
+        this.timeout(10000);
+        const link = element(by.linkText('Personal cloud'));
+        link.click();
+
+        chai.expect(browser.getCurrentUrl()).to.eventually.equal(base_url + "/#/folders/0");
+        setImmediate(done);
+    });
+
+    it('should delete Dossier de test IHM', async function () {
+        this.timeout(10000);
+        browser.driver.manage().window().maximize(); // @TODO remove when running all tests
+        const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
+        folder.click();
+        const delete_btn = element(by.css('.cui-trash.icon-tools'));
+        delete_btn.click();
+
+        browser.switchTo().alert().accept();
+
+        const link = element(by.linkText('Bin'));
+        link.click();
+        await browser.waitForAngular();
+        const deleted_folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
+        chai.expect(deleted_folder.getText()).to.eventually.equal('Dossier de test IHM');
     });
 });

@@ -24,7 +24,7 @@
                data-target="#shareElement"><i class="cui-share icon-tools"></i></a>
             <a *ngIf="showDeleteButton()" class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
             <a *ngIf="modeDisplay === 'trash'" class="btn cursor-pointer" (click)="undeleteSelectedElement()"><i class="cui-action-undo icon-tools"></i></a>
-            <a *ngIf="modeDisplay === 'trash'" class="btn cursor-pointer" (click)="hardSelectedElement()"><i class="cui-ban icon-tools text-danger"></i></a>
+            <a *ngIf="modeDisplay === 'trash'" class="btn cursor-pointer" (click)="hardDeleteSelectedElement()"><i class="cui-ban icon-tools text-danger"></i></a>
             <a *ngIf="modeDisplay !== 'trash'" class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
     </div>
