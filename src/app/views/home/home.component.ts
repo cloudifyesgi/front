@@ -320,6 +320,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.fileService.uploadFile(formData).subscribe(
                         (data) => {
                             this.getFiles(this.currentDirectory._id);
+                            console.log('file uploaded');
                         },
                         (err) => {
                             this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
@@ -369,7 +370,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     removeSelectedElement() {
-        if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name)) {
+        if (confirm('Voulez vous vraiment supprimer : ' + this.selectedElement.name + ' ?')) {
             if (this.currentType === 'dir') {
                 this.folderCardComponent.deleteFolder(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFolders(id);
@@ -378,6 +379,44 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.fileCardComponent.deleteFile(this.selectedElement._id, this.currentDirectory._id, (id) => {
                     this.getFiles(id);
                 });
+            }
+        }
+    }
+
+    async undeleteSelectedElement() {
+        if (this.currentType === 'dir') {
+            await this.folderCardComponent.undeleteFolder(this.selectedElement._id);
+            this.toastr.success('Dossier restauré');
+            this.initHomeMode();
+        } else if (this.currentType === 'file') {
+            await this.folderCardComponent.undeleteFile(this.selectedElement._id);
+            this.toastr.success('Fichier restauré');
+            this.initHomeMode();
+        }
+    }
+
+    async hardDeleteSelectedElement() {
+        if (confirm('Voulez vous vraiment supprimer définitivement : ' + this.selectedElement.name + ' ?')) {
+            if (this.currentType === 'dir') {
+                // await this.folderCardComponent.hardDeleteFolder(this.selectedElement._id);
+                await this.directoryService.hardDeleteDirectory(this.selectedElement._id).subscribe(
+                    response => {
+                        if (response.status === 200) {
+                            console.log('folder archived');
+                            this.toastr.success('Dossier archivé');
+                            this.initHomeMode();
+                        }
+                    }
+                );
+            } else if (this.currentType === 'file') {
+                await this.fileCardComponent.hardDeleteFile(this.selectedElement._id).subscribe(
+                    response => {
+                        if (response.status === 200) {
+                            console.log('file archived');
+                            this.toastr.success('Fichier archivé');
+                            this.initHomeMode();
+                        }
+                    });
             }
         }
     }
@@ -420,6 +459,9 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
+                if (this.currentType === 'dir') {
+                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                }
             },
             (err) => {
                 console.log(err);
@@ -475,7 +517,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     showLinkGenerator() {
-        return this.modeDisplay !== 'sharedClouds';
+        return (this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash') && !this.ReadOnly;
     }
 
     showNameRenamer() {
@@ -490,7 +532,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (this.modeDisplay !== 'sharedClouds') || (this.modeDisplay === 'sharedClouds' && this.currentType !== 'dir');
+            return (this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash') && !this.ReadOnly;
         }
     }
 
@@ -506,7 +548,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (!this.ReadOnly && this.currentDirectory !== undefined);
+            return (!this.ReadOnly && this.currentDirectory !== undefined) && !this.ReadOnly;
         }
     }
 
@@ -522,12 +564,12 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return !this.ReadOnly;
+            return (this.modeDisplay !== 'trash' && !this.ReadOnly);
         }
     }
 
     showShareForm() {
-        return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
+        return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash' && !this.ReadOnly;
     }
 
     showDeleteButton() {
@@ -542,7 +584,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash';
+            return this.modeDisplay !== 'sharedClouds' && this.modeDisplay !== 'trash' && !this.ReadOnly;
         }
     }
 
@@ -555,17 +597,6 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.right_type = rep.body.right;
                     this.currentShareParentId = rep.body.directory;
                 }
-                    /*.subscribe( async (data) => {
-                    console.log('data : ', data);
-                });*/
-                /*return await this.test(params.shareId).then(value => {
-                        console.log(value.body);
-                        if (value.body) {
-                            this.right_type = value.body.right;
-                            this.currentShareParentId = value.body.directory;
-                        }
-                        console.log(this.currentShareId);
-                });*/
             } else {
                 this.right_type = 'root';
             }

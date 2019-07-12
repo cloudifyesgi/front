@@ -90,6 +90,26 @@ export class FolderCardComponent implements OnInit {
         );
     }
 
+    async undeleteFolder(id) {
+        await this.directoryService.undeleteDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    console.log('undeleted folder');
+                }
+            }
+        );
+    }
+
+    async hardDeleteFolder(id) {
+        await this.directoryService.hardDeleteDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    console.log('folder archived');
+                }
+            }
+        );
+    }
+
     selectFolder() {
         this.messageEvent.emit(this.directory);
     }

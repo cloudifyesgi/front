@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Directory} from '../../../models/entities/directory';
 import {ConstantsService} from "../../constants/constants.service";
 import {GetChildren} from "../../../models/responses/getChildren";
+import {FileModel} from "../../../models/entities/file";
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +43,7 @@ export class DirectoryService {
     }
 
     delete(id: string): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`, {observe: "response"});
+        return this.http.delete<any>(`${this.constantsService.getConstant("URL_DIR_DELETE")}/${id}`, {observe: "response"});
     }
 
     isDeleted(id: string): Observable<HttpResponse<any>> {
@@ -55,6 +56,16 @@ export class DirectoryService {
             responseType: 'blob' as 'json',
             observe: "response"
         });
+    }
+
+    undeleteDirectory(id): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_UNDELETE_DIR').replace(':id', id);
+        return this.http.delete<any>(url, {observe: "response"});
+    }
+
+    hardDeleteDirectory(id): Observable<HttpResponse<any>> {
+        const url = this.constantsService.getConstant('URL_HARD_DELETE_DIR').replace(':id', id);
+        return this.http.delete<any>(url, {observe: "response"});
     }
 
 }

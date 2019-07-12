@@ -13,11 +13,11 @@
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="version" aria-selected="true"
                    href="#version">Version</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="modeDisplay !== 'sharedClouds' && modeDisplay !== 'sharedFolder'">
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="links" aria-selected="true"
                    href="#links">Liens</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="modeDisplay !== 'sharedClouds' && modeDisplay !== 'sharedFolder'">
                 <a class="nav-link" data-toggle="tab" role="tab" aria-controls="share" aria-selected="true"
                    href="#share">Partage</a>
             </li>
@@ -47,7 +47,7 @@
                         <h5 class="card-title">{{element.createdAt | amLocale:'fr' | amDateFormat:'LLLL'}}</h5>
                     </div>
                     <div class="card-footer text-muted">
-                        créé le
+                        Créé le
                     </div>
                 </div>
                 <div class="card text-center">
@@ -64,7 +64,7 @@
                 <app-history-card *ngFor="let history of histories" [history]="history"></app-history-card>
             </div>
             <div id="version" class="tab-pane fade" role="tabpanel" aria-labelledby="version-tab" *ngIf="type === 'file'">
-                <app-version-card *ngFor="let version of versions" [version]="version"></app-version-card>
+                <app-version-card *ngFor="let version of versions" [version]="version" (reverted)="getVersions($event, currentDirectory._id)" (update_files)="emitUpdateFiles($event)"></app-version-card>
             </div>
             <div id="links" class="tab-pane fade" role="tabpanel" aria-labelledby="links-tab">
                 <app-share-card [element]="element" [type]="type"></app-share-card>
