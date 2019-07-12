@@ -17,6 +17,7 @@ import {ToastrService} from "ngx-toastr";
 import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 import {InfoCardComponent} from "../../components/info-card/info-card.component";
+import {NotificationService} from '../../core/services/Notification/notification.service';
 
 declare var jQuery: any;
 
@@ -83,7 +84,8 @@ export class HomeComponent implements OnInit, OnChanges {
                 private fb: FormBuilder,
                 private shareLinkService: ShareLinkService,
                 private toastr: ToastrService,
-                private shareEmailService: ShareEmailService) {
+                private shareEmailService: ShareEmailService,
+                private notificationService : NotificationService) {
     }
 
     async ngOnInit() {
@@ -323,8 +325,12 @@ export class HomeComponent implements OnInit, OnChanges {
                             console.log('file uploaded');
                         },
                         (err) => {
-                            this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
-                            console.log(err);
+                            if(err.status === 412){
+                                this.notificationService.showError("Subscription maximum reached", "Fail upload Error")
+                            }else{
+                                this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
+                                console.log(err);
+                            }
                         }
                     );
                 });

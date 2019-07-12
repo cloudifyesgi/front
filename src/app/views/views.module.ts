@@ -22,6 +22,7 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
 import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
 import {DataTablesModule} from 'angular-datatables';
+import {NotificationService} from '../core/services/Notification/notification.service';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 

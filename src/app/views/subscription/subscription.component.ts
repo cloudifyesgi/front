@@ -3,6 +3,7 @@ import {SubscriptionService} from '../../core/services/Rest/subscription/subscri
 import {Subscription} from '../../core/models/entities/subscription';
 import {Transaction} from '../../core/models/entities/transaction';
 import {TransactionService} from '../../core/services/Rest/transaction/transaction.service';
+import {NotificationService} from '../../core/services/Notification/notification.service';
 
 @Component({
   selector: 'app-subscription',

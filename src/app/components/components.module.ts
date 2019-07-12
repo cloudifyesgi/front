@@ -27,6 +27,7 @@ import { SubscriptionCardComponent } from './subscription-card/subscription-card
 import {UserService} from '../core/services/Rest/User/user.service';
 import { NavbarDropdownComponent } from './navbar-dropdown/navbar-dropdown.component';
 import {AdminDefaultLayoutComponent} from './admin-default-layout';
+import {NotificationService} from '../core/services/Notification/notification.service';
 
 
 @NgModule({
@@ -68,7 +69,7 @@ import {AdminDefaultLayoutComponent} from './admin-default-layout';
         NavbarDropdownComponent,
         AdminDefaultLayoutComponent
     ],
-    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent, UserService]
+    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent, UserService, NotificationService]
 })
 export class ComponentsModule {
 }
