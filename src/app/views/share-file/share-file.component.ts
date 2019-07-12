@@ -47,7 +47,6 @@ export class ShareFileComponent implements OnInit {
                 this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                 return this.router.navigateByUrl('folders/0');
             }
-            this.user = await this.userService.getUser();
             if (!this.link.is_activated || Date.parse(this.link.expiry_date) < Date.parse(new Date().toString())) {
                 this.toastr.error('Ce lien de partage a expiré', 'Erreur');
                 return this.router.navigateByUrl('folders/0');

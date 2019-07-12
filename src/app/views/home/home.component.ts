@@ -385,11 +385,11 @@ export class HomeComponent implements OnInit, OnChanges {
 
     async undeleteSelectedElement() {
         if (this.currentType === 'dir') {
-            await this.folderCardComponent.undeleteFolder(this.selectedElement._id);
+            await this.fileCardComponent.undeleteFolder(this.selectedElement._id);
             this.toastr.success('Dossier restauré');
             this.initHomeMode();
         } else if (this.currentType === 'file') {
-            await this.folderCardComponent.undeleteFile(this.selectedElement._id);
+            await this.fileCardComponent.undeleteFile(this.selectedElement._id);
             this.toastr.success('Fichier restauré');
             this.initHomeMode();
         }
