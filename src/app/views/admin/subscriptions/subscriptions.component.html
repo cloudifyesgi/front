@@ -47,37 +47,51 @@
                     <div [formGroup]="subscriptionForm">
                         <div class="form-group">
                             <span>Subscription name</span>
-                            <input type="text" class="form-control" name="subscriptionName" formControlName="subscriptionName">
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('subscriptionName'), 'is-valid': !this.isInvalid('subscriptionName')}"
+                                type="text" class="form-control" name="subscriptionName" formControlName="subscriptionName">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription storage</span>
-                            <input type="number" min="0" class="form-control" name="subscriptionStorage" formControlName="subscriptionStorage">
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionStorage'), 'is-valid': !this.isInvalid('subscriptionStorage')}"
+                                   min="0" class="form-control" name="subscriptionStorage" formControlName="subscriptionStorage">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription file number</span>
-                            <input type="number" min="0" class="form-control" name="subscriptionFileNumber" formControlName="subscriptionFileNumber">
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionFileNumber'), 'is-valid': !this.isInvalid('subscriptionFileNumber')}"
+                                   min="0" class="form-control" name="subscriptionFileNumber" formControlName="subscriptionFileNumber">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription file size</span>
-                            <input type="number" min="0" class="form-control" name="subscriptionFileSize" formControlName="subscriptionFileSize">
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionFileSize'), 'is-valid': !this.isInvalid('subscriptionFileSize')}"
+                                   min="0" class="form-control" name="subscriptionFileSize" formControlName="subscriptionFileSize">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription price</span>
-                            <input type="number" min="0" class="form-control" name="subscriptionPrice" formControlName="subscriptionPrice">
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionPrice'), 'is-valid': !this.isInvalid('subscriptionPrice')}"
+                                   min="0" class="form-control" name="subscriptionPrice" formControlName="subscriptionPrice">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription description</span>
-                            <input type="text" class="form-control" name="subscriptionDescription" formControlName="subscriptionDescription">
+                            <input type="text"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionDescription'), 'is-valid': !this.isInvalid('subscriptionDescription')}"
+                                   class="form-control" name="subscriptionDescription" formControlName="subscriptionDescription">
                         </div>
 
                         <div class="form-group">
                             <span>Subscription is activated</span>
-                            <input type="checkbox"  class="form-control" name="subscriptionStatus" formControlName="subscriptionStatus">
+                            <input type="checkbox"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionStatus'), 'is-valid': !this.isInvalid('subscriptionStatus')}"
+                                   class="form-control" name="subscriptionStatus" formControlName="subscriptionStatus">
                         </div>
 
                     </div>

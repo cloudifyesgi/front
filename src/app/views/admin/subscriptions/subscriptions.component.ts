@@ -3,7 +3,7 @@ import {SubscriptionService} from '../../../core/services/Rest/subscription/subs
 import {Subscription} from '../../../core/models/entities/subscription';
 import {Subject} from 'rxjs';
 import {DataTableDirective} from 'angular-datatables';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 
 declare var jQuery: any;
 
@@ -23,12 +23,12 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     newSubscription : Subscription;
     subscriptionForm = this.fb.group(
         {
-            subscriptionName: ['', []],
-            subscriptionStorage: ['', []],
-            subscriptionFileNumber: ['', []],
-            subscriptionFileSize: ['', []],
-            subscriptionPrice: ['', []],
-            subscriptionDescription: ['', []],
+            subscriptionName: ['', [Validators.required]],
+            subscriptionStorage: ['', [Validators.required,Validators.min(0)]],
+            subscriptionFileNumber: ['', [Validators.required,Validators.min(0)]],
+            subscriptionFileSize: ['', [Validators.required,Validators.min(0)]],
+            subscriptionPrice: ['', [Validators.required,Validators.min(0)]],
+            subscriptionDescription: ['', [Validators.required]],
             subscriptionStatus: ['', []],
         }
     );
@@ -71,16 +71,18 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     }
 
     createSubscription() {
-        this.newSubscription = this.getSubscriptionFromForm();
-        if(this.updateMode){
-            this.newSubscription._id = this.selectedSubscription._id;
-            this.subscriptionService.putSubscription(this.newSubscription).subscribe( async (data) =>{
-                await this.postPutActions(data,false);
-            });
-        }else{
-            this.subscriptionService.postSubscription(this.newSubscription).subscribe( async (data) =>{
-                await this.postPutActions(data,true);
-            });
+        if(this.subscriptionForm.valid) {
+            this.newSubscription = this.getSubscriptionFromForm();
+            if(this.updateMode){
+                this.newSubscription._id = this.selectedSubscription._id;
+                this.subscriptionService.putSubscription(this.newSubscription).subscribe( async (data) =>{
+                    await this.postPutActions(data,false);
+                });
+            }else{
+                this.subscriptionService.postSubscription(this.newSubscription).subscribe( async (data) =>{
+                    await this.postPutActions(data,true);
+                });
+            }
         }
     }
 
@@ -132,5 +134,9 @@ export class SubscriptionsComponent implements OnInit, OnDestroy {
     createMode() {
         this.updateMode = false;
         this.subscriptionForm.reset();
+    }
+
+    isInvalid(key: string): boolean {
+        return !!this.subscriptionForm.get(key).errors;
     }
 }
