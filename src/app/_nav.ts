@@ -26,7 +26,7 @@ export const navItems = [
     url: '/sharedClouds/0',
     icon: 'cui-share'
   },
-  {
+  /*{
     name: 'Recently updated',
     url: '/dashboard',
     icon: 'cui-cloud-upload'
@@ -40,15 +40,15 @@ export const navItems = [
     name: 'Synchronized computer',
     url: '/dashboard',
     icon: 'cui-laptop'
-  },
+  },*/
   {
     name: 'Bin',
     url: '/trash/0',
     icon: 'cui-trash'
-  },
+  }/*,
   {
     name: 'My user groups',
     url: '/dashboard',
     icon: 'cui-user'
-  }
+  }*/
 ];
