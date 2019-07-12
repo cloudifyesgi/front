@@ -2,6 +2,7 @@ export const constants = {
     'URL_POST_LOGIN': '/login',
     "URL_REGISTER": '/register',
     'URL_USER': '/user',
+    'URL_USER_ISADMIN': '/user/isAdmin',
     'URL_USER_NAME': '/user/name',
     'URL_USER_BY_ID': '/user/id',
     'URL_FILE': '/file',

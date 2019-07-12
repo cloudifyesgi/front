@@ -15,6 +15,7 @@ import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.gu
 import {SubscriptionComponent} from './subscription/subscription.component';
 import {SubscriptionsComponent} from './admin/subscriptions/subscriptions.component';
 import {AdminDefaultLayoutComponent} from '../components/admin-default-layout/admin-default-layout.component';
+import {AdminGuard} from '../core/guards/admin/admin.guard';
 
 
 const routes: Routes = [
@@ -29,7 +30,7 @@ const routes: Routes = [
     {
         path: 'admin',
         component: AdminDefaultLayoutComponent,
-        canActivate: [AuthenticationGuard],
+        canActivate: [AuthenticationGuard,AdminGuard],
         children :[
             {
                 path : 'subscription',
