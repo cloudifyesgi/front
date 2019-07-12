@@ -12,77 +12,104 @@ import {ShareFileComponent} from "./share-file/share-file.component";
 import {DirectoryAccessGuard} from "../core/guards/directoryAccess/directory-access.guard";
 import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.guard";
 import {DocifyEditorComponent} from "./docify-editor/docify-editor.component";
+import {SubscriptionComponent} from './subscription/subscription.component';
+import {SubscriptionsComponent} from './admin/subscriptions/subscriptions.component';
+import {AdminDefaultLayoutComponent} from '../components/admin-default-layout';
+import {AdminGuard} from '../core/guards/admin/admin.guard';
 
 
 const routes: Routes = [
-    {
-        path: 'login',
-        component: LoginComponent
-    },
-    {
-        path: 'register',
-        component: RegisterComponent
-    },
-    {
-        path: '',
-        component: DefaultLayoutComponent,
-        canActivate: [AuthenticationGuard],
-        children: [
-            {
-                path: '',
-                redirectTo: 'folders/0',
-            },
-            {
-                path: 'folders',
-                redirectTo: 'folders/0',
-            },
-            {
-                path: 'folders/:directoryId',
-                component: HomeComponent,
-                canActivate: [DirectoryAccessGuard, DeletedAccessGuard],
-                data: {
-                    modeDisplay: 'home'
+        {
+            path: 'login',
+            component: LoginComponent
+        },
+        {
+            path: 'register',
+            component: RegisterComponent
+        },
+        {
+            path: 'admin',
+            component: AdminDefaultLayoutComponent,
+            canActivate: [AuthenticationGuard, AdminGuard],
+            children: [
+                {
+                    path: 'subscription',
+                    component: SubscriptionsComponent
                 }
-            },
-            {
-                path: 'trash/:directoryId',
-                component: HomeComponent,
-                data: {
-                    modeDisplay: 'trash'
+            ]
+        },
+        {
+            path: 'shared',
+            component: DefaultLayoutComponent,
+            children: [
+                {
+                    path: 'files/:linkId',
+                    component: ShareFileComponent
+                },
+            ]
+        },
+        {
+            path: '',
+            component: DefaultLayoutComponent,
+            canActivate: [AuthenticationGuard],
+            children: [
+
+                {
+                    path: '',
+                    redirectTo: 'folders/0',
+                },
+                {
+                    path: 'folders',
+                    redirectTo: 'folders/0',
+                },
+                {
+                    path: 'folders/:directoryId',
+                    component: HomeComponent,
+                    canActivate: [DirectoryAccessGuard, DeletedAccessGuard],
+                    data: {
+                        modeDisplay: 'home'
+                    }
+                },
+                {
+                    path: 'trash/:directoryId',
+                    component: HomeComponent,
+                    data: {
+                        modeDisplay: 'trash'
+                    }
+                },
+                {
+                    path: 'sharedClouds/0',
+                    component: HomeComponent,
+                    data: {
+                        modeDisplay: 'sharedClouds'
+                    }
+                },
+                {
+                    path: 'shared/folders/:linkId/:directoryId',
+                    component: HomeComponent,
+                    data: {
+                        modeDisplay: 'sharedFolder'
+                    }
+                },
+                {
+                    path: 'sharedClouds/:shareId/:directoryId',
+                    component: HomeComponent,
+                    data: {
+                        modeDisplay: 'sharedClouds'
+                    }
+                },
+                {
+                    path: 'docify/:docifyId',
+                    component: DocifyEditorComponent
+                },
+                {
+                    path: 'subscription',
+                    component: SubscriptionComponent
                 }
-            },
-            {
-                path: 'shared/folders/:linkId/:directoryId',
-                component: HomeComponent,
-                data: {
-                    modeDisplay: 'sharedFolder'
-                }
-            },
-            {
-                path: 'shared/files/:linkId',
-                component: ShareFileComponent
-            },
-            {
-                path: 'sharedClouds/0',
-                component: HomeComponent,
-                data: {
-                    modeDisplay: 'sharedClouds'
-                }
-            },
-            {
-                path: 'sharedClouds/:shareId/:directoryId',
-                component: HomeComponent,
-                data: {
-                    modeDisplay: 'sharedClouds'
-                }
-            },
-            {
-                path: 'docify/:docifyId',
-                component: DocifyEditorComponent
-            },
-        ]
-    }
-];
+            ]
+        }
+    ]
+;
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],

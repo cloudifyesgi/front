@@ -2,6 +2,7 @@ export const constants = {
     'URL_POST_LOGIN': '/login',
     "URL_REGISTER": '/register',
     'URL_USER': '/user',
+    'URL_USER_ISADMIN': '/user/isAdmin',
     'URL_USER_NAME': '/user/name',
     'URL_USER_BY_ID': '/user/id',
     'URL_FILE': '/file',
@@ -36,5 +37,9 @@ export const constants = {
     'URL_UNDELETE_DIR': '/directory/undelete/:id',
     'URL_HARD_DELETE_DIR': '/directory/hard/:id',
     'URL_DIR_DELETE': '/directory/delete',
-    'URL_DOCIFY': '/docify'
+    'URL_DOCIFY': '/docify',
+    'URL_SUBSCRIPTION' : '/subscription',
+    'URL_CURRENT_TRANSACTION' : '/transaction/current',
+    'URL_TRANSACTION' : '/transaction',
+    'URL_ACTIVE_SUBSCRIPTION' : '/subscription/active',
 };

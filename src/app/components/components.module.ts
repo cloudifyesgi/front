@@ -23,6 +23,10 @@ import {MomentModule} from "ngx-moment";
 import {ShareCardComponent} from './share-card/share-card.component';
 import {VersionCardComponent} from "./version-card/version-card.component";
 import { MailShareCardComponent } from './mail-share-card/mail-share-card.component';
+import { SubscriptionCardComponent } from './subscription-card/subscription-card.component';
+import {UserService} from '../core/services/Rest/User/user.service';
+import { NavbarDropdownComponent } from './navbar-dropdown/navbar-dropdown.component';
+import {AdminDefaultLayoutComponent} from './admin-default-layout';
 
 
 @NgModule({
@@ -49,15 +53,22 @@ import { MailShareCardComponent } from './mail-share-card/mail-share-card.compon
         InfoCardComponent,
         HistoryCardComponent,
         ShareCardComponent,
+        MailShareCardComponent,
         VersionCardComponent,
-        MailShareCardComponent],
+        SubscriptionCardComponent,
+        NavbarDropdownComponent,
+        AdminDefaultLayoutComponent
+    ],
     exports: [
         FolderCardComponent,
         FileCardComponent,
         InfoCardComponent,
-        VersionCardComponent
+        VersionCardComponent,
+        SubscriptionCardComponent,
+        NavbarDropdownComponent,
+        AdminDefaultLayoutComponent
     ],
-    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent]
+    providers: [LocalStorageService, HomeComponent, DatePipe, ShareFolderComponent, ShareFileComponent, UserService]
 })
 export class ComponentsModule {
 }

@@ -18,6 +18,10 @@ import { ShareFileComponent } from './share-file/share-file.component';
 import { DocifyEditorComponent } from './docify-editor/docify-editor.component';
 import {QuillModule} from "ngx-quill";
 import {QuillInitializeService} from "../core/services/Quill/quillInitialize.service";
+import { SubscriptionComponent } from './subscription/subscription.component';
+import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
+import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
+import {DataTablesModule} from 'angular-datatables';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -33,7 +37,8 @@ import {QuillInitializeService} from "../core/services/Quill/quillInitialize.ser
         ComponentsModule,
         ReactiveFormsModule,
         NgxFileDropModule,
-        QuillModule
+        QuillModule,
+        DataTablesModule
 
     ],
     declarations: [
@@ -43,7 +48,9 @@ import {QuillInitializeService} from "../core/services/Quill/quillInitialize.ser
         RegisterComponent,
         ShareFolderComponent,
         ShareFileComponent,
-        DocifyEditorComponent
+        DocifyEditorComponent,
+        SubscriptionComponent,
+        SubscriptionsComponent
     ],
     providers: [
         LocalStorageService,

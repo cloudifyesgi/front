@@ -10,7 +10,7 @@ export interface User {
     address: string;
     postal: string;
     city: string;
-    rank: string;
+    rank: number;
     language: string;
     user_groups: Array<UserGroup>;
     belong_user_groups: Array<UserGroup>;

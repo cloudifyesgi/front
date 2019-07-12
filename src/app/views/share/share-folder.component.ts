@@ -36,8 +36,7 @@ export class ShareFolderComponent implements OnInit {
     sharedParentDirectory: Directory;
     parentID: string;
 
-    constructor(private userService: UserService,
-                private directoryService: DirectoryService,
+    constructor(private directoryService: DirectoryService,
                 private fileService: FileService,
                 private route: ActivatedRoute,
                 private router: Router,
@@ -54,7 +53,6 @@ export class ShareFolderComponent implements OnInit {
                 return this.router.navigateByUrl('folders/0');
             }
             this.parentID = this.link.directory;
-            this.user = await this.userService.getUser();
             if (params.directoryId === '0') {
                 await this.getLink(this.parentID).then( value => this.link = value.body);
                 if (this.link === null) {

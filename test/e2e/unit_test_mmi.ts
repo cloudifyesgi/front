@@ -109,7 +109,7 @@ describe('User', function () {
         chai.expect(breadcrumb.getText()).to.eventually.equal('Dossier de test IHM');
     });
 
-    it('should upload a file named fichier.txt', async function (done) {
+    xit('should upload a file named fichier.txt', async function (done) {
         this.timeout(10000);
         const fileToUpload = './files/fichier.txt';
         const absolutePath = path.resolve(__dirname, fileToUpload);
@@ -192,7 +192,8 @@ describe('User', function () {
 
     it('should delete Dossier de test IHM', async function () {
         this.timeout(10000);
-        browser.driver.manage().window().maximize(); // @TODO remove when running all tests
+        const toast = element(by.css('.toast-top-right.toast-container'));
+        toast.click();
         const folder = element(by.cssContainingText('.textCard', 'Dossier de test IHM'));
         folder.click();
         const delete_btn = element(by.css('.cui-trash.icon-tools'));
