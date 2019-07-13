@@ -86,7 +86,9 @@
             <form (submit)="submitFormModal()">
                 <div class="modal-body">
                     <div [formGroup]="directoryForm">
-                        <input type="text" class="form-control" name="directoryNameField"
+                        <input
+                            [ngClass]="{'is-invalid': this.isInvalid('directoryName','directoryForm'), 'is-valid': !this.isInvalid('directoryName','directoryForm')}"
+                            type="text" class="form-control" name="directoryNameField"
                                formControlName="directoryName">
                     </div>
                 </div>
@@ -114,27 +116,37 @@
                     <div [formGroup]="linkForm">
                         <div class="form-group">
                             <span>Nom du lien</span>
-                            <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkName','linkForm'), 'is-valid': !this.isInvalid('linkName','linkForm')}"
+                                type="text" class="form-control" name="linkNameField" formControlName="linkName">
                         </div>
                         <div class="form-group">
                             <span>Type du lien :</span>&nbsp;
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('linkType','linkForm'), 'is-valid': !this.isInvalid('linkType','linkForm')}"
+                                    class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
                                 <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('linkType','linkForm'), 'is-valid': !this.isInvalid('linkType','linkForm')}"
+                                    class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
                                        value="readonly">
                                 <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <span>Date d'expiration du lien</span><br>
-                            <input type="date" class="form-check-inline center text-center form-control" name="linkExpiryField" formControlName="linkExpiry">
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkExpiry','linkForm'), 'is-valid': !this.isInvalid('linkExpiry','linkForm')}"
+                                type="date" class="form-check-inline center text-center form-control" name="linkExpiryField" formControlName="linkExpiry">
                         </div>
                         <div class="form-group">
                             <label>Lien actif : </label>&nbsp;
-                            <input type="checkbox" class="inline form-control" name="linkActivatedField" formControlName="linkActivated">
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkActivated','linkForm'), 'is-valid': !this.isInvalid('linkActivated','linkForm')}"
+                                type="checkbox" class="inline form-control" name="linkActivatedField" formControlName="linkActivated">
                         </div>
                     </div>
                 </div>
@@ -162,17 +174,23 @@
                     <div [formGroup]="shareForm">
                         <div class="form-group">
                             <span>Entrez le(s) mail(s) : (avec une virgule et un espace entre les mails)  </span>
-                            <input type="text" class="form-control" name="shareEmail"
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('shareEmail','shareForm'), 'is-valid': !this.isInvalid('shareEmail','shareForm')}"
+                                type="text" class="form-control" name="shareEmail"
                                formControlName="shareEmail" placeholder="Exemple : jean@dupont.com, frederic@sananes.fr, luiz@valdez.fr">
                         </div>
                         <div class="form-group">
                             <span>Type du lien :</span>&nbsp;
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="writeRadio2" value="write" checked>
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('shareType','shareForm'), 'is-valid': !this.isInvalid('shareType','shareForm')}"
+                                    class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="writeRadio2" value="write" checked>
                                 <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="readonlyRadio2"
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('shareType','shareForm'), 'is-valid': !this.isInvalid('shareType','shareForm')}"
+                                    class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="readonlyRadio2"
                                        value="readonly">
                                 <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
                             </div>

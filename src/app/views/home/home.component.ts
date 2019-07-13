@@ -8,7 +8,7 @@ import {FileService} from "../../core/services/Rest/file/file.service";
 import {FileModel} from "../../core/models/entities/file";
 import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatePipe} from "@angular/common";
-import {FormBuilder} from "@angular/forms";
+import {FormBuilder, Validators} from '@angular/forms';
 import {FileCardComponent} from "../../components/file-card/file-card.component";
 import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
 import {Link} from "../../core/models/entities/link";
@@ -55,23 +55,23 @@ export class HomeComponent implements OnInit, OnChanges {
 
     directoryForm = this.fb.group(
         {
-            directoryName: ['', []]
+            directoryName: ['', [Validators.required,Validators.minLength(1)]]
         }
     );
 
     linkForm = this.fb.group(
         {
-            linkName: ['', []],
-            linkType: ['', []],
-            linkExpiry: ['', []],
+            linkName: ['', [Validators.required,Validators.minLength(1)]],
+            linkType: ['', [Validators.required]],
+            linkExpiry: ['', [Validators.required]],
             linkActivated: ['', []],
         }
     );
 
     shareForm = this.fb.group(
         {
-            shareEmail: ['', []],
-            shareType: ['', []],
+            shareEmail: ['', [Validators.required]],
+            shareType: ['', [Validators.required]],
         }
     );
 
@@ -343,10 +343,12 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     submitFormModal() {
-        if (this.selectedElement) {
-            this.editSelectedElement();
-        } else {
-            this.createDirectory();
+        if (this.directoryForm.valid) {
+            if (this.selectedElement) {
+                this.editSelectedElement();
+            } else {
+                this.createDirectory();
+            }
         }
     }
 
@@ -442,37 +444,39 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     async generateLink() {
-        if (!this.selectedElement) {
-            this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
-            return;
-        }
-        this.new_link = {
-            link: this.linkForm.value.linkName,
-            link_type: this.linkForm.value.linkType,
-            expiry_date: this.linkForm.value.linkExpiry,
-            is_activated: this.linkForm.value.linkActivated,
-            user: this.user._id.toString(),
-            directory: null,
-            file: null
-        };
-        if (this.currentType === 'dir') {
-            this.new_link.directory = this.selectedElement._id;
-        } else {
-            this.new_link.file = this.selectedElement._id;
-        }
-        await this.shareLinkService.postLink(this.new_link).subscribe((data) => {
-                if (data.status === 201) {
-                }
-                jQuery('#linkGenerator').modal('hide');
-                this.infoCardComponent.shareCardComponent.getLinkInfo();
-                if (this.currentType === 'dir') {
-                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
-                }
-            },
-            (err) => {
-                console.log(err);
+        if(this.linkForm.valid){
+            if (!this.selectedElement) {
+                this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
+                return;
             }
-        );
+            this.new_link = {
+                link: this.linkForm.value.linkName,
+                link_type: this.linkForm.value.linkType,
+                expiry_date: this.linkForm.value.linkExpiry,
+                is_activated: this.linkForm.value.linkActivated,
+                user: this.user._id.toString(),
+                directory: null,
+                file: null
+            };
+            if (this.currentType === 'dir') {
+                this.new_link.directory = this.selectedElement._id;
+            } else {
+                this.new_link.file = this.selectedElement._id;
+            }
+            await this.shareLinkService.postLink(this.new_link).subscribe((data) => {
+                    if (data.status === 201) {
+                    }
+                    jQuery('#linkGenerator').modal('hide');
+                    this.infoCardComponent.shareCardComponent.getLinkInfo();
+                    if (this.currentType === 'dir') {
+                        alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                    }
+                },
+                (err) => {
+                    console.log(err);
+                }
+            );
+        }
     }
 
     unsetSelectedElement() {
@@ -485,41 +489,44 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     async shareElement() {
-        if (!this.selectedElement) {
-            this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
-            return;
-        }
-        const emails = this.shareForm.value.shareEmail.split(', ');
+        if(this.shareForm.valid){
+            if (!this.selectedElement) {
+                this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
+                return;
+            }
+            const emails = this.shareForm.value.shareEmail.split(', ');
 
-        this.share = {
-            right: this.shareForm.value.shareType,
-            directory: null,
-            file: null,
-            user: null,
-            email: emails
-        };
-        if (this.currentType === 'dir') {
-            this.share.directory = this.selectedElement._id;
-        } else {
-            this.share.file = this.selectedElement._id;
+            this.share = {
+                right: this.shareForm.value.shareType,
+                directory: null,
+                file: null,
+                user: null,
+                email: emails
+            };
+            if (this.currentType === 'dir') {
+                this.share.directory = this.selectedElement._id;
+            } else {
+                this.share.file = this.selectedElement._id;
+            }
+            await this.shareEmailService.postShare(this.share).subscribe((data) => {
+                    if (data.status === 201) {
+                        console.log('element partagé');
+                        this.toastr.info('Element partagé', 'Succès');
+                    } else if (data.status === 303) {
+                        console.log('email doesnt exist');
+                        this.toastr.error('Cette email n\'existe pas', 'Erreur');
+                    }
+                    jQuery('#shareElement').modal('hide');
+                    this.infoCardComponent.getShare();
+                },
+                (err) => {
+                console.log(err);
+                    this.toastr.error('L\'un des email spécifié n\'existe pas ou le format n\'est pas respecté', 'Erreur');
+                    if (err.status !== 401) {
+                        console.log(err);
+                    }
+                });
         }
-        await this.shareEmailService.postShare(this.share).subscribe((data) => {
-                if (data.status === 201) {
-                    console.log('element partagé');
-                    this.toastr.info('Element partagé', 'Succès');
-                } else if (data.status === 303) {
-                    console.log('email doesnt exist');
-                    this.toastr.error('Cette email n\'existe pas', 'Erreur');
-                }
-                jQuery('#shareElement').modal('hide');
-                this.infoCardComponent.getShare();
-            },
-            (err) => {
-                this.toastr.error('L\'un des email spécifié n\'existe pas ou le format n\'est pas respecté', 'Erreur');
-                if (err.status !== 401) {
-                    console.log(err);
-                }
-            });
     }
 
     showLinkGenerator() {
@@ -617,5 +624,16 @@ export class HomeComponent implements OnInit, OnChanges {
             const res = await this.shareEmailService.getShareForDirAndUser(_id, this.user._id).toPromise();
             this.currentShareId = res.body._id;
         }
+    }
+
+    isInvalid(key: string, form : string): boolean {
+        if(form === "directoryForm")
+            return !!this.directoryForm.get(key).errors;
+        if(form === "linkForm")
+            return !!this.linkForm.get(key).errors;
+        if(form === "shareForm")
+            return !!this.shareForm.get(key).errors;
+        return true;
+
     }
 }
