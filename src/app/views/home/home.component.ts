@@ -246,7 +246,7 @@ export class HomeComponent implements OnInit, OnChanges {
         );
     }
 
-    getDeletedFolders(id: string) {
+    getDeletedFolders() {
         this.directoryService.getDeletedFolders('0').subscribe(
             response => {
                 if (response.status === 200) {
@@ -444,7 +444,7 @@ export class HomeComponent implements OnInit, OnChanges {
             link: this.linkForm.value.linkName,
             link_type: this.linkForm.value.linkType,
             expiry_date: this.linkForm.value.linkExpiry,
-            is_activated: this.linkForm.value.linkActivated,
+            is_activated: 'true',
             user: this.user._id.toString(),
             directory: null,
             file: null
@@ -460,6 +460,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
                 if (this.currentType === 'dir') {
+                    // tslint:disable-next-line:max-line-length
                     alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
                 }
             },
@@ -548,7 +549,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (!this.ReadOnly && this.currentDirectory !== undefined) && !this.ReadOnly;
+            return (!this.ReadOnly && this.currentDirectory.name !== 'Home') && !this.ReadOnly;
         }
     }
 
