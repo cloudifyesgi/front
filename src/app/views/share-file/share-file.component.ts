@@ -19,14 +19,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class ShareFileComponent implements OnInit {
     user: User;
-    children: Array<Directory>;
-    parents: Array<Directory>;
-    currentDirectory: Directory;
     files: Array<FileModel> = [];
-    filesToUpload: NgxFileDropEntry[] = [];
-    isHidden = true;
-    fileMenu: FileModel;
-    fileHistory: Array<History>;
     link: Link;
     ReadOnly = true;
 

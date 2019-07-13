@@ -246,7 +246,7 @@ export class HomeComponent implements OnInit, OnChanges {
         );
     }
 
-    getDeletedFolders() {
+    getDeletedFolders(id: string) {
         this.directoryService.getDeletedFolders('0').subscribe(
             response => {
                 if (response.status === 200) {
@@ -385,9 +385,15 @@ export class HomeComponent implements OnInit, OnChanges {
 
     async undeleteSelectedElement() {
         if (this.currentType === 'dir') {
-            await this.fileCardComponent.undeleteFolder(this.selectedElement._id);
-            this.toastr.success('Dossier restauré');
-            this.initHomeMode();
+            await this.directoryService.undeleteDirectory(this.selectedElement._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        console.log('undeleted folder');
+                        this.toastr.success('Dossier restauré');
+                        this.initHomeMode();
+                    }
+                }
+            );
         } else if (this.currentType === 'file') {
             await this.fileCardComponent.undeleteFile(this.selectedElement._id);
             this.toastr.success('Fichier restauré');
@@ -549,7 +555,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (!this.ReadOnly && this.currentDirectory.name !== 'Home') && !this.ReadOnly;
+            return (this.currentDirectory !== undefined && this.currentDirectory.name !== 'Home') && !this.ReadOnly;
         }
     }
 
