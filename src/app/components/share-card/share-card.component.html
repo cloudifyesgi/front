@@ -4,10 +4,11 @@
             <div class="card-body">
                 <h5 class="card-title">{{link.link}}</h5>
             </div>
-            <div class="card-footer text-muted">
+            <!--<div class="card-footer text-muted">
                 Nom du lien
-            </div>
-            <button type="button" class="btn btn-danger" (click)="deleteLink(link._id)">Cliquez ici pour supprimer le lien</button>
+            </div>-->
+            <button type="button" class="btn btn-primary" (click)="copyText('http://localhost:4200/#/shared/folders/' + link._id + '/0')">Copier le lien dans le presse-papier</button> <!-- @TODO remplacer le lien ici -->
+            <button type="button" class="btn btn-danger" (click)="deleteLink(link._id)">Supprimer le lien</button>
         </div>
     </div>
 </div>

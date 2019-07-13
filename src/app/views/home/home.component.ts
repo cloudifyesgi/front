@@ -466,14 +466,28 @@ export class HomeComponent implements OnInit, OnChanges {
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
                 if (this.currentType === 'dir') {
-                    // tslint:disable-next-line:max-line-length
-                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                    this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                    this.copyText('http://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO remplacer par www.cloudify.fr
                 }
             },
             (err) => {
                 console.log(err);
             }
         );
+    }
+
+    copyText(val: string) {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
     }
 
     unsetSelectedElement() {
