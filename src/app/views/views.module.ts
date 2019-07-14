@@ -40,7 +40,6 @@ import {NotificationService} from '../core/services/Notification/notification.se
         NgxFileDropModule,
         QuillModule,
         DataTablesModule
-
     ],
     declarations: [
         DashboardComponent,

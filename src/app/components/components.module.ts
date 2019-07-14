@@ -18,7 +18,6 @@ import {FileCardComponent} from './file-card/file-card.component';
 import {CoreModule} from "../core/core.module";
 import {InfoCardComponent} from './info-card/info-card.component';
 import {HistoryCardComponent} from './history-card/history-card.component';
-import {Moment} from "moment";
 import {MomentModule} from "ngx-moment";
 import {ShareCardComponent} from './share-card/share-card.component';
 import {VersionCardComponent} from "./version-card/version-card.component";
