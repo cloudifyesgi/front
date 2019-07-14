@@ -23,6 +23,7 @@ import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.comp
 import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
 import {DataTablesModule} from 'angular-datatables';
 import {NotificationService} from '../core/services/Notification/notification.service';
+import {CoreModule} from "../core/core.module";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -39,7 +40,8 @@ import {NotificationService} from '../core/services/Notification/notification.se
         ReactiveFormsModule,
         NgxFileDropModule,
         QuillModule,
-        DataTablesModule
+        DataTablesModule,
+        CoreModule
     ],
     declarations: [
         DashboardComponent,

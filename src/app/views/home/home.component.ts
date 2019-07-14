@@ -19,6 +19,7 @@ import {InfoCardComponent} from "../../components/info-card/info-card.component"
 import {NotificationService} from '../../core/services/Notification/notification.service';
 import {UploadFolders} from "../../core/models/UploadFolders";
 import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
+import {environment} from "../../../environments/environment";
 
 declare var jQuery: any;
 
@@ -459,9 +460,15 @@ export class HomeComponent implements OnInit, OnChanges {
 
     async undeleteSelectedElement() {
         if (this.currentType === 'dir') {
-            await this.fileCardComponent.undeleteFolder(this.selectedElement._id);
-            this.toastr.success('Dossier restauré');
-            this.initHomeMode();
+            await this.directoryService.undeleteDirectory(this.selectedElement._id).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        console.log('undeleted folder');
+                        this.toastr.success('Dossier restauré');
+                        this.initHomeMode();
+                    }
+                }
+            );
         } else if (this.currentType === 'file') {
             await this.fileCardComponent.undeleteFile(this.selectedElement._id);
             this.toastr.success('Fichier restauré');
@@ -532,7 +539,7 @@ export class HomeComponent implements OnInit, OnChanges {
             link: this.linkForm.value.linkName,
             link_type: this.linkForm.value.linkType,
             expiry_date: this.linkForm.value.linkExpiry,
-            is_activated: this.linkForm.value.linkActivated,
+            is_activated: 'true',
             user: this.user._id.toString(),
             directory: null,
             file: null
@@ -548,14 +555,31 @@ export class HomeComponent implements OnInit, OnChanges {
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
                 if (this.currentType === 'dir') {
-                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0');
-                    // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                    this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                    this.copyText(environment.local_url + '/#/shared/folders/' + data.body._id + '/0');
+                } else if (this.currentType === 'file') {
+                    this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                    this.copyText(environment.local_url + '/#/shared/files/' + data.body._id);
                 }
             },
             (err) => {
                 console.log(err);
             }
         );
+    }
+
+    copyText(val: string) {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
     }
 
     unsetSelectedElement() {
@@ -637,7 +661,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (!this.ReadOnly && this.currentDirectory !== undefined) && !this.ReadOnly;
+            return (this.currentDirectory !== undefined && this.currentDirectory.name !== 'Home' && this.modeDisplay !== 'trash') && !this.ReadOnly;
         }
     }
 

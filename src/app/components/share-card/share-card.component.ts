@@ -4,6 +4,8 @@ import {FileModel} from "../../core/models/entities/file";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {Link} from "../../core/models/entities/link";
 import {UserService} from "../../core/services/Rest/User/user.service";
+import {ToastrService} from "ngx-toastr";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'app-share-card',
@@ -15,7 +17,7 @@ export class ShareCardComponent implements OnInit, OnChanges {
     @Input() type: string;
     Links: Array<Link>;
 
-    constructor(private shareLinkService: ShareLinkService, private userService: UserService) {
+    constructor(private shareLinkService: ShareLinkService, private userService: UserService, private toastr: ToastrService) {
     }
 
     ngOnInit() {
@@ -57,5 +59,26 @@ export class ShareCardComponent implements OnInit, OnChanges {
             }},
             err => console.log(err)
         );
+    }
+
+    copyText(link_id) {
+        let val = "";
+        if (this.type === 'dir') {
+            val = environment.local_url + '/#/shared/folders/' + link_id + '/0';
+        } else {
+            val = environment.local_url + '/#/shared/files/' + link_id;
+        }
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+        this.toastr.success('Le lien a été copié dans le presse-papier', 'Lien copié');
     }
 }

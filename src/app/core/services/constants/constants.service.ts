@@ -10,6 +10,6 @@ export class ConstantsService {
   constructor() { }
 
   getConstant(key: string): string {
-    return environment.api + constants[key];
+      return environment.api + constants[key];
   }
 }

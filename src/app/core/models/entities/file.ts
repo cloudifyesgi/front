@@ -11,4 +11,5 @@ export interface FileModel {
     directory?: string;
     createdAt?: string;
     updatedAt?: string;
+    deleted?: boolean;
 }

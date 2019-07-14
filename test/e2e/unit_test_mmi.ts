@@ -1,3 +1,5 @@
+import {environment} from "../../src/environments/environment";
+
 const protractor = require('protractor');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -8,7 +10,7 @@ const browser = protractor.browser;
 const element = protractor.element;
 const by = protractor.by;
 
-const base_url = "http://localhost:4200"; // @TODO change url to https://cloudify.fr
+const base_url = environment.local_url;
 
 const urlChanged = function (url) {
     return function () {
