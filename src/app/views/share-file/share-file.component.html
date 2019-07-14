@@ -1,20 +1,15 @@
-<nav class="breadcrumb">
-    <div class="breadcrumb-menu">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-        </div>
-    </div>
-</nav>
-<div class="homeContainer">
-    <div class="card">
-        <div class="card-header">
-            Shared Files
-        </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <app-file-card *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
-                </div>
+<div class="jumbotron jumbotron-fluid" style="height: 100%;" *ngIf="files[0]">
+    <div class="container" >
+        <h1 class="display-4 text-center">{{files[0].name}}</h1>
+        <div class="card fileCard cursor-pointer" (dblclick)="getFile(files[0]._id)">
+            <div class="card-block p-1 text-center">
+                <i *ngIf="!isImage" [appFileIcon]="files[0].file_type" class="p-1 font-2xl mr-1 iconCard"></i>
+                <img *ngIf="isImage" [src]="imageToShow"
+                     alt="affichage de l'image {{files[0].name}}" style="max-height: 60vh">
+                <div class="h5 h5 p-1 font-2lg mr-1 textCard">{{files[0].name}}</div>
             </div>
         </div>
+        <p class="lead text-center">Double-cliquez sur le fichier pour le télécharger</p>
+        <a class="download-zip-link" #downloadZipLink></a>
     </div>
 </div>

@@ -60,7 +60,13 @@ export class ShareCardComponent implements OnInit, OnChanges {
         );
     }
 
-    copyText(val: string) {
+    copyText(link_id) {
+        let val = "";
+        if (this.type === 'dir') {
+            val = 'http://localhost:4200/#/shared/folders/' + link_id + '/0'; // @TODO remplacer le lien ici
+        } else {
+            val = 'http://localhost:4200/#/shared/files/' + link_id; // @TODO remplacer le lien ici
+        }
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';
         selBox.style.left = '0';

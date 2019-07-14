@@ -299,7 +299,6 @@ export class HomeComponent implements OnInit, OnChanges {
         this.filesToUpload = files;
         for (const droppedFile of files) {
 
-            // Is it a file?
             if (droppedFile.fileEntry.isFile) {
                 const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
                 const filename = droppedFile.relativePath;
@@ -468,6 +467,9 @@ export class HomeComponent implements OnInit, OnChanges {
                 if (this.currentType === 'dir') {
                     this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
                     this.copyText('http://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO remplacer par www.cloudify.fr
+                } else if (this.currentType === 'file') {
+                    this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                    this.copyText('http://localhost:4200/#/shared/files/' + data.body._id); // @TODO remplacer par www.cloudify.fr
                 }
             },
             (err) => {
@@ -569,7 +571,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 }
             }
         } else {
-            return (this.currentDirectory !== undefined && this.currentDirectory.name !== 'Home') && !this.ReadOnly;
+            return (this.currentDirectory !== undefined && this.currentDirectory.name !== 'Home' && this.modeDisplay !== 'trash') && !this.ReadOnly;
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {User} from "../../core/models/entities/user";
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {ToastrService} from "ngx-toastr";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-share-file',
@@ -22,6 +23,9 @@ export class ShareFileComponent implements OnInit {
     files: Array<FileModel> = [];
     link: Link;
     ReadOnly = true;
+    imageToShow: any;
+    isImage = false;
+    @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
 
     constructor(private userService: UserService,
@@ -30,10 +34,11 @@ export class ShareFileComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private shareLinkService: ShareLinkService,
-                private toastr: ToastrService) {
+                private toastr: ToastrService,
+                private sanitization: DomSanitizer) {
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.route.params.subscribe(async (params) => {
             await this.getLinkById(params.linkId).then(value => this.link = value.body);
             if (this.link === undefined || this.link === null) {
@@ -45,7 +50,13 @@ export class ShareFileComponent implements OnInit {
                 return this.router.navigateByUrl('folders/0');
             }
             this.ReadOnly = this.link.link_type === 'readonly';
-            this.getFiles(this.link.file);
+            await this.getFiles(this.link.file);
+            if (this.isImage) {
+                const binaryData = [];
+                const img_res = await this.fileService.getFileById(this.link.file).toPromise();
+                binaryData.push(img_res.body);
+                await this.createImageFromBlob(new Blob(binaryData, {type: this.files[0].file_type}));
+            }
         });
     }
 
@@ -53,17 +64,64 @@ export class ShareFileComponent implements OnInit {
         return await this.shareLinkService.getLink(id).toPromise();
     }
 
-    getFiles(id: string) {
-        this.fileService.getFile(id).subscribe(
-            response => {
-                if (response.status === 200) {
-                    this.files.push(response.body);
-                } else {
-                    this.router.navigateByUrl('folders/0');
-                }
-            },
-            err => console.log(err)
-        );
+    async getFiles(id: string) {
+        const response = await this.fileService.getFile(id).toPromise();
+        if (response.status === 200) {
+            if (response.body.deleted === true) {
+                this.toastr.error('Le fichier partagé a été supprimé', 'Erreur');
+                return this.router.navigateByUrl('folders/0');
+            }
+            this.files = [];
+            this.files.push(response.body);
+            this.isImageType(response.body.file_type);
+            console.log(this.files);
+        } else {
+            this.router.navigateByUrl('folders/0');
+        }
     }
 
+    async getFile(_id: string) {
+        const binaryData = [];
+        let url;
+        let link;
+        const response = await this.fileService.getFileInfo(_id).toPromise();
+        const file_name = response.body.name;
+        await this.fileService.getFileById(_id).subscribe(res => {
+            binaryData.push(res.body);
+            url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
+            link = this.downloadZipLink.nativeElement;
+            link.href = url;
+            link.download = file_name;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
+
+    async createImageFromBlob(image: Blob) {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            this.imageToShow = reader.result;
+            this.imageToShow = this.sanitization.bypassSecurityTrustUrl(this.imageToShow);
+        }, false);
+
+        if (image) {
+            reader.readAsDataURL(image);
+        }
+    }
+
+    isImageType(file_type: string) {
+        console.log('isImageType : ', file_type);
+        switch (file_type.toLowerCase()) {
+            case 'jpg':
+                this.isImage = true;
+                break;
+            case 'png':
+                this.isImage = true;
+                break;
+            default:
+                this.isImage = false;
+                break;
+        }
+    }
 }

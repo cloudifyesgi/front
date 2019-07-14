@@ -22,6 +22,7 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
 import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
 import {DataTablesModule} from 'angular-datatables';
+import {CoreModule} from "../core/core.module";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -38,7 +39,8 @@ import {DataTablesModule} from 'angular-datatables';
         ReactiveFormsModule,
         NgxFileDropModule,
         QuillModule,
-        DataTablesModule
+        DataTablesModule,
+        CoreModule
 
     ],
     declarations: [
