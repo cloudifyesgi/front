@@ -5,6 +5,7 @@ import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.se
 import {Link} from "../../core/models/entities/link";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {ToastrService} from "ngx-toastr";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'app-share-card',
@@ -63,9 +64,9 @@ export class ShareCardComponent implements OnInit, OnChanges {
     copyText(link_id) {
         let val = "";
         if (this.type === 'dir') {
-            val = 'http://localhost:4200/#/shared/folders/' + link_id + '/0'; // @TODO remplacer le lien ici
+            val = environment.local_url + '/#/shared/folders/' + link_id + '/0';
         } else {
-            val = 'http://localhost:4200/#/shared/files/' + link_id; // @TODO remplacer le lien ici
+            val = environment.local_url + '/#/shared/files/' + link_id;
         }
         const selBox = document.createElement('textarea');
         selBox.style.position = 'fixed';

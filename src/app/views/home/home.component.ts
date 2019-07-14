@@ -17,6 +17,7 @@ import {ToastrService} from "ngx-toastr";
 import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 import {InfoCardComponent} from "../../components/info-card/info-card.component";
+import {environment} from "../../../environments/environment";
 
 declare var jQuery: any;
 
@@ -466,10 +467,10 @@ export class HomeComponent implements OnInit, OnChanges {
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
                 if (this.currentType === 'dir') {
                     this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
-                    this.copyText('http://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO remplacer par www.cloudify.fr
+                    this.copyText(environment.local_url + '/#/shared/folders/' + data.body._id + '/0');
                 } else if (this.currentType === 'file') {
                     this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
-                    this.copyText('http://localhost:4200/#/shared/files/' + data.body._id); // @TODO remplacer par www.cloudify.fr
+                    this.copyText(environment.local_url + '/#/shared/files/' + data.body._id);
                 }
             },
             (err) => {
