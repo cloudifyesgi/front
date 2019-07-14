@@ -7,15 +7,11 @@
             <div class="dropdown-header text-center">
                 <strong>Settings</strong>
             </div>
-            <!--<a class="dropdown-item" href="#">
-                <i class="fa fa-user"></i> Profile</a>
-            <a class="dropdown-item" href="#">
-                <i class="fa fa-wrench"></i> Settings</a>-->
             <a class="dropdown-item" routerLink="/subscription">
                 <i class="fa fa-usd"></i> Subscription
                 <span class="badge badge-dark"></span>
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item cursor-pointer" (click)="logout()">
                 <i class="fa fa-lock"></i> Logout</a>
         </div>
     </li>

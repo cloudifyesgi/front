@@ -18,6 +18,8 @@ import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 import {InfoCardComponent} from "../../components/info-card/info-card.component";
 import {NotificationService} from '../../core/services/Notification/notification.service';
+import {Upload} from "../../core/models/entities/upload";
+import {UploadFolders} from "../../core/models/UploadFolders";
 
 declare var jQuery: any;
 
@@ -49,6 +51,7 @@ export class HomeComponent implements OnInit, OnChanges {
     right_type: string;
     currentShareId: string;
     currentShareParentId: string;
+    progressBarValue: { value: number; max: number; number: number } = null;
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
     @ViewChild(InfoCardComponent) infoCardComponent;
@@ -85,7 +88,7 @@ export class HomeComponent implements OnInit, OnChanges {
                 private shareLinkService: ShareLinkService,
                 private toastr: ToastrService,
                 private shareEmailService: ShareEmailService,
-                private notificationService : NotificationService) {
+                private notificationService: NotificationService) {
     }
 
     async ngOnInit() {
@@ -214,7 +217,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getMailSharedFolders(user_id) {
-        this.shareEmailService.getFolders(user_id).subscribe( response => {
+        this.shareEmailService.getFolders(user_id).subscribe(response => {
             if (response.status === 200) {
                 this.children = response.body;
             }
@@ -222,7 +225,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     getMailSharedFiles(user_id) {
-        this.shareEmailService.getFiles(user_id).subscribe( response => {
+        this.shareEmailService.getFiles(user_id).subscribe(response => {
             if (response.status === 200) {
                 this.files = response.body;
             }
@@ -299,47 +302,112 @@ export class HomeComponent implements OnInit, OnChanges {
 
     dropped(files: NgxFileDropEntry[]) {
         this.filesToUpload = files;
+        this.progressBarValue = {max: files.length, value: 0, number: 0};
+        let directories: UploadFolders = null;
         for (const droppedFile of files) {
-
-            // Is it a file?
-            if (droppedFile.fileEntry.isFile) {
-                const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-                const filename = droppedFile.relativePath;
-                const fileNameArray = filename.split('.');
-                const ext = fileNameArray[fileNameArray.length - 1];
-                fileEntry.file((file: File) => {
-
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('name', droppedFile.relativePath);
-                    formData.append('date_create', this.datePipe.transform(Date.now(), 'yyyy-MM-dd'));
-                    formData.append('file_version', '1');
-                    formData.append('file_type', ext);
-                    formData.append('user_create', this.user._id.toString());
-                    formData.append('user_update', this.user._id.toString());
-                    formData.append('directory', this.currentDirectory._id);
-
-                    this.fileService.uploadFile(formData).subscribe(
-                        (data) => {
-                            this.getFiles(this.currentDirectory._id);
-                            console.log('file uploaded');
-                        },
-                        (err) => {
-                            if(err.status === 412){
-                                this.notificationService.showError("Subscription maximum reached", "Fail upload Error")
-                            }else{
-                                this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
-                                console.log(err);
-                            }
-                        }
-                    );
-                });
+            if (droppedFile.relativePath === droppedFile.fileEntry.name) {
+                this.uploadFile(droppedFile, this.currentDirectory._id);
             } else {
-                const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-                console.log(droppedFile.relativePath, fileEntry);
-                this.toastr.error('Vous ne pouvez pas upload un dossier vide', 'Erreur');
+                directories = this.treeGenerator(droppedFile, directories);
             }
         }
+
+        if (directories) {
+            this.uploadFolder(directories, this.currentDirectory._id);
+        }
+    }
+
+    uploadFile(droppedFile: NgxFileDropEntry, directoryId: string) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        const filename = droppedFile.relativePath;
+        const fileNameArray = filename.split('.');
+        const ext = fileNameArray[fileNameArray.length - 1];
+        fileEntry.file((file: File) => {
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('name', droppedFile.fileEntry.name);
+            formData.append('date_create', this.datePipe.transform(Date.now(), 'yyyy-MM-dd'));
+            formData.append('file_version', '1');
+            formData.append('file_type', ext);
+            formData.append('user_create', this.user._id.toString());
+            formData.append('user_update', this.user._id.toString());
+            formData.append('directory', directoryId);
+
+            this.fileService.uploadFile(formData).subscribe(
+                (data) => {
+                    this.getFiles(this.currentDirectory._id);
+                    this.progressBarValue.value += 100 / this.progressBarValue.max;
+                    this.progressBarValue.value = Math.round(this.progressBarValue.value * 100) / 100;
+                    this.progressBarValue.number += 1;
+
+                    if (this.progressBarValue.max === this.progressBarValue.number) {
+                        this.progressBarValue.value = 100;
+                        this.toastr.success(`téléverser avec succès !`, 'Success');
+                        setTimeout(() => this.progressBarValue = null, 2000);
+                    }
+                },
+                (err) => {
+                    if (err.status === 412) {
+                        this.notificationService.showError("Subscription maximum reached", "Fail upload Error");
+                    } else {
+                        this.toastr.error('Vous ne pouvez pas upload un fichier vide', 'Erreur');
+                        console.log(err);
+                    }
+                }
+            );
+        });
+    }
+
+    uploadFolder(directories: UploadFolders, parentId: string, first = true) {
+        this.directoryService.create(directories.name, parentId).subscribe(
+            response => {
+                if (first) {
+                    this.children.push(response.body);
+                }
+                directories._id = response.body._id;
+
+                directories.files.forEach(
+                    file => {
+                        this.uploadFile(file, directories._id);
+                    }
+                );
+                directories.directories.forEach(
+                    directory => {
+                        this.uploadFolder(directory, directories._id, false);
+                    }
+                );
+            }
+        );
+    }
+
+    treeGenerator(droppedFile: NgxFileDropEntry, directories: UploadFolders): UploadFolders {
+        const paths = droppedFile.relativePath.split('/');
+        if (!directories) {
+            directories = {name: paths[0], directories: [], _id: null, files: []};
+        }
+
+        if (paths.length === 2) {
+            directories.files.push(droppedFile);
+        }
+        let currentDir = directories;
+        let idx = 1;
+        for (; idx < paths.length - 1; idx++) {
+            if (directories) {
+                let dir = currentDir.directories.find(element => element.name === paths[idx]);
+                if (!dir) {
+                    currentDir.directories.push({name: paths[idx], directories: [], _id: null, files: []});
+                }
+                dir = currentDir.directories.find(element => element.name === paths[idx]);
+                currentDir = dir;
+
+                if (idx === paths.length - 2) {
+                    currentDir.files.push(droppedFile);
+                }
+            }
+        }
+
+        return directories;
     }
 
     submitFormModal() {
@@ -466,7 +534,8 @@ export class HomeComponent implements OnInit, OnChanges {
                 jQuery('#linkGenerator').modal('hide');
                 this.infoCardComponent.shareCardComponent.getLinkInfo();
                 if (this.currentType === 'dir') {
-                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                    alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0');
+                    // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
                 }
             },
             (err) => {

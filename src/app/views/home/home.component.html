@@ -187,3 +187,7 @@
         </div>
     </div>
 </div>
+
+<div *ngIf="progressBarValue" class="progress position-fixed" style="bottom:50px; width: 85vw;">
+    <div class="progress-bar" role="progressbar" [style.width.%]="progressBarValue.value" [attr.aria-valuenow]="progressBarValue.value" aria-valuemin="0" aria-valuemax="100">{{progressBarValue.value}}%</div>
+</div>
