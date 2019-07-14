@@ -6,13 +6,11 @@
   [asideMenuToggler]="false">
   <ul class="nav navbar-nav d-md-down-none mr-auto">
     <li class="nav-item px-3">
-      <a class="nav-link" href="#">Acceuil</a>
+      <a class="nav-link" href="#">Accueil</a>
     </li>
   </ul>
-  <form class="form-inline" style="margin-right: 10px">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
+    <button *ngIf="user && user.rank > 0" class="btn btn-outline-success my-2 my-sm-0" routerLink="/admin">Backoffice</button>
+    <app-navbar-dropdown></app-navbar-dropdown>
 </app-header>
 <div class="app-body">
   <app-sidebar [fixed]="true" [display]="'lg'">
@@ -21,7 +19,7 @@
   </app-sidebar>
   <!--<app-navbar class="sidebar-show"></app-navbar>-->
   <main class="main">
-    <div class="container-fluid cloudifyMainContainer" (click)="test()">
+    <div class="container-fluid cloudifyMainContainer">
       <router-outlet></router-outlet>
     </div><!-- /.container-fluid -->
   </main>

@@ -1,0 +1,7 @@
+<div class="callout border-bottom" (click)="getPreviousVersion(version.name, version.file_version, version.directory)">
+    <small class="text-muted">created by {{userCreate}}</small>
+    <br>
+    <strong class="h5"><strong>{{version.name}}</strong><br>
+        {{version.file_version}}<br>
+        le {{version.createdAt  | amLocale:'fr' | amDateFormat:'LLLL'}}</strong>
+</div>

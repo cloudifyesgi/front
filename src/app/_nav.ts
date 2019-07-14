@@ -1,12 +1,12 @@
 export const navItems = [
   {
     name: 'Personal cloud',
-    url: '/dashboard',
+    url: '/folders',
     icon: 'cui-cloud',
-    children: [
+    /*children: [
       {
         name: 'Cloudify',
-        url: './defaultCloudify',
+        url: '/folders',
         icon: 'cui-star'
       },
       {
@@ -19,14 +19,14 @@ export const navItems = [
         url: './',
         icon: 'cui-star'
       }
-    ]
+    ]*/
   },
   {
     name: 'Shared clouds',
-    url: '/dashboard',
+    url: '/sharedClouds/0',
     icon: 'cui-share'
   },
-  {
+  /*{
     name: 'Recently updated',
     url: '/dashboard',
     icon: 'cui-cloud-upload'
@@ -40,15 +40,15 @@ export const navItems = [
     name: 'Synchronized computer',
     url: '/dashboard',
     icon: 'cui-laptop'
-  },
+  },*/
   {
     name: 'Bin',
-    url: '/dashboard',
+    url: '/trash/0',
     icon: 'cui-trash'
-  },
+  }/*,
   {
     name: 'My user groups',
     url: '/dashboard',
     icon: 'cui-user'
-  }
+  }*/
 ];

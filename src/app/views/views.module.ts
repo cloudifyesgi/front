@@ -9,13 +9,21 @@ import {ViewsRouting} from "./views.routing";
 import {LoginComponent} from "./authentication/login/login.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {AgGridModule} from 'ag-grid-angular';
 import {ComponentsModule} from "../components/components.module";
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './authentication/register/register.component';
 import {NgxFileDropModule} from "ngx-file-drop";
 import { ShareFolderComponent } from './share/share-folder.component';
 import { ShareFileComponent } from './share-file/share-file.component';
+import { DocifyEditorComponent } from './docify-editor/docify-editor.component';
+import {QuillModule} from "ngx-quill";
+import {QuillInitializeService} from "../core/services/Quill/quillInitialize.service";
+import { SubscriptionComponent } from './subscription/subscription.component';
+import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
+import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
+import {DataTablesModule} from 'angular-datatables';
+import {NotificationService} from '../core/services/Notification/notification.service';
+import {CoreModule} from "../core/core.module";
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -30,8 +38,10 @@ import { ShareFileComponent } from './share-file/share-file.component';
         CommonModule,
         ComponentsModule,
         ReactiveFormsModule,
-        NgxFileDropModule
-
+        NgxFileDropModule,
+        QuillModule,
+        DataTablesModule,
+        CoreModule
     ],
     declarations: [
         DashboardComponent,
@@ -39,9 +49,15 @@ import { ShareFileComponent } from './share-file/share-file.component';
         HomeComponent,
         RegisterComponent,
         ShareFolderComponent,
-        ShareFileComponent
+        ShareFileComponent,
+        DocifyEditorComponent,
+        SubscriptionComponent,
+        SubscriptionsComponent
     ],
-    providers: [LocalStorageService]
+    providers: [
+        LocalStorageService,
+        QuillInitializeService
+    ]
 })
 export class ViewsModule {
 }

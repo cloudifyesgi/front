@@ -1,13 +1,31 @@
 <nav class="breadcrumb">
-    <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
-    <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
-    <div class="breadcrumb-menu" *ngIf="selectedElement">
+    <div *ngIf="modeDisplay === 'home' || modeDisplay === 'trash'">
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/folders/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+        <a *ngIf="!isParent" class="btn cursor-pointer" (click)="downloadCurrentDir()"><i class="cui-cloud-download icon-tools"></i></a>
+    </div>
+    <div *ngIf="modeDisplay === 'sharedFolder'">
+        <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/0">{{sharedParentDirectory.name}}</a>
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/shared/folders/{{link._id}}/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    </div>
+    <div *ngIf="modeDisplay === 'sharedClouds'">
+        <a *ngIf="sharedParentDirectory" class="breadcrumb-item" routerLink="/sharedClouds/{{currentShareId}}/{{sharedParentDirectory._id}}">{{sharedParentDirectory.name}}</a>
+        <a *ngFor="let item of parents" class="breadcrumb-item" routerLink="/sharedClouds/{{currentShareId}}/{{item._id}}">{{item.name}}</a>
+        <span *ngIf="currentDirectory" class="breadcrumb-item active">{{currentDirectory.name}}</span>
+    </div>
+        <div class="breadcrumb-menu" *ngIf="selectedElement">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn cursor-pointer"><i class="icon-link icon-tools"></i></a>
-            <a class="btn cursor-pointer" data-toggle="modal"
+            <a *ngIf="showLinkGenerator()" class="btn cursor-pointer" data-toggle="modal"
+               data-target="#linkGenerator"><i class="icon-link icon-tools"></i></a>
+            <a *ngIf="showNameRenamer()" class="btn cursor-pointer" data-toggle="modal"
                data-target="#getNameDirectory"><i class="cui-pencil icon-tools"></i></a>
-            <a class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
-            <a class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
+            <a *ngIf="showShareForm()" class="btn cursor-pointer" data-toggle="modal"
+               data-target="#shareElement"><i class="cui-share icon-tools"></i></a>
+            <a *ngIf="showDeleteButton()" class="btn cursor-pointer" (click)="removeSelectedElement()"><i class="cui-trash icon-tools"></i></a>
+            <a *ngIf="modeDisplay === 'trash'" class="btn cursor-pointer" (click)="undeleteSelectedElement()"><i class="cui-action-undo icon-tools"></i></a>
+            <a *ngIf="modeDisplay === 'trash'" class="btn cursor-pointer" (click)="hardDeleteSelectedElement()"><i class="cui-ban icon-tools text-danger"></i></a>
+            <a *ngIf="modeDisplay !== 'trash'" class="btn cursor-pointer" (click)="toggleInfoCard()"><i class="cui-info icon-tools"></i></a>
         </div>
     </div>
 </nav>
@@ -16,15 +34,15 @@
     <div class="col dataBlock">
         <div class="card">
             <div class="card-header">
-                folder <i class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
-                          data-target="#getNameDirectory" (click)="unsetSelectedElement()"></i>
+                folder <i *ngIf="showCreateDirButton()" class="fa fa-plus-square btn cursor-pointer float-right btn-create" data-toggle="modal"
+                          data-target="#getNameDirectory" id="createDirButton" (click)="unsetSelectedElement()"></i>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
-                    <div class="row">
+                    <div *ngIf="children" class="row">
                         <app-folder-card
                             (messageEvent)="setSelectedElement($event, 'dir')"
-                            *ngFor="let directory of children" [directory]="directory"
+                            *ngFor="let directory of children" [directory]="directory" [shareId]="currentShareId"
                             [ngClass]="{'selected-card': selectedElement && selectedElement._id === directory._id}"
                             class="col-2 col-sm-4"></app-folder-card>
                     </div>
@@ -37,22 +55,21 @@
                 Files
             </div>
             <div class="card-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
-                                       [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
-                                       *ngFor="let file of files" [file]="file" class="col-2"></app-file-card>
-                    </div>
+                <div *ngIf="files" class="d-flex flex-row flex-wrap">
+                    <app-file-card (messageEvent)="setSelectedElement($event, 'file')"
+                                   [ngClass]="{'selected-card': selectedElement && selectedElement._id === file._id}"
+                                   *ngFor="let file of files" [file]="file" class="col-2 col-sm-4">>
+                    </app-file-card>
                 </div>
             </div>
-            <div class="center">
-                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)">
+            <div *ngIf="showUploadZone()" class="center">
+                <ngx-file-drop dropZoneLabel="Drop files here" id="fileDropZone" (onFileDrop)="dropped($event)">
                 </ngx-file-drop>
             </div>
         </div>
     </div>
     <div [ngClass]="{'ag-hidden': isHidden}" class="col-3" *ngIf="selectedElement">
-        <app-info-card [element]="selectedElement" [type]="currentType"></app-info-card>
+        <app-info-card [currentDirectory]="currentDirectory" [element]="selectedElement" [type]="currentType" [modeDisplay]="modeDisplay" (update_files)="getActiveFiles($event)" ></app-info-card>
     </div>
 </div>
 
@@ -61,7 +78,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="getNameDirectoryTitle">Entrer le nom du dossier : </h5>
+                <h5 class="modal-title" id="getNameDirectoryTitle">Entrez le nom du dossier : </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -69,13 +86,15 @@
             <form (submit)="submitFormModal()">
                 <div class="modal-body">
                     <div [formGroup]="directoryForm">
-                        <input type="text" class="form-control" name="directoryNameField"
+                        <input
+                            [ngClass]="{'is-invalid': this.isInvalid('directoryName','directoryForm'), 'is-valid': !this.isInvalid('directoryName','directoryForm')}"
+                            type="text" class="form-control" name="directoryNameField"
                                formControlName="directoryName">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" name="create" class="btn btn-primary">Créer</button>
                 </div>
             </form>
         </div>
@@ -95,18 +114,44 @@
             <form (submit)="generateLink()">
                 <div class="modal-body">
                     <div [formGroup]="linkForm">
-                        <span>Nom du lien</span>
-                        <input type="text" class="form-control" name="linkNameField" formControlName="linkName">
-                        <span>Type du lien</span>
-                        <input type="text" class="form-control" name="linkTypeField" formControlName="linkType">
-                        <span>Date d'expiration du lien</span>
-                        <input type="text" class="form-control" name="linkExpiryField" formControlName="linkExpiry">
-                        <span>Lien actif</span>
-                        <input type="text" class="form-control" name="linkActivatedField" formControlName="linkActivated">
+                        <div class="form-group">
+                            <span>Nom du lien</span>
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkName','linkForm'), 'is-valid': !this.isInvalid('linkName','linkForm')}"
+                                type="text" class="form-control" name="linkNameField" formControlName="linkName">
+                        </div>
+                        <div class="form-group">
+                            <span>Type du lien :</span>&nbsp;
+                            <div class="form-check form-check-inline">
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('linkType','linkForm'), 'is-valid': !this.isInvalid('linkType','linkForm')}"
+                                    class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="writeRadio" value="write" checked>
+                                <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('linkType','linkForm'), 'is-valid': !this.isInvalid('linkType','linkForm')}"
+                                    class="form-check-input form-control" formControlName="linkType" type="radio" name="linkType" id="readonlyRadio"
+                                       value="readonly">
+                                <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span>Date d'expiration du lien</span><br>
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkExpiry','linkForm'), 'is-valid': !this.isInvalid('linkExpiry','linkForm')}"
+                                type="date" class="form-check-inline center text-center form-control" name="linkExpiryField" formControlName="linkExpiry">
+                        </div>
+                        <div class="form-group ag-hidden">
+                            <label>Lien actif : </label>&nbsp;
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('linkActivated','linkForm'), 'is-valid': !this.isInvalid('linkActivated','linkForm')}"
+                                type="checkbox" class="inline form-control" name="linkActivatedField" formControlName="linkActivated">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-primary">Créer</button>
                 </div>
             </form>
@@ -114,5 +159,53 @@
     </div>
 </div>
 
-
-
+<div class="modal fade" id="shareElement" tabindex="-1" role="dialog" aria-labelledby="shareElementTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="getEmailToShare">Partage entre utilisateurs </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (submit)="shareElement()">
+                <div class="modal-body">
+                    <div [formGroup]="shareForm">
+                        <div class="form-group">
+                            <span>Entrez le(s) mail(s) : (avec une virgule et un espace entre les mails)  </span>
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('shareEmail','shareForm'), 'is-valid': !this.isInvalid('shareEmail','shareForm')}"
+                                type="text" class="form-control" name="shareEmail"
+                               formControlName="shareEmail" placeholder="Exemple : jean@dupont.com, frederic@sananes.fr, luiz@valdez.fr">
+                        </div>
+                        <div class="form-group">
+                            <span>Type du lien :</span>&nbsp;
+                            <div class="form-check form-check-inline">
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('shareType','shareForm'), 'is-valid': !this.isInvalid('shareType','shareForm')}"
+                                    class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="writeRadio2" value="write" checked>
+                                <label class="form-check-label" for="writeRadio">Droit en écriture</label>&nbsp;
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    [ngClass]="{'is-invalid': this.isInvalid('shareType','shareForm'), 'is-valid': !this.isInvalid('shareType','shareForm')}"
+                                    class="form-check-input form-control" formControlName="shareType" type="radio" name="shareType" id="readonlyRadio2"
+                                       value="readonly">
+                                <label class="form-check-label" for="readonlyRadio">Droit uniquement en lecture</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Partager</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<a class="download-zip-link" #downloadZipLink></a>
+<div *ngIf="progressBarValue" class="progress position-fixed" style="bottom:50px; width: 85vw;">
+    <div class="progress-bar" role="progressbar" [style.width.%]="progressBarValue.value" [attr.aria-valuenow]="progressBarValue.value" aria-valuemin="0" aria-valuemax="100">{{progressBarValue.value}}%</div>
+</div>

@@ -1,10 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FileModel} from "../../core/models/entities/file";
 import {FileService} from "../../core/services/Rest/file/file.service";
-import {HomeComponent} from "../../views/home/home.component";
-import {ShareFolderComponent} from "../../views/share/share-folder.component";
-import {UserService} from "../../core/services/Rest/User/user.service";
-import {ShareFileComponent} from "../../views/share-file/share-file.component";
 import {Directory} from "../../core/models/entities/directory";
 
 @Component({
@@ -16,15 +12,9 @@ export class FileCardComponent implements OnInit {
 
     @Input() file: FileModel;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
-    testFile: FileModel;
-    // @ts-ignore
     @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
-    constructor(private fileService: FileService,
-                private homeComponent: HomeComponent,
-                private shareFolderComponent: ShareFolderComponent,
-                private shareFileComponent: ShareFileComponent,
-                private userService: UserService) {
+    constructor(private fileService: FileService) {
     }
 
     ngOnInit() {
@@ -48,16 +38,8 @@ export class FileCardComponent implements OnInit {
     }
 
     deleteFile(id, idParent, callback) {
-        console.log("hey");
-        this.fileService.deleteFile(id).subscribe(
+        this.fileService.deleteFile(id, idParent).subscribe(
             (data) => {
-                if (this.homeComponent) {
-                    this.homeComponent.getFiles(this.homeComponent.currentDirectory._id);
-                } else if (this.shareFolderComponent) {
-                    this.shareFolderComponent.getFiles(this.shareFolderComponent.currentDirectory._id);
-                } else if (this.shareFileComponent) {
-                    this.shareFileComponent.getFiles(this.shareFileComponent.currentDirectory._id);
-                }
                 callback(idParent);
             },
             (err) => {
@@ -65,8 +47,27 @@ export class FileCardComponent implements OnInit {
             });
     }
 
+    undeleteFile(id) {
+        this.fileService.undeleteFile(id).subscribe(
+            (data) => {
+                console.log('undeleted file');
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
+    hardDeleteFile(id) {
+        this.fileService.hardDeleteFile(id).subscribe(
+            (data) => {
+                console.log('file archived');
+            },
+            (err) => {
+                console.log(err);
+            });
+    }
+
     renameFile(newName: string, id: string, idParent: string, callback: (id: string) => void) {
-        console.log('rename ' + id + ' to ' + newName);
         this.fileService.updateFile({id: id, name: newName}).subscribe(
             response => {
                 if (response.status === 200) {
@@ -75,36 +76,6 @@ export class FileCardComponent implements OnInit {
             }
         );
         callback(idParent);
-    }
-
-    getVersions(name) {
-        this.fileService.getFileByVersions(name).subscribe(
-            (data) => {
-                console.log(data.body);
-            },
-            (err) => {
-                console.log(err);
-            });
-    }
-
-    getPreviousVersion(name, number) {
-        this.fileService.getFileVersion(name, number).subscribe(
-            (data) => {
-                console.log(data.body);
-            },
-            (err) => {
-                console.log(err);
-            });
-    }
-
-    showMenu(_id) {
-        if (this.homeComponent) {
-            this.homeComponent.showMenu(_id, this.userService);
-        } else if (this.shareFolderComponent) {
-            this.shareFolderComponent.showMenu(_id, this.userService);
-        } else if (this.shareFileComponent) {
-            this.shareFileComponent.showMenu(_id, this.userService);
-        }
     }
 
     selectFile() {

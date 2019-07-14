@@ -1,0 +1,106 @@
+<h2>Subscription</h2>
+<div class="btn btn-primary" data-toggle="modal"
+     data-target="#newSubscriptionModal" (click)="createMode()" >Create</div>
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+    <thead>
+    <tr>
+        <th>name</th>
+        <th>storage (Kb)</th>
+        <th>file_number</th>
+        <th>file_size (Kb)</th>
+        <th>price</th>
+        <th>description</th>
+        <th>status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let subscription of subscriptions">
+        <td>{{subscription.name}}</td>
+        <td>{{subscription.storage}}</td>
+        <td>{{subscription.file_number}}</td>
+        <td>{{subscription.file_size}}</td>
+        <td>{{subscription.price}}</td>
+        <td>{{subscription.description}}</td>
+        <td>{{subscription.status}}</td>
+        <td>
+            <a class="btn cursor-pointer" (click)="updateSubscription(subscription)" data-toggle="modal" data-target="#newSubscriptionModal"><i class="cui-pencil icon-tools"></i></a>
+            <a class="btn cursor-pointer" (click)="deleteSubscription(subscription)" ><i class="cui-trash icon-tools"></i></a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="newSubscriptionModal" tabindex="-1" role="dialog" aria-labelledby="newSubscriptionModalTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newSubscriptionModalTitle">{{updateMode ? selectedSubscription.name : "New Subscription"}} : </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form (submit)="createSubscription()">
+                <div class="modal-body">
+                    <div [formGroup]="subscriptionForm">
+                        <div class="form-group">
+                            <span>Subscription name</span>
+                            <input
+                                [ngClass]="{'is-invalid': this.isInvalid('subscriptionName'), 'is-valid': !this.isInvalid('subscriptionName')}"
+                                type="text" class="form-control" name="subscriptionName" formControlName="subscriptionName">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription storage</span>
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionStorage'), 'is-valid': !this.isInvalid('subscriptionStorage')}"
+                                   min="0" class="form-control" name="subscriptionStorage" formControlName="subscriptionStorage">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription file number</span>
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionFileNumber'), 'is-valid': !this.isInvalid('subscriptionFileNumber')}"
+                                   min="0" class="form-control" name="subscriptionFileNumber" formControlName="subscriptionFileNumber">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription file size</span>
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionFileSize'), 'is-valid': !this.isInvalid('subscriptionFileSize')}"
+                                   min="0" class="form-control" name="subscriptionFileSize" formControlName="subscriptionFileSize">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription price</span>
+                            <input type="number"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionPrice'), 'is-valid': !this.isInvalid('subscriptionPrice')}"
+                                   min="0" class="form-control" name="subscriptionPrice" formControlName="subscriptionPrice">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription description</span>
+                            <input type="text"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionDescription'), 'is-valid': !this.isInvalid('subscriptionDescription')}"
+                                   class="form-control" name="subscriptionDescription" formControlName="subscriptionDescription">
+                        </div>
+
+                        <div class="form-group">
+                            <span>Subscription is activated</span>
+                            <input type="checkbox"
+                                   [ngClass]="{'is-invalid': this.isInvalid('subscriptionStatus'), 'is-valid': !this.isInvalid('subscriptionStatus')}"
+                                   class="form-control" name="subscriptionStatus" formControlName="subscriptionStatus">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">{{updateMode ? "Update" : "Create"}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

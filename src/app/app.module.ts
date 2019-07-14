@@ -6,6 +6,7 @@ import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/com
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+const config: SocketIoConfig = { url: 'http://localhost:6789', options: {} };
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     suppressScrollX: true
@@ -34,6 +35,12 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {NgxFileDropModule} from "ngx-file-drop";
 import {ToastrModule} from "ngx-toastr";
+import {MomentModule} from "ngx-moment";
+import {HttpsInterceptor} from "./core/providers/http.interceptor";
+import {RestErrorHandler} from "./core/providers/rest.error-handler";
+import {NotificationService} from "./core/services/Notification/notification.service";
+import {SocketIoConfig} from "ngx-socket-io/src/config/socket-io.config";
+import {SocketIoModule} from "ngx-socket-io";
 
 @NgModule({
     imports: [
@@ -50,19 +57,22 @@ import {ToastrModule} from "ngx-toastr";
         TabsModule.forRoot(),
         ChartsModule,
         CoreModule,
-        BrowserModule,
         FormsModule,
         HttpClientModule,
         NgxFileDropModule,
         CommonModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot({
+            preventDuplicates: true
+        }),
+        SocketIoModule.forRoot(config)
     ],
     exports: [AppRoutingModule],
     declarations: [
         AppComponent
     ],
     providers: [
+        RestErrorHandler,
+        NotificationService,
         {
             provide: LocationStrategy,
             useClass: HashLocationStrategy
@@ -70,6 +80,11 @@ import {ToastrModule} from "ngx-toastr";
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpsInterceptor,
             multi: true
         }
     ],

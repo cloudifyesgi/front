@@ -1,4 +1,4 @@
-<div class="card cursor-pointer" (dblclick)="getFile(file._id)" (click)="selectFile()">
+<div class="card fileCard cursor-pointer" (dblclick)="getFile(file._id)" (click)="selectFile()">
     <div class="card-block p-1">
         <i [appFileIcon]="file.file_type" class="fa fa-folder p-1 font-2xl mr-1 iconCard float-left"></i>
         <div class="h5 h5 p-1 font-2lg mr-1 textCard">{{file.name}}</div>

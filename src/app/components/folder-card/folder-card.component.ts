@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FileModel} from "../../core/models/entities/file";
 import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
 
@@ -14,18 +14,42 @@ declare var $: any;
 
 export class FolderCardComponent implements OnInit {
 
+    modeDisplay: string;
+    linkId: string;
     @Input() directory: Directory;
+    @Input() shareId: string;
     @Output() messageEvent = new EventEmitter<Directory | FileModel>();
+    @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
     constructor(private router: Router,
-                private  directoryService: DirectoryService) {
+                private  directoryService: DirectoryService,
+                private  route: ActivatedRoute) {
     }
 
     ngOnInit() {
+        this.route.data.subscribe(
+            data => {
+                this.modeDisplay = data.modeDisplay;
+                if (this.modeDisplay === 'sharedFolder') {
+                    this.route.params.subscribe((params) => {
+                        this.linkId = params.linkId;
+                    });
+                } else if (this.modeDisplay === 'sharedClouds') {
+                    this.route.params.subscribe( (params) => {
+                        this.shareId = params.shareId;
+                    });
+                }
+            });
     }
 
     openFolder(idFolder: string) {
-        this.router.navigate(['folders/' + idFolder]);
+        if (this.modeDisplay === 'home' || this.modeDisplay === 'trash') {
+            this.router.navigate(['folders/' + idFolder]);
+        } else if (this.modeDisplay === 'sharedFolder') {
+            this.router.navigate(['shared/folders/' + this.linkId + '/' + idFolder]);
+        } else if (this.modeDisplay === 'sharedClouds') {
+            this.router.navigate(['sharedClouds/' + this.shareId + '/' + idFolder]);
+        }
     }
 
     renameFolder(newName: string, id: string, idParent: string, callback: (id: string) => void) {
@@ -43,6 +67,26 @@ export class FolderCardComponent implements OnInit {
             response => {
                 if (response.status === 200) {
                     callback(idParent);
+                }
+            }
+        );
+    }
+
+    async undeleteFolder(id) {
+        await this.directoryService.undeleteDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    console.log('undeleted folder');
+                }
+            }
+        );
+    }
+
+    async hardDeleteFolder(id) {
+        await this.directoryService.hardDeleteDirectory(id).subscribe(
+            response => {
+                if (response.status === 200) {
+                    console.log('folder archived');
                 }
             }
         );

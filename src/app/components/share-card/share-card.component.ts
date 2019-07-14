@@ -1,51 +1,48 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {Directory} from "../../core/models/entities/directory";
 import {FileModel} from "../../core/models/entities/file";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {Link} from "../../core/models/entities/link";
 import {UserService} from "../../core/services/Rest/User/user.service";
+import {ToastrService} from "ngx-toastr";
+import {environment} from "../../../environments/environment";
 
 @Component({
-  selector: 'app-share-card',
-  templateUrl: './share-card.component.html',
-  styleUrls: ['./share-card.component.scss']
+    selector: 'app-share-card',
+    templateUrl: './share-card.component.html',
+    styleUrls: ['./share-card.component.scss']
 })
 export class ShareCardComponent implements OnInit, OnChanges {
     @Input() element: Directory | FileModel;
     @Input() type: string;
-    Link: Link;
+    Links: Array<Link>;
 
-  constructor(private shareLinkService: ShareLinkService, private userService: UserService) { }
+    constructor(private shareLinkService: ShareLinkService, private userService: UserService, private toastr: ToastrService) {
+    }
 
-  ngOnInit() {
-      this.getLinkInfo();
-  }
+    ngOnInit() {
+        this.getLinkInfo();
+    }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
       this.getLinkInfo();
   }
 
   getLinkInfo() {
       if (this.type === 'dir') {
-          this.shareLinkService.getLinkForDir(this.element._id).subscribe(
+          this.shareLinkService.getLinksForDir(this.element._id).subscribe(
               response => {
                   if (response.status === 200) {
-                      this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
+                      this.Links = response.body;
                   }
               },
               err => console.log(err)
           );
       } else {
-          this.shareLinkService.getLinkForFile(this.element._id).subscribe(
+          this.shareLinkService.getLinksForFile(this.element._id).subscribe(
               response => {
                   if (response.status === 200) {
-                      this.Link = response.body;
-                      this.userService.getUserName(this.Link.user).subscribe( (data) => {
-                          this.Link.user = data.name + ' ' + data.firstname;
-                      });
+                      this.Links = response.body;
                   }
               },
               err => console.log(err)
@@ -54,4 +51,34 @@ export class ShareCardComponent implements OnInit, OnChanges {
   }
 
 
+    deleteLink(id) {
+        this.shareLinkService.deleteLink(id).subscribe( response => {
+            if (response.status === 200) {
+                console.log('lien supprimé');
+                this.getLinkInfo();
+            }},
+            err => console.log(err)
+        );
+    }
+
+    copyText(link_id) {
+        let val = "";
+        if (this.type === 'dir') {
+            val = environment.local_url + '/#/shared/folders/' + link_id + '/0';
+        } else {
+            val = environment.local_url + '/#/shared/files/' + link_id;
+        }
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+        this.toastr.success('Le lien a été copié dans le presse-papier', 'Lien copié');
+    }
 }

@@ -34,9 +34,9 @@ export class ShareFolderComponent implements OnInit {
     @Input() directory: Directory;
     @Output() messageEvent = new EventEmitter<Directory | File>();
     sharedParentDirectory: Directory;
+    parentID: string;
 
-    constructor(private userService: UserService,
-                private directoryService: DirectoryService,
+    constructor(private directoryService: DirectoryService,
                 private fileService: FileService,
                 private route: ActivatedRoute,
                 private router: Router,
@@ -47,10 +47,14 @@ export class ShareFolderComponent implements OnInit {
 
     async ngOnInit() {
         this.route.params.subscribe(async (params) => {
-            this.user = await this.userService.getUser();
+            await this.getLinkById(params.linkId).then( value => this.link = value.body);
+            if (this.link === undefined) {
+                this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur')
+                return this.router.navigateByUrl('folders/0');
+            }
+            this.parentID = this.link.directory;
             if (params.directoryId === '0') {
-                console.log('on est dans le dossier parent partagé');
-                await this.getLink(params.parentId).then( value => this.link = value.body);
+                await this.getLink(this.parentID).then( value => this.link = value.body);
                 if (this.link === null) {
                     this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
@@ -60,11 +64,10 @@ export class ShareFolderComponent implements OnInit {
                     return this.router.navigateByUrl('folders/0');
                 }
                 this.ReadOnly = this.link.link_type === 'readonly';
-                this.getFolders(params.parentId, true, 0);
-                this.getFiles(params.parentId);
+                this.getFolders(this.parentID, true, 0);
+                this.getFiles(this.parentID);
             } else {
-                console.log('on est dans un sous dossier partagé');
-                await this.getLink(params.parentId).then( value => this.link = value.body);
+                await this.getLink(this.parentID).then( value => this.link = value.body);
                 if (this.link === null) {
                     this.toastr.error('Ce lien de partage n\'est pas actif', 'Erreur');
                     return this.router.navigateByUrl('folders/0');
@@ -74,7 +77,7 @@ export class ShareFolderComponent implements OnInit {
                     return this.router.navigateByUrl('folders/0');
                 }
                 this.ReadOnly = this.link.link_type === 'readonly';
-                this.getFolders(params.directoryId, false, params.parentId);
+                this.getFolders(params.directoryId, false, this.parentID);
                 this.getFiles(params.directoryId);
             }
         });
@@ -82,6 +85,10 @@ export class ShareFolderComponent implements OnInit {
 
     async getLink(id) {
         return await this.shareLinkService.getLinkForDir(id).toPromise();
+    }
+
+    async getLinkById(id) {
+        return await this.shareLinkService.getLink(id).toPromise();
     }
 
     getFolders(id: string, isParent, parentId) {
@@ -148,12 +155,10 @@ export class ShareFolderComponent implements OnInit {
     }
 
     openFolder(idFolder: string) {
-        this.router.navigate(['shared/folders/' + this.sharedParentDirectory._id + '/' + idFolder]);
+        this.router.navigate(['shared/folders/' + this.link._id + '/' + idFolder]);
     }
 
     selectFolder($event, directory: Directory) {
-        /*$('.selected-card').removeClass('selected-card');
-        $(event.currentTarget).addClass('selected-card');*/
         this.messageEvent.emit(directory);
     }
 

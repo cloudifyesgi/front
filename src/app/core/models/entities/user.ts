@@ -1,7 +1,7 @@
 import {UserGroup} from "./userGroup";
 
 export interface User {
-    _id?: number;
+    _id?: string;
     email?: string;
     password?: string;
     name: string;
@@ -10,7 +10,7 @@ export interface User {
     address: string;
     postal: string;
     city: string;
-    rank: string;
+    rank: number;
     language: string;
     user_groups: Array<UserGroup>;
     belong_user_groups: Array<UserGroup>;
