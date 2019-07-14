@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {User} from "../../core/models/entities/user";
 import {UserService} from "../../core/services/Rest/User/user.service";
 import {DirectoryService} from "../../core/services/Rest/directory/directory.service";
@@ -10,7 +10,6 @@ import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "n
 import {DatePipe} from "@angular/common";
 import {FormBuilder} from "@angular/forms";
 import {FileCardComponent} from "../../components/file-card/file-card.component";
-import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {ToastrService} from "ngx-toastr";
@@ -18,8 +17,8 @@ import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
 import {InfoCardComponent} from "../../components/info-card/info-card.component";
 import {NotificationService} from '../../core/services/Notification/notification.service';
-import {Upload} from "../../core/models/entities/upload";
 import {UploadFolders} from "../../core/models/UploadFolders";
+import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
 
 declare var jQuery: any;
 
@@ -55,6 +54,7 @@ export class HomeComponent implements OnInit, OnChanges {
     @ViewChild(FileCardComponent) fileCardComponent;
     @ViewChild(FolderCardComponent) folderCardComponent;
     @ViewChild(InfoCardComponent) infoCardComponent;
+    @ViewChild('downloadZipLink') private downloadZipLink: ElementRef;
 
     directoryForm = this.fb.group(
         {
@@ -495,8 +495,22 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     }
 
-    async downloadCurrentDir() {
-        await this.folderCardComponent.downloadDir(this.currentDirectory._id);
+     async downloadCurrentDir() {
+        const binaryData = [];
+        let url;
+        let link;
+        const response = await this.directoryService.getDirectory(this.currentDirectory._id).toPromise();
+        const dirName = response.body.name + '.zip';
+
+        this.directoryService.download(this.currentDirectory._id).subscribe(res => {
+            binaryData.push(res.body);
+            url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
+            link = this.downloadZipLink.nativeElement;
+            link.href = url;
+            link.download = dirName;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
     }
 
     async setSelectedElement($event: Directory | FileModel, type: string) {

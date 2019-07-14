@@ -42,24 +42,6 @@ export class FolderCardComponent implements OnInit {
             });
     }
 
-    async downloadDir(idDir: string) {
-        const binaryData = [];
-        let url;
-        let link;
-        const response = await this.directoryService.getDirectory(idDir).toPromise();
-        const dirName = response.body.name + '.zip';
-
-        await this.directoryService.download(idDir).subscribe(res => {
-            binaryData.push(res.body);
-            url = window.URL.createObjectURL(new Blob(binaryData, {type: res.body.type}));
-            link = this.downloadZipLink.nativeElement;
-            link.href = url;
-            link.download = dirName;
-            link.click();
-            window.URL.revokeObjectURL(url);
-        });
-    }
-
     openFolder(idFolder: string) {
         if (this.modeDisplay === 'home' || this.modeDisplay === 'trash') {
             this.router.navigate(['folders/' + idFolder]);
