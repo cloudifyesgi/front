@@ -11,7 +11,10 @@ export class RestErrorHandler implements ErrorHandler {
 
     handleError(error: any): void {
         if (error.status === 401) {
-            console.log('Unauthorized');
+            this.notificationService.showError('Not connected', '401');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            this.route.navigate(['/login']);
         } else if (error.status === 404) {
             this.notificationService.showError('Not found', '404');
             this.route.navigate(['/folders/0']);
