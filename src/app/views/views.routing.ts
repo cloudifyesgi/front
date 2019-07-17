@@ -3,7 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {AuthenticationGuard} from "../core/guards/authentication/authentication.guard";
 import {LocalStorageService} from "../core/services/localStorage/local-storage.service";
 import {LoginComponent} from "./authentication/login/login.component";
-import {DefaultLayoutComponent} from "../components/default-layout";
+import {DefaultLayoutComponent} from "../shared/default-layout";
 import {HomeComponent} from "./home/home.component";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {TokenInterceptor} from "../core/providers/auth.interceptor";
@@ -14,8 +14,9 @@ import {DeletedAccessGuard} from "../core/guards/deletedAccess/deleted-access.gu
 import {DocifyEditorComponent} from "./docify-editor/docify-editor.component";
 import {SubscriptionComponent} from './subscription/subscription.component';
 import {SubscriptionsComponent} from './admin/subscriptions/subscriptions.component';
-import {AdminDefaultLayoutComponent} from '../components/admin-default-layout';
+import {AdminDefaultLayoutComponent} from '../shared/admin-default-layout';
 import {AdminGuard} from '../core/guards/admin/admin.guard';
+import {ErrorServerPageComponent} from "./error-server-page/error-server-page.component";
 
 
 const routes: Routes = [
@@ -26,6 +27,10 @@ const routes: Routes = [
         {
             path: 'register',
             component: RegisterComponent
+        },
+        {
+            path: 'servererror',
+            component: ErrorServerPageComponent
         },
         {
             path: 'admin',

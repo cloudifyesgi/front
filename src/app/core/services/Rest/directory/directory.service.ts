@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {Directory} from '../../../models/entities/directory';
 import {ConstantsService} from "../../constants/constants.service";
 import {GetChildren} from "../../../models/responses/getChildren";
-import {FileModel} from "../../../models/entities/file";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +14,7 @@ export class DirectoryService {
                 private constantsService: ConstantsService) {
     }
 
-    getDirectory(id): Observable<HttpResponse<Directory>> {
+    getDirectory(id: string): Observable<HttpResponse<Directory>> {
         return this.http.get<Directory>(`${this.constantsService.getConstant("URL_DIRECTORY")}/${id}`,
             {observe: "response"});
     }
@@ -27,12 +26,12 @@ export class DirectoryService {
         }, {observe: "response"});
     }
 
-    getChildDirectory(id): Observable<HttpResponse<GetChildren>> {
+    getChildDirectory(id: string): Observable<HttpResponse<GetChildren>> {
         const url = this.constantsService.getConstant('URL_GET_CHILD_DIRECTORY').replace(':id', id);
         return this.http.get<GetChildren>(url, {observe: "response"});
     }
 
-    getDeletedFolders(id): Observable<HttpResponse<GetChildren>> {
+    getDeletedFolders(id: string): Observable<HttpResponse<GetChildren>> {
         const url = this.constantsService.getConstant('URL_GET_DELETED_DIRECTORY').replace(':id', id);
         return this.http.get<GetChildren>(url, {observe: "response"});
     }
@@ -51,19 +50,19 @@ export class DirectoryService {
         return this.http.get<any>(url, {observe: "response"});
     }
 
-    download(id): Observable<HttpResponse<any>> {
+    download(id: string): Observable<HttpResponse<any>> {
         return this.http.get<any>(`${this.constantsService.getConstant("URL_DOWNLOAD_DIR")}/${id}`, {
             responseType: 'blob' as 'json',
             observe: "response"
         });
     }
 
-    undeleteDirectory(id): Observable<HttpResponse<any>> {
+    undeleteDirectory(id: string): Observable<HttpResponse<any>> {
         const url = this.constantsService.getConstant('URL_UNDELETE_DIR').replace(':id', id);
         return this.http.delete<any>(url, {observe: "response"});
     }
 
-    hardDeleteDirectory(id): Observable<HttpResponse<any>> {
+    hardDeleteDirectory(id: string): Observable<HttpResponse<any>> {
         const url = this.constantsService.getConstant('URL_HARD_DELETE_DIR').replace(':id', id);
         return this.http.delete<any>(url, {observe: "response"});
     }

@@ -6,19 +6,19 @@ import {Directory} from "../../core/models/entities/directory";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FileService} from "../../core/services/Rest/file/file.service";
 import {FileModel} from "../../core/models/entities/file";
-import {FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
+import {FileSystemFileEntry, NgxFileDropEntry} from "ngx-file-drop";
 import {DatePipe} from "@angular/common";
 import {FormBuilder, Validators} from '@angular/forms';
-import {FileCardComponent} from "../../components/file-card/file-card.component";
+import {FileCardComponent} from "../../shared/file-card/file-card.component";
 import {Link} from "../../core/models/entities/link";
 import {ShareLinkService} from "../../core/services/Rest/ShareLink/share-link.service";
 import {ToastrService} from "ngx-toastr";
 import {Share} from "../../core/models/entities/share";
 import {ShareEmailService} from "../../core/services/Rest/ShareEmail/share-email.service";
-import {InfoCardComponent} from "../../components/info-card/info-card.component";
+import {InfoCardComponent} from "../../shared/info-card/info-card.component";
 import {NotificationService} from '../../core/services/Notification/notification.service';
 import {UploadFolders} from "../../core/models/UploadFolders";
-import {FolderCardComponent} from "../../components/folder-card/folder-card.component";
+import {FolderCardComponent} from "../../shared/folder-card/folder-card.component";
 import {environment} from "../../../environments/environment";
 
 declare var jQuery: any;
@@ -59,13 +59,13 @@ export class HomeComponent implements OnInit, OnChanges {
 
     directoryForm = this.fb.group(
         {
-            directoryName: ['', [Validators.required,Validators.minLength(1)]]
+            directoryName: ['', [Validators.required, Validators.minLength(1)]]
         }
     );
 
     linkForm = this.fb.group(
         {
-            linkName: ['', [Validators.required,Validators.minLength(1)]],
+            linkName: ['', [Validators.required, Validators.minLength(1)]],
             linkType: ['', [Validators.required]],
             linkExpiry: ['', [Validators.required]],
             linkActivated: ['', []],
@@ -504,7 +504,7 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     }
 
-     async downloadCurrentDir() {
+    async downloadCurrentDir() {
         const binaryData = [];
         let url;
         let link;
@@ -533,7 +533,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     async generateLink() {
-        if(this.linkForm.valid){
+        if (this.linkForm.valid) {
             if (!this.selectedElement) {
                 this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
                 return;
@@ -558,7 +558,11 @@ export class HomeComponent implements OnInit, OnChanges {
                     jQuery('#linkGenerator').modal('hide');
                     this.infoCardComponent.shareCardComponent.getLinkInfo();
                     if (this.currentType === 'dir') {
-                        alert('Votre lien a bien été généré :\nhttp://localhost:4200/#/shared/folders/' + data.body._id + '/0'); // @TODO à remplacer par quelque chose de copiable et avec www.cloudify.fr
+                        this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                        this.copyText(environment.local_url + '/#/shared/folders/' + data.body._id + '/0');
+                    } else if (this.currentType === 'file') {
+                        this.toastr.success('Votre lien a bien été généré et copié dans le presse-papier', 'Succès');
+                        this.copyText(environment.local_url + '/#/shared/files/' + data.body._id);
                     }
                 },
                 (err) => {
@@ -623,7 +627,7 @@ export class HomeComponent implements OnInit, OnChanges {
     }
 
     async shareElement() {
-        if(this.shareForm.valid){
+        if (this.shareForm.valid) {
             if (!this.selectedElement) {
                 this.toastr.error('Veuillez choisir un dossier ou un fichier à partager', 'Erreur');
                 return;
@@ -654,7 +658,7 @@ export class HomeComponent implements OnInit, OnChanges {
                     this.infoCardComponent.getShare();
                 },
                 (err) => {
-                console.log(err);
+                    console.log(err);
                     this.toastr.error('L\'un des email spécifié n\'existe pas ou le format n\'est pas respecté', 'Erreur');
                     if (err.status !== 401) {
                         console.log(err);
@@ -760,13 +764,16 @@ export class HomeComponent implements OnInit, OnChanges {
         }
     }
 
-    isInvalid(key: string, form : string): boolean {
-        if(form === "directoryForm")
+    isInvalid(key: string, form: string): boolean {
+        if (form === "directoryForm") {
             return !!this.directoryForm.get(key).errors;
-        if(form === "linkForm")
+        }
+        if (form === "linkForm") {
             return !!this.linkForm.get(key).errors;
-        if(form === "shareForm")
+        }
+        if (form === "shareForm") {
             return !!this.shareForm.get(key).errors;
+        }
         return true;
 
     }

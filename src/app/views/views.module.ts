@@ -9,7 +9,7 @@ import {ViewsRouting} from "./views.routing";
 import {LoginComponent} from "./authentication/login/login.component";
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-import {ComponentsModule} from "../components/components.module";
+import {ComponentsModule} from "../shared/components.module";
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './authentication/register/register.component';
 import {NgxFileDropModule} from "ngx-file-drop";
@@ -20,10 +20,11 @@ import {QuillModule} from "ngx-quill";
 import {QuillInitializeService} from "../core/services/Quill/quillInitialize.service";
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { SubscriptionsComponent } from './admin/subscriptions/subscriptions.component';
-import { AdminDefaultLayoutComponent } from '../components/admin-default-layout/admin-default-layout.component';
+import { AdminDefaultLayoutComponent } from '../shared/admin-default-layout/admin-default-layout.component';
 import {DataTablesModule} from 'angular-datatables';
 import {NotificationService} from '../core/services/Notification/notification.service';
 import {CoreModule} from "../core/core.module";
+import { ErrorServerPageComponent } from './error-server-page/error-server-page.component';
 
 // import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -52,7 +53,8 @@ import {CoreModule} from "../core/core.module";
         ShareFileComponent,
         DocifyEditorComponent,
         SubscriptionComponent,
-        SubscriptionsComponent
+        SubscriptionsComponent,
+        ErrorServerPageComponent
     ],
     providers: [
         LocalStorageService,
