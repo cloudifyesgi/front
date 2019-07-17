@@ -122,6 +122,7 @@ export class InfoCardComponent implements OnInit, OnChanges {
 
     emitUpdateFiles(dir) {
         this.getFileHistories(dir);
+        this.update_files.emit(this.currentDirectory._id);
     }
 
 }
