@@ -20,6 +20,8 @@ export class RestErrorHandler implements ErrorHandler {
             this.route.navigate(['/folders/0']);
         } else if (error.status === 409) {
             console.log('conflict');
+        } else if (error.status === 500 || error.status === 0) {
+            this.route.navigate(['/servererror']);
         }
     }
 
